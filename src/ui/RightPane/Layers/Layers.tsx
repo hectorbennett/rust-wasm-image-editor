@@ -112,7 +112,7 @@ function LayerRow(props: LayerProps) {
       />
       <Box
         sx={{ display: "flex", alignItems: "center" }}
-        onClick={() => layers.setActiveLayerId(props.layer.id)}
+        // onClick={() => layers.setActiveLayerId(props.layer.id)}
       >
         <LayerPreview />
         <LayerLabel layer={props.layer} />
@@ -124,7 +124,12 @@ function LayerRow(props: LayerProps) {
 function NewLayerButton() {
   const layers = LayersContext.useContainer();
   return (
-    <ActionIcon size="sm" onClick={layers.addNewLayer}>
+    <ActionIcon
+      size="sm"
+      onClick={() => {
+        layers.addNewLayer();
+      }}
+    >
       <Plus size={12} />
     </ActionIcon>
   );
@@ -136,12 +141,12 @@ export default function Layers() {
     <>
       <NewLayerButton />
       <SegmentedControl
-        value={layers.activeLayerId.toString()}
+        // value={layers.activeLayerId.toString()}
         //   onChange={setValue}
         fullWidth
         orientation="vertical"
         data={layers.layers.map((layer) => ({
-          value: layer.id.toString(),
+          value: layer.uid.toString(),
           label: <LayerRow layer={layer} />,
         }))}
       />

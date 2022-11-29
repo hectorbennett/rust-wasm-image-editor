@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { AppContext } from "./app";
-import { CanvasContext } from "./canvas";
+// import { CanvasContext } from "./canvas";
 import { LayersContext } from "./layers";
 import { ActiveProjectContext } from "./activeProject";
 import { ToolsContext } from "./tools";
@@ -19,13 +19,13 @@ export default function Provider(props: { children: ReactNode }) {
       <ActiveProjectContext.Provider>
         <ToolsContext.Provider>
           <LayersContext.Provider>
-            <CanvasContext.Provider>
-              <SettingsContext.Provider>
-                <CommandsContext.Provider>
-                  {props.children}
-                </CommandsContext.Provider>
-              </SettingsContext.Provider>
-            </CanvasContext.Provider>
+            {/* <CanvasContext.Provider> */}
+            <SettingsContext.Provider>
+              <CommandsContext.Provider>
+                {props.children}
+              </CommandsContext.Provider>
+            </SettingsContext.Provider>
+            {/* </CanvasContext.Provider> */}
           </LayersContext.Provider>
         </ToolsContext.Provider>
       </ActiveProjectContext.Provider>
