@@ -6,11 +6,11 @@ https://seahorse-app-r8jlv.ondigitalocean.app/
 
 
 Version 1:
- - [x] Square select
- - [x] Oval select
  - [x] Resizable UI
  - [x] Settings - Keyboard shortcuts - https://mantine.dev/others/spotlight/
  - [x] Command pallette - https://mantine.dev/others/spotlight/
+ - [ ] Square select
+ - [ ] Oval select
  - [ ] New
  - [ ] Open
  - [ ] Save
@@ -39,7 +39,6 @@ Version 2:
  - [ ] Light and dark Theme
  - [ ] Customise keyboard shortcuts
  - [ ] undo/redo
- - [ ] Layer opacity
 
 
 ## DigitalOcean app spec:
