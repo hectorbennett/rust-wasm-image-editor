@@ -25,8 +25,6 @@ const Canvas = function (props: CanvasProps) {
       return;
     }
     let newData = ctx.createImageData(props.width, props.height);
-    // console.log("wasm.api.image_data");
-    // console.log(wasm.api.image_data);
     newData.data.set(wasm.api.image_data);
     ctx.putImageData(newData, 0, 0);
   }, [props]);

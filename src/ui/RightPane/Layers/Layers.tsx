@@ -53,10 +53,6 @@ function LayerLabel(props: LayerLabelProps) {
   const layers = LayersContext.useContainer();
   const [editMode, setEditMode] = useState(false);
   const [value, setValue] = useState(props.layer.name);
-  // function handleDoubleClick(event: MouseEventHandler) {
-  //   console.log("double click");
-  //   setEditMode(true);
-  // }
 
   function handleBlur() {
     layers.renameLayer(props.layer.id, value);
@@ -90,8 +86,8 @@ interface LayerProps {
 function LayerRow(props: LayerProps) {
   const layers = LayersContext.useContainer();
   const rightClickRef = useRightClick(function (event: Event) {
-    console.log("right click");
-    console.log(event);
+    // console.log("right click");
+    // console.log(event);
   });
   //   const ref = useRef<HTMLDivElement>(null);
   return (

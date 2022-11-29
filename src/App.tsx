@@ -21,41 +21,24 @@ function Testing() {
   }, []);
 
   function test() {
-    // console.log("testing");
-    // console.log(wasm);
-    // console.log(wasm.api);
-
-    // console.log("creating project");
     wasm.api.create_project("Test project", 500, 500);
 
     // red square layer
-    console.log("creating red square layer");
     let layer_1_uid = wasm.api.create_layer("Test layer 1", 500, 500);
     let red = [255, 0, 0, 100];
     wasm.api.fill_rect(layer_1_uid, red, 100, 100, 150, 150);
 
     // green square layer
-    console.log("creating green square layer");
     let layer_2_uid = wasm.api.create_layer("Test layer 2", 500, 500);
     let green = [0, 255, 0, 100];
     wasm.api.fill_rect(layer_2_uid, green, 220, 50, 180, 150);
 
     // blue square layer
-    console.log("creating blue square layer");
     let layer_3_uid = wasm.api.create_layer("Test layer 3", 500, 500);
     let blue = [0, 0, 255, 100];
     wasm.api.fill_rect(layer_3_uid, blue, 180, 150, 200, 200);
 
-    // setting image data to canvas
-    // console.log("image_data");
-    // console.log(wasm.api.image_data);
-
-    // create a new project
-    // wasm.api.create_project("Test project 2", 500, 500);
-
-    // console.log("refresh_data");
     wasm.refresh_data();
-    // console.log(wasm.data);
   }
   return null;
 }

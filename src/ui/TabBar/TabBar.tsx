@@ -64,10 +64,6 @@ function TabBarTabs() {
   //     );
   //   };
 
-  // const renderTab =
-  // console.log("tabs");
-  // console.log(app.tabs);
-
   return (
     <>
       {app.tabs.map((tab, i) => (

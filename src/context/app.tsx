@@ -18,7 +18,6 @@ function useFilters() {
 }
 
 function useTabs() {
-  console.log("use tabs");
   const wasm = WasmContext.useContainer();
   const [activeTabId, setActiveTabId] = useState<string | null>("");
   const [tabs, setTabs] = useState<Array<Tab>>([]);
@@ -27,8 +26,6 @@ function useTabs() {
     tabs.find((tab) => tab.uid === activeTabId) || tabs[0] || null;
 
   function newTab(uid: string, type: TabType) {
-    console.log("new tab");
-    console.log(uid);
     setTabs((t) => {
       if (t.find((tab) => tab.uid === uid)) {
         return t;

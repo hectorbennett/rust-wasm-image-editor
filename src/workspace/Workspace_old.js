@@ -39,7 +39,6 @@ function useBucketFillTool({
           }
         }
         newImageContext.putImageData(newImageData, 0, 0);
-        console.log(activeLayer.ctx);
         activeLayer.ctx.drawImage(
           newImage,
           0,

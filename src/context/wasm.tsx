@@ -15,7 +15,6 @@ function useWasm() {
       }
       setInited(true);
       init().then(() => {
-        console.log("init wasm api");
         setApi(init_api());
       });
     })();
@@ -23,7 +22,6 @@ function useWasm() {
 
   const refresh_data = () => {
     setData(api.to_json());
-    // console.log(api.to_json());
   };
 
   const isLoading = !api;
