@@ -27,6 +27,10 @@ impl Api {
         return Api { app: App::new() };
     }
 
+    pub fn set_active_project(&mut self, project_uid: u64) -> () {
+        self.app.set_active_project(project_uid);
+    }
+
     pub fn create_project(&mut self, name: String, width: u16, height: u16) {
         let project = self.app.new_project();
         project.set_name(&name);

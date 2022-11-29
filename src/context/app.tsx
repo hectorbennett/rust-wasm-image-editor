@@ -41,7 +41,8 @@ function useTabs() {
 
   function focusTab(uid: string) {
     setActiveTabId(uid);
-    // wasm.api.set_active_project(uid);
+    // wasm.api.set_active_project(BigInt(uid));
+    // wasm.refresh_data();
   }
 
   useEffect(() => {

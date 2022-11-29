@@ -2,6 +2,7 @@ import { Tabs } from "@mantine/core";
 import { IconPhoto, IconSettings } from "@tabler/icons";
 import { CloseButton } from "@mantine/core";
 import { AppContext } from "../../context/app";
+import { WasmContext } from "../../context/wasm";
 
 export function TabBar() {
   const app = AppContext.useContainer();
@@ -64,6 +65,10 @@ function TabBarTabs() {
   //     );
   //   };
 
+  // const renderTab =
+  // console.log("tabs");
+  // console.log(app.tabs);
+
   return (
     <>
       {app.tabs.map((tab, i) => (
@@ -108,13 +113,15 @@ interface ProjectTabProps {
 }
 
 function ProjectTab(props: ProjectTabProps) {
+  const wasm = WasmContext.useContainer();
+  const project_name = wasm.data.projects.get(props.uid).name;
   return (
     <Tabs.Tab
       value={props.uid}
       icon={<IconPhoto size={14} />}
       rightSection={<TabCloseButton id={props.uid} />}
     >
-      Project {props.uid}
+      Project {project_name}
     </Tabs.Tab>
   );
 }
