@@ -4,9 +4,17 @@
   "version": "0.0.0",
   "type": "module",
   "dependencies": {
+    "@mantine/core": "^5.8.4",
+    "@mantine/hooks": "^5.8.4",
+    "@mantine/modals": "^5.8.4",
+    "@mantine/spotlight": "^5.8.4",
+    "@tabler/icons": "^1.114.0",
     "react": "^18.2.0",
+    "react-bootstrap-icons": "^1.10.2",
     "react-dom": "^18.2.0",
+    "react-icons": "^4.7.1",
     "serve": "^14.1.2",
+    "unstated-next": "^1.1.0",
     "wasm-pack": "^0.10.3"
   },
   "devDependencies": {

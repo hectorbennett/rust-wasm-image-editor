@@ -1,38 +1,97 @@
-// @ts-ignore
-import init, { greet } from "wasm";
+import { MantineProvider } from "@mantine/core";
+import { ModalsProvider } from "@mantine/modals";
+import { SpotlightProvider } from "@mantine/spotlight";
 
-import reactLogo from "./assets/react.svg";
-import rustWasm from "./assets/rust-wasm.png";
-import "./App.css";
+// import { DndProvider } from "react-dnd";
+// import { HTML5Backend } from "react-dnd-html5-backend";
+
+import modals from "./ui/Modals";
+import Provider from "./context";
+import { WasmContext } from "./context/wasm";
+
+// @ts-ignore
+import Main from "./main/Main";
+import { CustomSpotlightAction } from "./components/CustomSpotlightAction";
+import { useEffect } from "react";
+
+function Testing() {
+  const wasm = WasmContext.useContainer();
+  useEffect(() => {
+    test();
+  }, []);
+
+  function test() {
+    // console.log("testing");
+    // console.log(wasm);
+    // console.log(wasm.api);
+
+    // console.log("creating project");
+    wasm.api.create_project("Test project", 500, 500);
+
+    // red square layer
+    console.log("creating red square layer");
+    let layer_1_uid = wasm.api.create_layer("Test layer 1", 500, 500);
+    let red = [255, 0, 0, 100];
+    wasm.api.fill_rect(layer_1_uid, red, 100, 100, 150, 150);
+
+    // green square layer
+    console.log("creating green square layer");
+    let layer_2_uid = wasm.api.create_layer("Test layer 2", 500, 500);
+    let green = [0, 255, 0, 100];
+    wasm.api.fill_rect(layer_2_uid, green, 220, 50, 180, 150);
+
+    // blue square layer
+    console.log("creating blue square layer");
+    let layer_3_uid = wasm.api.create_layer("Test layer 3", 500, 500);
+    let blue = [0, 0, 255, 100];
+    wasm.api.fill_rect(layer_3_uid, blue, 180, 150, 200, 200);
+
+    // setting image data to canvas
+    // console.log("image_data");
+    // console.log(wasm.api.image_data);
+
+    // create a new project
+    // wasm.api.create_project("Test project 2", 500, 500);
+
+    // console.log("refresh_data");
+    wasm.refresh_data();
+    // console.log(wasm.data);
+  }
+  return null;
+}
 
 function App() {
   return (
-    <div className="App">
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src="/vite.svg" className="logo vite" alt="Vite logo" />
-        </a>
-        <a href="https://reactjs.org" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-        <a href="https://rustwasm.github.io/" target="_blank">
-          <img src={rustWasm} className="logo rust-wasm" alt="Rust/Wasm logo" />
-        </a>
-      </div>
-      <h1>Vite + React + TypeScript + Rust/WebAssembly</h1>
-      <div className="card">
-        <button
-          onClick={() => {
-            init().then(() => {
-              console.log("init wasm-pack");
-              greet("from vite!");
-            });
-          }}
-        >
-          Click me
-        </button>
-      </div>
-    </div>
+    // <DndProvider backend={HTML5Backend}>
+    <MantineProvider
+      theme={{
+        // radius: 0,
+        colorScheme: "dark",
+        defaultRadius: "xs",
+        primaryColor: "yellow",
+        primaryShade: 8,
+      }}
+      withGlobalStyles
+      withNormalizeCSS
+    >
+      <SpotlightProvider
+        shortcut={null}
+        actions={[]}
+        actionComponent={CustomSpotlightAction}
+        overlayBlur={0}
+        transitionDuration={0}
+      >
+        <WasmContext.Provider>
+          <Provider>
+            <ModalsProvider modals={modals}>
+              <Main />
+              <Testing />
+            </ModalsProvider>
+          </Provider>
+        </WasmContext.Provider>
+      </SpotlightProvider>
+    </MantineProvider>
+    // </DndProvider>
   );
 }
 

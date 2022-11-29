@@ -1,0 +1,75 @@
+import { useEffect, useRef } from "react";
+import { ActiveProjectContext } from "../context/activeProject";
+import { WasmContext } from "../context/wasm";
+
+interface WorkspaceProps {
+  id: String;
+}
+
+interface CanvasProps {
+  width: number;
+  height: number;
+}
+
+const Canvas = function (props: CanvasProps) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const wasm = WasmContext.useContainer();
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) {
+      return;
+    }
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return;
+    }
+    let newData = ctx.createImageData(props.width, props.height);
+    // console.log("wasm.api.image_data");
+    // console.log(wasm.api.image_data);
+    newData.data.set(wasm.api.image_data);
+    ctx.putImageData(newData, 0, 0);
+  }, [props]);
+
+  return (
+    <canvas
+      ref={ref}
+      width={props.width}
+      height={props.height}
+      style={{
+        position: "absolute",
+        zIndex: 1,
+      }}
+    />
+  );
+};
+
+function Background(props: { width: number; height: number }) {
+  return (
+    <div
+      style={{
+        width: props.width,
+        height: props.height,
+        position: "relative",
+        zIndex: 0,
+        background:
+          "repeating-conic-gradient(#878787 0% 25%, #5a5a5a 0% 50%) 50% / 20px 20px",
+      }}
+    />
+  );
+}
+
+export default function Workspace(props: WorkspaceProps) {
+  const activeProject = ActiveProjectContext.useContainer();
+
+  if (!activeProject.uid) {
+    return null;
+  }
+
+  return (
+    <div>
+      <Canvas width={activeProject.width} height={activeProject.height} />
+      <Background width={activeProject.width} height={activeProject.height} />
+    </div>
+  );
+}
