@@ -1,9 +1,45 @@
-# Vite + React + TypeScript + Rust/WebAssembly
-A minimal docker project for running a vite application on DigitalOcean with React, TypeScript and Rust/WebAssembly/Wasm all working out of the box. 
+# Image Editor built with Rust/WebAssembly + TypeScript + React
 
 See an example in action at
 
-https://orca-app-byv23.ondigitalocean.app/
+https://seahorse-app-r8jlv.ondigitalocean.app/
+
+
+Version 1:
+ - [x] Square select
+ - [x] Oval select
+ - [x] Resizable UI
+ - [x] Settings - Keyboard shortcuts - https://mantine.dev/others/spotlight/
+ - [x] Command pallette - https://mantine.dev/others/spotlight/
+ - [ ] New
+ - [ ] Open
+ - [ ] Save
+ - [ ] Export
+ - [ ] Resize Canvas
+ - [ ] Resize layers
+ - [ ] Move layers
+ - [ ] Reorder layers
+ - [ ] Store settings and state in localStorage (or similar)
+ - [ ] Select All
+ - [ ] Select None
+ - [ ] Invert Selection
+ - [ ] Colour picker
+ - [ ] Paintbrush tool with brush sizes and brush types
+ - [ ] Eraser
+ - [ ] Zoom
+ - [ ] App Name
+ - [ ] Favicon
+ - [ ] Page title
+ - [ ] Persist state on refresh
+ - [ ] Remove 'any' types.
+ - [ ] Error boundaries
+ - [ ] Language support
+
+Version 2:
+ - [ ] Light and dark Theme
+ - [ ] Customise keyboard shortcuts
+ - [ ] undo/redo
+ - [ ] Layer opacity
 
 
 ## DigitalOcean app spec:
