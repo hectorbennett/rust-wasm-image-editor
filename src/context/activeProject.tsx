@@ -8,7 +8,7 @@ interface SerializedProject {
   uid: string;
   width: number;
   height: number;
-  name: String;
+  name: string;
   layers: Array<Layer>;
 }
 

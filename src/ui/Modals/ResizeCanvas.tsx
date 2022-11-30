@@ -33,7 +33,7 @@ export default function ResizeCanvas({
         fullWidth
         mt="md"
         onClick={() => {
-          project.resizeCanvas(width, height);
+          // project.resizeCanvas(width, height);
           context.closeModal(id);
         }}
       >

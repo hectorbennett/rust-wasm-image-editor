@@ -3,7 +3,7 @@ import { ActiveProjectContext } from "../context/activeProject";
 import { WasmContext } from "../context/wasm";
 
 interface WorkspaceProps {
-  id: String;
+  id: string;
 }
 
 interface CanvasProps {

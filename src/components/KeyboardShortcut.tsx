@@ -2,7 +2,7 @@ import { Fragment } from "react";
 import { Kbd } from "@mantine/core";
 
 interface KeyboardShortcutProps {
-  keys: Array<String>;
+  keys: Array<string>;
 }
 
 export default function KeyboardShortcut(props: KeyboardShortcutProps) {

@@ -3,8 +3,8 @@ import { ActiveProjectContext } from "./activeProject";
 import { WasmContext } from "./wasm";
 
 export interface Layer {
-  uid: String;
-  name: String;
+  uid: string;
+  name: string;
   width: number;
   height: number;
   left: number;
@@ -23,7 +23,7 @@ function useLayers() {
     wasm.refresh_data();
   }
 
-  function toggleLocked(layer_id: number) {
+  function toggleLocked(layer_id: string) {
     // setLayers(
     //   layers.map((layer) => ({
     //     ...layer,
@@ -32,7 +32,7 @@ function useLayers() {
     // );
   }
 
-  function toggleVisibility(layer_id: number) {
+  function toggleVisibility(layer_id: string) {
     // setLayers(
     //   layers.map((layer) => ({
     //     ...layer,
@@ -41,7 +41,7 @@ function useLayers() {
     // );
   }
 
-  function renameLayer(layer_id: number, name: string) {
+  function renameLayer(layer_id: string, name: string) {
     // setLayers(
     //   layers.map((layer) => ({
     //     ...layer,
