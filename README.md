@@ -7,8 +7,9 @@ https://seahorse-app-r8jlv.ondigitalocean.app/
 
 Version 1:
  - [x] Resizable UI
- - [x] Settings - Keyboard shortcuts - https://mantine.dev/others/spotlight/
- - [x] Command pallette - https://mantine.dev/others/spotlight/
+ - [x] Settings - Keyboard shortcuts
+ - [x] Command pallette
+ - [x] Rust/Wasm api for writing image data to the canvas
  - [ ] Square select
  - [ ] Oval select
  - [ ] New
