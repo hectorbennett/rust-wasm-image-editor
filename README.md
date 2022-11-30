@@ -1,6 +1,6 @@
-# Image Editor built with Rust/WebAssembly + TypeScript + React
+# Image Editor built with Rust/WebAssembly, TypeScript and React
 
-See an example in action at
+See a very early example in action at
 
 https://seahorse-app-r8jlv.ondigitalocean.app/
 
