@@ -55,7 +55,7 @@ function LayerLabel(props: LayerLabelProps) {
   const [value, setValue] = useState(props.layer.name);
 
   function handleBlur() {
-    layers.renameLayer(props.layer.id, value);
+    layers.renameLayer(props.layer.uid, value);
     setEditMode(false);
   }
   return (
@@ -67,7 +67,7 @@ function LayerLabel(props: LayerLabelProps) {
       {editMode ? (
         <TextInput
           size="xs"
-          value={value}
+          // value={value}
           autoFocus
           onChange={(event) => setValue(event.currentTarget.value)}
           onBlur={handleBlur}
@@ -96,14 +96,14 @@ function LayerRow(props: LayerProps) {
         checked={props.layer.visible}
         onClick={(e) => {
           e.preventDefault();
-          layers.toggleVisibility(props.layer.id);
+          layers.toggleVisibility(props.layer.uid);
         }}
       />
       <LockedCheckbox
         checked={props.layer.locked}
         onClick={(e) => {
           e.preventDefault();
-          layers.toggleLocked(props.layer.id);
+          layers.toggleLocked(props.layer.uid);
         }}
       />
       <Box
