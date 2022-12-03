@@ -96,14 +96,14 @@ function LayerRow(props: LayerProps) {
         checked={props.layer.visible}
         onClick={(e) => {
           e.preventDefault();
-          layers.toggleVisibility(props.layer.uid);
+          layers.setLayerVisibility(props.layer.uid, !props.layer.visible);
         }}
       />
       <LockedCheckbox
         checked={props.layer.locked}
         onClick={(e) => {
           e.preventDefault();
-          layers.toggleLocked(props.layer.uid);
+          layers.setLayerLocked(props.layer.uid, !props.layer.locked);
         }}
       />
       <Box
@@ -123,7 +123,7 @@ function NewLayerButton() {
     <ActionIcon
       size="sm"
       onClick={() => {
-        layers.addNewLayer();
+        layers.createNewLayer();
       }}
     >
       <Plus size={12} />
@@ -133,6 +133,7 @@ function NewLayerButton() {
 
 export default function Layers() {
   const layers = LayersContext.useContainer();
+
   return (
     <>
       <NewLayerButton />
@@ -141,10 +142,14 @@ export default function Layers() {
         //   onChange={setValue}
         fullWidth
         orientation="vertical"
-        data={layers.layers.map((layer) => ({
-          value: layer.uid.toString(),
-          label: <LayerRow layer={layer} />,
-        }))}
+        data={
+          layers.layers
+            ? [...layers.layers.values()].map((layer: Layer) => ({
+                value: layer.uid.toString(),
+                label: <LayerRow layer={layer} />,
+              }))
+            : []
+        }
       />
     </>
   );

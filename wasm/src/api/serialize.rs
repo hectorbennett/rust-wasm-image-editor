@@ -1,4 +1,4 @@
-use std::{collections::HashMap};
+use std::collections::HashMap;
 
 use serde::Serialize;
 use wasm_bindgen::JsValue;
@@ -33,7 +33,7 @@ impl ApiSerializerSchema {
         // let p = ProjectSerializer { uid: 10 };
         // projects_2.insert(10, p);
         // // console_log!("{:?}", projects);
-        return ApiSerializerSchema { projects: projects };
+        return ApiSerializerSchema { projects };
     }
 }
 
@@ -59,7 +59,7 @@ impl ProjectSerializer {
             name: project.name.clone(),
             width: project.width.clone(),
             height: project.height.clone(),
-            layers: layers,
+            layers,
         };
     }
 }

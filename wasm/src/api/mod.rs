@@ -31,10 +31,14 @@ impl Api {
         self.app.set_active_project(project_uid);
     }
 
-    pub fn create_project(&mut self, name: String, width: u16, height: u16) {
+    pub fn create_project(&mut self, name: String, width: u16, height: u16) -> u64 {
         let project = self.app.new_project();
         project.set_name(&name);
         project.resize_canvas(width, height);
+        let layer = project.new_layer();
+        layer.set_name("Background");
+        layer.resize(width, height);
+        return project.uid.clone();
     }
 
     pub fn create_layer(&mut self, name: String, width: u16, height: u16) -> u64 {
@@ -86,7 +90,8 @@ impl Api {
         }
     }
 
-    pub fn to_json(&self) -> JsValue {
+    #[wasm_bindgen(getter)]
+    pub fn state(&self) -> JsValue {
         return serialize::ApiSerializer::to_json(&self.app);
     }
 }

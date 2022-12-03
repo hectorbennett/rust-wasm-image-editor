@@ -8,4 +8,11 @@ export default defineConfig({
     port: 3000,
   },
   plugins: [wasmPack(["./wasm"]), react()],
+  esbuild: {
+    target: "es2020",
+  },
+  build: { target: "es2020" },
+  optimizeDeps: {
+    esbuildOptions: { target: "es2020", supported: { bigint: true } },
+  },
 });

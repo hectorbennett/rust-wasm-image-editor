@@ -1,12 +1,48 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { createContainer } from "unstated-next";
+import { TabsContext } from "./tabs";
 import { WasmContext } from "./wasm";
 
-type TabType = "project" | "settings";
+function useFile() {
+  const wasm = WasmContext.useContainer();
+  const tabs = TabsContext.useContainer();
+  return {
+    new: function _new(width: number, height: number) {
+      wasm.api.create_project("Untitled", width, height);
+    },
+    open: function open() {
+      console.log("open");
+    },
+    save: function save() {
+      console.log("save");
+    },
+    export: function _export() {
+      console.log("export");
+    },
+    close: function close() {
+      console.log("close");
+    },
+  };
+}
 
-interface Tab {
-  uid: string;
-  type: TabType;
+function useEdit() {
+  return {
+    undo: function undo() {
+      console.log("undo");
+    },
+    redo: function redo() {
+      console.log("redo");
+    },
+    cut: function redo() {
+      console.log("cut");
+    },
+    copy: function redo() {
+      console.log("copy");
+    },
+    paste: function redo() {
+      console.log("paste");
+    },
+  };
 }
 
 function useFilters() {
@@ -17,86 +53,31 @@ function useFilters() {
   };
 }
 
-function useTabs() {
-  const wasm = WasmContext.useContainer();
-  const [activeTabId, setActiveTabId] = useState<string | null>("");
-  const [tabs, setTabs] = useState<Array<Tab>>([]);
-
-  const activeTab: Tab =
-    tabs.find((tab) => tab.uid === activeTabId) || tabs[0] || null;
-
-  function newTab(uid: string, type: TabType) {
-    setTabs((t) => {
-      if (t.find((tab) => tab.uid === uid)) {
-        return t;
-      }
-      return [...t, { uid: uid, type: type }];
-    });
-    setActiveTabId(uid);
-  }
-
-  function closeTab(uid: string) {
-    console.log("close tab");
-  }
-
-  function focusTab(uid: string) {
-    setActiveTabId(uid);
-    // wasm.api.set_active_project(BigInt(uid));
-    // wasm.refresh_data();
-  }
-
-  useEffect(() => {
-    if (!wasm.data.projects) {
-      return;
-    }
-    const current_uids = tabs.map((tab) => tab.uid);
-    wasm.data.projects.forEach((project: any) => {
-      if (!current_uids.includes(project.uid)) {
-        newTab(project.uid, "project");
-      }
-    });
-  }, [wasm.data]);
-
+function useImage() {
   return {
-    tabs,
-    activeTab,
-    newTab,
-    closeTab,
-    focusTab,
+    resizeCanvas: function resizeCanvas() {
+      console.log("resizeCanvas");
+    },
   };
 }
 
+const SETTINGS_UID = 1n;
+
 function useApp() {
-  const tabs = useTabs();
-  const filters = useFilters();
-  const wasm = WasmContext.useContainer();
+  const tabs = TabsContext.useContainer();
   const [activeColour, setActiveColour] = useState([255, 255, 255, 255]);
 
-  useEffect(() => {
-    // wasm.app.set_active_colour(...activeColour);
-  }, [activeColour]);
-
-  function closeTab(tabId: string) {
-    tabs.closeTab(tabId);
-  }
-
-  function openSettings() {
-    tabs.newTab("settings", "settings");
-  }
-
-  function createNewProject(width: number, height: number) {
-    const uid = wasm.app.new_project(width, height);
-    tabs.newTab(uid, "project");
-  }
-
   return {
-    tabs: tabs.tabs,
-    filters,
-    activeTab: tabs.activeTab,
-    focusTab: tabs.focusTab,
-    closeTab,
-    openSettings,
-    createNewProject,
+    openSettings: function openSettings() {
+      tabs.newTab(SETTINGS_UID, "settings");
+    },
+    exit: function exit() {
+      console.log("exit");
+    },
+    file: useFile(),
+    edit: useEdit(),
+    filters: useFilters(),
+    image: useImage(),
     activeColour,
     setActiveColour,
   };
