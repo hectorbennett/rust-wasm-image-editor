@@ -60,14 +60,20 @@ function Background(props: { width: number; height: number }) {
 export default function Workspace(props: WorkspaceProps) {
   const activeProject = ActiveProjectContext.useContainer();
 
-  if (!activeProject.uid) {
+  if (!activeProject.activeProject) {
     return null;
   }
 
   return (
     <div>
-      <Canvas width={activeProject.width} height={activeProject.height} />
-      <Background width={activeProject.width} height={activeProject.height} />
+      <Canvas
+        width={activeProject.activeProject.width}
+        height={activeProject.activeProject.height}
+      />
+      <Background
+        width={activeProject.activeProject.width}
+        height={activeProject.activeProject.height}
+      />
     </div>
   );
 }
