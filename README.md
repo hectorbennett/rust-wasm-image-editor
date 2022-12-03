@@ -1,18 +1,19 @@
-# Image Editor built with Rust/WebAssembly + TypeScript + React
+# Image Editor built with Rust/WebAssembly, TypeScript and React
 
-See an example in action at
+See a very early example in action at
 
 https://seahorse-app-r8jlv.ondigitalocean.app/
 
 
 Version 1:
  - [x] Resizable UI
- - [x] Settings - Keyboard shortcuts - https://mantine.dev/others/spotlight/
- - [x] Command pallette - https://mantine.dev/others/spotlight/
+ - [x] Settings - Keyboard shortcuts
+ - [x] Command pallette
+ - [x] Rust/Wasm api for writing image data to the canvas
  - [x] New
  - [x] Resize Canvas
  - [x] Toggle layer visibility
- - [ ] Layer previews
+ - [x] Layer previews
  - [ ] Sort layers
  - [ ] Square select
  - [ ] Oval select
