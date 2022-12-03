@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use serde::Serialize;
 use wasm_bindgen::JsValue;
 
-use crate::app::{App, layer::Layer, project::Project};
+use crate::app::{layer::Layer, project::Project, App};
 
 #[derive(Serialize)]
 pub struct ApiSerializer {}
@@ -48,15 +48,15 @@ struct ProjectSerializer {
     width: u16,
     height: u16,
     image_hash: String,
-    layers: HashMap<String, LayerSerializer>,
+    layers: Vec<LayerSerializer>,
 }
 
 impl ProjectSerializer {
     pub fn from_project(project: &Project) -> ProjectSerializer {
-        let mut layers: HashMap<String, LayerSerializer> = HashMap::new();
-        project.layers.iter().for_each(|(uid, l)| {
+        let mut layers: Vec<LayerSerializer> = vec![];
+        project.layers.iter().for_each(|l| {
             let s = LayerSerializer::from_layer(l);
-            layers.insert(uid.to_string(), s);
+            layers.push(s);
         });
 
         return ProjectSerializer {

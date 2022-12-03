@@ -9,7 +9,7 @@ export interface Project {
   width: number;
   height: number;
   image_hash: string;
-  layers: Map<string, Layer>;
+  layers: Array<Layer>;
 }
 
 function useActiveProject() {
