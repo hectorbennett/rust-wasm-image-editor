@@ -72,7 +72,7 @@ impl Project {
 
     fn get_compiled_pixel(&self, x: u16, y: u16) -> [u8; 4] {
         let mut output = [0, 0, 0, 0];
-        for (_uid, layer) in self.layers.iter() {
+        for (_uid, layer) in self.layers.iter().filter(|l| l.1.visible) {
             let pixel = layer.get_pixel_from_canvas_coordinates(x, y);
             output = blend_pixels(output, pixel);
         }

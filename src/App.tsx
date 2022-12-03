@@ -18,7 +18,7 @@ function Testing() {
   const wasm = WasmContext.useContainer();
   const testCalled = useRef(false);
   useEffect(() => {
-    // test();
+    test();
   }, []);
 
   function test() {
