@@ -17,12 +17,12 @@ const DEFAULT_APP_STATE: AppState = {
 
 const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
   const [api, setApi] = useState<any>(null);
-  const [inited, setInited] = useState<boolean>(false);
+  const inited = useRef(false);
   useEffect(() => {
-    if (inited) {
+    if (inited.current) {
       return;
     }
-    setInited(true);
+    inited.current = true;
     initWasm().then(() => {
       const apiHandler: any = {
         get(target: any, prop: any, receiver: any) {

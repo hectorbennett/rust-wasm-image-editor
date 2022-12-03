@@ -2,6 +2,7 @@ use crate::app::{colour::Colour, layer::Layer};
 
 use super::app::App;
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
+extern crate console_error_panic_hook;
 
 pub mod serialize;
 
@@ -26,6 +27,7 @@ impl Api {
 impl Api {
     #[wasm_bindgen(constructor)]
     pub fn init() -> Api {
+        console_error_panic_hook::set_once();
         return Api { app: App::new() };
     }
 
@@ -65,6 +67,14 @@ impl Api {
         match _layer {
             None => (),
             Some(layer) => layer.set_visible(visible),
+        }
+    }
+
+    pub fn set_layer_locked(&mut self, layer_uid: u64, locked: bool) {
+        let _layer = self.get_layer(layer_uid);
+        match _layer {
+            None => (),
+            Some(layer) => layer.set_locked(locked),
         }
     }
 

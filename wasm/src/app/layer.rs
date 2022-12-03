@@ -14,6 +14,7 @@ pub struct Layer {
     pub width: u16,
     pub height: u16,
     pub visible: bool,
+    pub locked: bool,
     img: RgbaImage,
 }
 
@@ -25,6 +26,7 @@ impl Layer {
             width: 500,
             height: 500,
             visible: true,
+            locked: false,
             img: ImageBuffer::from_fn(500, 500, |_x, _y| image::Rgba([0, 0, 0, 0])),
         };
     }
@@ -42,6 +44,10 @@ impl Layer {
 
     pub fn set_visible(&mut self, visible: bool) -> () {
         self.visible = visible;
+    }
+
+    pub fn set_locked(&mut self, locked: bool) -> () {
+        self.locked = locked;
     }
 
     pub fn fill_rect(

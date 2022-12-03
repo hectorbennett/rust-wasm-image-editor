@@ -75,6 +75,7 @@ struct LayerSerializer {
     width: u16,
     height: u16,
     visible: bool,
+    locked: bool,
 }
 
 impl LayerSerializer {
@@ -85,6 +86,7 @@ impl LayerSerializer {
             width: layer.width.clone(),
             height: layer.height.clone(),
             visible: layer.visible.clone(),
+            locked: layer.locked.clone(),
         };
     }
 }

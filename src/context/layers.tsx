@@ -28,13 +28,13 @@ function useLayers() {
       layer_uid: string,
       locked: boolean
     ) {
-      console.log("set layer locked");
+      wasm.api.set_layer_locked(layer_uid, locked);
     },
     setLayerVisibility: function setLayerVisibility(
       layer_uid: string,
       visible: boolean
     ) {
-      console.log("set layer visibility");
+      wasm.api.set_layer_visibile(layer_uid, visible);
     },
     renameLayer: function renameLayer(layer_uid: string, name: string) {
       console.log("rename layer");
