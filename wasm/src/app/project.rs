@@ -1,3 +1,8 @@
+use std::{
+    collections::hash_map::DefaultHasher,
+    hash::{Hash, Hasher},
+};
+
 use image::{ImageBuffer, RgbaImage};
 use indexmap::IndexMap;
 use rand::Rng;
@@ -52,6 +57,12 @@ impl Project {
         return ImageBuffer::from_fn(self.width as u32, self.height as u32, |x, y| {
             return image::Rgba(self.get_compiled_pixel(x as u16, y as u16));
         });
+    }
+
+    pub fn get_image_hash(&self) -> u64 {
+        let mut s = DefaultHasher::new();
+        self.get_image().hash(&mut s);
+        return s.finish();
     }
 
     fn render_image(&self) -> () {

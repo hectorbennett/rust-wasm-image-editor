@@ -3,14 +3,14 @@ import { Text, Button, NumberInput } from "@mantine/core";
 
 import { ContextModalProps } from "@mantine/modals";
 
-import { ActiveProjectContext } from "../../context/activeProject";
+import { WasmContext } from "../../context/wasm";
 
 export default function ResizeCanvas({
   context,
   id,
   innerProps,
 }: ContextModalProps) {
-  const project = ActiveProjectContext.useContainer();
+  const wasm = WasmContext.useContainer();
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
   return (
@@ -33,7 +33,7 @@ export default function ResizeCanvas({
         fullWidth
         mt="md"
         onClick={() => {
-          // project.resizeCanvas(width, height);
+          wasm.api.resize_canvas(width, height);
           context.closeModal(id);
         }}
       >

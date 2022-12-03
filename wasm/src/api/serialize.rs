@@ -47,6 +47,7 @@ struct ProjectSerializer {
     name: String,
     width: u16,
     height: u16,
+    image_hash: String,
     layers: HashMap<String, LayerSerializer>,
 }
 
@@ -63,6 +64,7 @@ impl ProjectSerializer {
             name: project.name.clone(),
             width: project.width.clone(),
             height: project.height.clone(),
+            image_hash: project.get_image_hash().to_string(),
             layers,
         };
     }

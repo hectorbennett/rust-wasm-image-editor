@@ -49,6 +49,13 @@ impl Api {
         return project.uid.clone();
     }
 
+    pub fn resize_canvas(&mut self, width: u16, height: u16) -> () {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .resize_canvas(width, height);
+    }
+
     pub fn create_layer(&mut self, name: String, width: u16, height: u16) -> u64 {
         let _project = self.app.get_active_project();
         match _project {

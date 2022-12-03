@@ -9,13 +9,13 @@ Version 1:
  - [x] Resizable UI
  - [x] Settings - Keyboard shortcuts - https://mantine.dev/others/spotlight/
  - [x] Command pallette - https://mantine.dev/others/spotlight/
+ - [x] New
+ - [x] Resize Canvas
  - [ ] Square select
  - [ ] Oval select
- - [ ] New
  - [ ] Open
  - [ ] Save
  - [ ] Export
- - [ ] Resize Canvas
  - [ ] Resize layers
  - [ ] Move layers
  - [ ] Reorder layers
