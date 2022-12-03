@@ -1,4 +1,6 @@
-use super::{app::App, app::Colour, app::Layer};
+use crate::app::{layer::Layer, colour::Colour};
+
+use super::app::App;
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
 
 pub mod serialize;

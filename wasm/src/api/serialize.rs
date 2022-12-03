@@ -2,9 +2,8 @@ use std::collections::HashMap;
 
 use serde::Serialize;
 use wasm_bindgen::JsValue;
-// use wasm_bindgen_test::console_log;
 
-use crate::app::{App, Layer, Project};
+use crate::app::{App, project::Project, layer::Layer};
 
 #[derive(Serialize)]
 pub struct ApiSerializer {}
