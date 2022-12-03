@@ -49,6 +49,7 @@ struct ProjectSerializer {
     height: u16,
     image_hash: String,
     layers: Vec<LayerSerializer>,
+    active_layer_uid: Option<String>,
 }
 
 impl ProjectSerializer {
@@ -59,6 +60,11 @@ impl ProjectSerializer {
             layers.push(s);
         });
 
+        let active_layer_uid: Option<String> = match project.active_layer_uid {
+            None => None,
+            Some(uid) => Some(uid.to_string()),
+        };
+
         return ProjectSerializer {
             uid: project.uid.to_string(),
             name: project.name.clone(),
@@ -66,6 +72,7 @@ impl ProjectSerializer {
             height: project.height.clone(),
             image_hash: project.get_image_hash().to_string(),
             layers,
+            active_layer_uid,
         };
     }
 }

@@ -14,6 +14,8 @@ Version 1:
  - [x] Resize Canvas
  - [x] Toggle layer visibility
  - [x] Layer previews
+ - [x] Fix layer order
+ - [x] active layer uid
  - [ ] Sort layers
  - [ ] Square select
  - [ ] Oval select

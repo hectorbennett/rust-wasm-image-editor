@@ -4,7 +4,6 @@ use std::{
 };
 
 use image::{ImageBuffer, RgbaImage};
-use indexmap::IndexMap;
 use rand::Rng;
 
 use super::layer::Layer;
@@ -20,6 +19,7 @@ pub struct Project {
     pub width: u16,
     pub height: u16,
     pub layers: Vec<Layer>,
+    pub active_layer_uid: Option<u64>,
 }
 
 impl Project {
@@ -30,6 +30,7 @@ impl Project {
             width: 20,
             height: 20,
             layers: vec![],
+            active_layer_uid: None,
         };
     }
 
@@ -46,12 +47,16 @@ impl Project {
         let layer: Layer = Layer::new();
         let uid: u64 = layer.uid.clone();
         self.layers.push(layer);
+        self.set_active_layer(Some(uid.clone()));
         return self.get_layer(uid);
     }
 
     pub fn get_layer(&mut self, uid: u64) -> &mut Layer {
         return self.layers.iter_mut().find(|l| l.uid == uid).unwrap();
-        // return self.layers.get_mut(&uid).unwrap();
+    }
+
+    pub fn set_active_layer(&mut self, uid: Option<u64>) {
+        self.active_layer_uid = uid.clone();
     }
 
     pub fn get_image(&self) -> RgbaImage {

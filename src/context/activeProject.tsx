@@ -10,6 +10,7 @@ export interface Project {
   height: number;
   image_hash: string;
   layers: Array<Layer>;
+  active_layer_uid: string | null;
 }
 
 function useActiveProject() {

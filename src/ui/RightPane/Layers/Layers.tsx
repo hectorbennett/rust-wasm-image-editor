@@ -163,10 +163,11 @@ export default function Layers() {
     <>
       <NewLayerButton />
       <SegmentedControl
-        // value={layers.activeLayerId.toString()}
-        //   onChange={setValue}
+        value={layers.active_layer_uid || ""}
+        onChange={layers.setActiveLayer}
         fullWidth
         orientation="vertical"
+        transitionDuration={0}
         data={
           layers.layers
             ?.slice(0)
