@@ -6,11 +6,13 @@ import { createContainer } from "unstated-next";
 import { Project } from "./activeProject";
 
 interface AppState {
-  projects: Map<bigint, Project>;
+  projects: Map<string, Project>;
+  active_project_uid: string | null;
 }
 
-const DEFAULT_APP_STATE = {
+const DEFAULT_APP_STATE: AppState = {
   projects: new Map(),
+  active_project_uid: null,
 };
 
 const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
@@ -25,6 +27,7 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
       const apiHandler: any = {
         get(target: any, prop: any, receiver: any) {
           const p = Reflect.get(target, prop);
+          console.log(target);
           if (p instanceof Function) {
             return function () {
               // @ts-ignore

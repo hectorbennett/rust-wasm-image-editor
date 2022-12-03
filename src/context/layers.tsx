@@ -3,7 +3,7 @@ import { ActiveProjectContext } from "./activeProject";
 import { WasmContext } from "./wasm";
 
 export interface Layer {
-  uid: bigint;
+  uid: string;
   name: string;
   width: number;
   height: number;
@@ -25,18 +25,18 @@ function useLayers() {
       wasm.api.create_layer("A new layer :)", 500, 500);
     },
     setLayerLocked: function setLayerLocked(
-      layer_uid: bigint,
+      layer_uid: string,
       locked: boolean
     ) {
       console.log("set layer locked");
     },
     setLayerVisibility: function setLayerVisibility(
-      layer_uid: bigint,
+      layer_uid: string,
       visible: boolean
     ) {
       console.log("set layer visibility");
     },
-    renameLayer: function renameLayer(layer_uid: bigint, name: string) {
+    renameLayer: function renameLayer(layer_uid: string, name: string) {
       console.log("rename layer");
     },
   };

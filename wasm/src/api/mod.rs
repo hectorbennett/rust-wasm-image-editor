@@ -1,4 +1,4 @@
-use crate::app::{layer::Layer, colour::Colour};
+use crate::app::{colour::Colour, layer::Layer};
 
 use super::app::App;
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
@@ -30,7 +30,11 @@ impl Api {
     }
 
     pub fn set_active_project(&mut self, project_uid: u64) -> () {
-        self.app.set_active_project(project_uid);
+        self.app.set_active_project(Some(project_uid));
+    }
+
+    pub fn clear_active_project(&mut self) -> () {
+        self.app.set_active_project(None);
     }
 
     pub fn create_project(&mut self, name: String, width: u16, height: u16) -> u64 {

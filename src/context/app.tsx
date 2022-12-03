@@ -61,15 +61,13 @@ function useImage() {
   };
 }
 
-const SETTINGS_UID = 1n;
-
 function useApp() {
   const tabs = TabsContext.useContainer();
   const [activeColour, setActiveColour] = useState([255, 255, 255, 255]);
 
   return {
     openSettings: function openSettings() {
-      tabs.newTab(SETTINGS_UID, "settings");
+      tabs.newTab("settings", "settings");
     },
     exit: function exit() {
       console.log("exit");

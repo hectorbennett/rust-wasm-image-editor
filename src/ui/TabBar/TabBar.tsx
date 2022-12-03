@@ -1,7 +1,6 @@
 import { Tabs } from "@mantine/core";
 import { IconPhoto, IconSettings } from "@tabler/icons";
 import { CloseButton } from "@mantine/core";
-import { AppContext } from "../../context/app";
 import { WasmContext } from "../../context/wasm";
 import { TabsContext } from "../../context/tabs";
 
@@ -27,8 +26,8 @@ export function TabBar() {
           maxWidth: 100,
         },
       })}
-      value={tabs.activeTab.uid.toString()}
-      onTabChange={(uid) => tabs.focusTab(BigInt(uid || 0))}
+      value={tabs.activeTab.uid}
+      onTabChange={(uid) => (uid ? tabs.focusTab(uid) : null)}
     >
       <Tabs.List>
         <TabBarTabs />
@@ -53,7 +52,7 @@ function TabBarTabs() {
 }
 
 interface TabBarTabProps {
-  uid: bigint;
+  uid: string;
   type: string;
 }
 
@@ -67,7 +66,7 @@ function TabBarTab(props: TabBarTabProps) {
 }
 
 interface SettingsTabProps {
-  uid: bigint;
+  uid: string;
 }
 
 function SettingsTab(props: SettingsTabProps) {
@@ -83,7 +82,7 @@ function SettingsTab(props: SettingsTabProps) {
 }
 
 interface ProjectTabProps {
-  uid: bigint;
+  uid: string;
 }
 
 function ProjectTab(props: ProjectTabProps) {
@@ -100,7 +99,7 @@ function ProjectTab(props: ProjectTabProps) {
   );
 }
 
-function TabCloseButton(props: { uid: bigint }) {
+function TabCloseButton(props: { uid: string }) {
   const tabs = TabsContext.useContainer();
   return (
     <CloseButton

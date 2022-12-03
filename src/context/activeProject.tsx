@@ -2,21 +2,20 @@ import { createContainer } from "unstated-next";
 
 import { WasmContext } from "./wasm";
 import { Layer } from "./layers";
-import { TabsContext } from "./tabs";
 
 export interface Project {
-  uid: bigint;
+  uid: string;
   name: string;
   width: number;
   height: number;
-  layers: Map<bigint, Layer>;
+  layers: Map<string, Layer>;
 }
 
 function useActiveProject() {
   const wasm = WasmContext.useContainer();
-  const tabs = TabsContext.useContainer();
-  let data: Project | null =
-    wasm.state.projects.get(tabs.activeTab?.uid) || null;
+  let data: Project | null = wasm.state.active_project_uid
+    ? wasm.state.projects.get(wasm.state.active_project_uid) || null
+    : null;
   return {
     activeProject: data,
   };

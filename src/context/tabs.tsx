@@ -5,19 +5,27 @@ import { WasmContext } from "./wasm";
 type TabType = "project" | "settings";
 
 interface Tab {
-  uid: bigint;
+  uid: string;
   type: TabType;
 }
 
 function useTabs() {
   const wasm = WasmContext.useContainer();
-  const [activeTabId, setActiveTabId] = useState<bigint>(0n);
+  const [activeTabId, setActiveTabId] = useState<string | null>(null);
   const [tabs, setTabs] = useState<Array<Tab>>([]);
 
   const activeTab: Tab =
     tabs.find((tab) => tab.uid === activeTabId) || tabs[0] || null;
 
-  function newTab(uid: bigint, type: TabType) {
+  useEffect(() => {
+    if (!activeTab || activeTab.type !== "project") {
+      wasm.api.clear_active_project();
+    } else {
+      wasm.api.set_active_project(activeTab.uid);
+    }
+  }, [activeTab]);
+
+  function newTab(uid: string, type: TabType) {
     setTabs((t) => {
       if (t.find((tab) => tab.uid === uid)) {
         return t;
@@ -27,11 +35,11 @@ function useTabs() {
     setActiveTabId(uid);
   }
 
-  function closeTab(uid: bigint) {
+  function closeTab(uid: string) {
     console.log("close tab");
   }
 
-  function focusTab(uid: bigint) {
+  function focusTab(uid: string) {
     setActiveTabId(uid);
   }
 
