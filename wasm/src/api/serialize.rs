@@ -3,7 +3,7 @@ use std::collections::HashMap;
 use serde::Serialize;
 use wasm_bindgen::JsValue;
 
-use crate::app::{layer::Layer, project::Project, App};
+use crate::app::{App, layer::Layer, project::Project};
 
 #[derive(Serialize)]
 pub struct ApiSerializer {}

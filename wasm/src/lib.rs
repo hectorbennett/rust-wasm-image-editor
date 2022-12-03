@@ -1,9 +1,8 @@
 use api::Api;
 use wasm_bindgen::prelude::*;
 
-pub mod app;
-
 pub mod api;
+pub mod app;
 
 #[wasm_bindgen]
 extern "C" {
