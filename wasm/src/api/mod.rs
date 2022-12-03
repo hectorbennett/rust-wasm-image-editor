@@ -113,6 +113,11 @@ impl Api {
         }
     }
 
+    pub fn get_layer_thumbnail(&mut self, layer_uid: u64) -> Clamped<Vec<u8>> {
+        let img = self.get_layer(layer_uid).unwrap().get_thumbnail();
+        return Clamped(img.into_vec());
+    }
+
     #[wasm_bindgen(getter)]
     pub fn state(&self) -> JsValue {
         return serialize::ApiSerializer::to_json(&self.app);

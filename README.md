@@ -11,6 +11,9 @@ Version 1:
  - [x] Command pallette - https://mantine.dev/others/spotlight/
  - [x] New
  - [x] Resize Canvas
+ - [x] Toggle layer visibility
+ - [ ] Layer previews
+ - [ ] Sort layers
  - [ ] Square select
  - [ ] Oval select
  - [ ] Open
@@ -18,7 +21,6 @@ Version 1:
  - [ ] Export
  - [ ] Resize layers
  - [ ] Move layers
- - [ ] Reorder layers
  - [ ] Store settings and state in localStorage (or similar)
  - [ ] Select All
  - [ ] Select None

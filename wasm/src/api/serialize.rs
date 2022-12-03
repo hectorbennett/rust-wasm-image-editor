@@ -78,6 +78,7 @@ struct LayerSerializer {
     height: u16,
     visible: bool,
     locked: bool,
+    thumbnail_hash: String,
 }
 
 impl LayerSerializer {
@@ -89,6 +90,7 @@ impl LayerSerializer {
             height: layer.height.clone(),
             visible: layer.visible.clone(),
             locked: layer.locked.clone(),
+            thumbnail_hash: layer.get_thumbnail_hash().to_string(),
         };
     }
 }

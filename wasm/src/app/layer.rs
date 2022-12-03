@@ -1,4 +1,12 @@
-use image::{imageops, ImageBuffer, Pixel, RgbaImage};
+use std::{
+    collections::hash_map::DefaultHasher,
+    hash::{Hash, Hasher},
+};
+
+use image::{
+    imageops::{self, FilterType::Nearest},
+    ImageBuffer, Pixel, RgbaImage,
+};
 use rand::Rng;
 
 use super::colour::Colour;
@@ -33,6 +41,16 @@ impl Layer {
 
     pub fn set_name(&mut self, name: &str) -> () {
         self.name = name.into();
+    }
+
+    pub fn get_thumbnail(&self) -> RgbaImage {
+        return imageops::resize(&self.img, 20, 20, Nearest);
+    }
+
+    pub fn get_thumbnail_hash(&self) -> u64 {
+        let mut s = DefaultHasher::new();
+        self.get_thumbnail().hash(&mut s);
+        return s.finish();
     }
 
     pub fn resize(&mut self, width: u16, height: u16) -> () {

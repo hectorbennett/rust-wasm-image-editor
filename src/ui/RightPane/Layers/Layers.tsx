@@ -1,4 +1,4 @@
-import { useState, MouseEventHandler } from "react";
+import { useState, MouseEventHandler, useRef, useEffect } from "react";
 import {
   SegmentedControl,
   Box,
@@ -9,6 +9,7 @@ import {
 import { EyeFill, EyeSlash, LockFill, Lock, Plus } from "react-bootstrap-icons";
 import { useRightClick } from "../../../hooks";
 import { Layer, LayersContext } from "../../../context/layers";
+import { WasmContext } from "../../../context/wasm";
 
 interface LayerCheckboxProps {
   checked: boolean;
@@ -31,18 +32,53 @@ function LockedCheckbox(props: LayerCheckboxProps) {
   );
 }
 
-function LayerPreview() {
+interface LayerThumbnailProps {
+  layer: Layer;
+}
+
+function LayerThumbnail(props: LayerThumbnailProps) {
+  const ref = useRef<HTMLCanvasElement>(null);
+  const wasm = WasmContext.useContainer();
+
+  const width = 20;
+  const height = 20;
+
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) {
+      return;
+    }
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return;
+    }
+    let newData = ctx.createImageData(width, height);
+    newData.data.set(wasm.api.get_layer_thumbnail(props.layer.uid));
+    ctx.putImageData(newData, 0, 0);
+  }, [props.layer.thumbnail_hash]);
+
   return (
-    <Paper
-      shadow="xs"
-      radius="xs"
-      p={0}
-      m={1}
-      mx={5}
-      withBorder
-      sx={{ width: 20, height: 20, background: "white" }}
+    <canvas
+      ref={ref}
+      width={width}
+      height={height}
+      style={{
+        background:
+          "repeating-conic-gradient(rgb(135, 135, 135) 0%, rgb(135, 135, 135) 25%, rgb(90, 90, 90) 0%, rgb(90, 90, 90) 50%) 50% center / 5px 5px",
+      }}
     />
   );
+  // return (
+  //   <Paper
+  //     shadow="xs"
+  //     radius="xs"
+  //     p={0}
+  //     m={1}
+  //     mx={5}
+  //     withBorder
+  //     sx={{ width: 20, height: 20, background: "white" }}
+  //   />
+  // );
 }
 
 interface LayerLabelProps {
@@ -110,7 +146,7 @@ function LayerRow(props: LayerProps) {
         sx={{ display: "flex", alignItems: "center" }}
         // onClick={() => layers.setActiveLayerId(props.layer.id)}
       >
-        <LayerPreview />
+        <LayerThumbnail layer={props.layer} />
         <LayerLabel layer={props.layer} />
       </Box>
     </Box>

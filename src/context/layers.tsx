@@ -11,6 +11,7 @@ export interface Layer {
   top: number;
   visible: boolean;
   locked: boolean;
+  thumbnail_hash: string;
 }
 
 function useLayers() {
