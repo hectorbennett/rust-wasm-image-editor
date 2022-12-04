@@ -10,16 +10,18 @@ Version 1:
  - [x] Settings - Keyboard shortcuts
  - [x] Command pallette
  - [x] Rust/Wasm api for writing image data to the canvas
+ - [x] New
+ - [x] Resize Canvas
+ - [x] Toggle layer visibility
+ - [x] Layer previews
+ - [ ] Sort layers
  - [ ] Square select
  - [ ] Oval select
- - [ ] New
  - [ ] Open
  - [ ] Save
  - [ ] Export
- - [ ] Resize Canvas
  - [ ] Resize layers
  - [ ] Move layers
- - [ ] Reorder layers
  - [ ] Store settings and state in localStorage (or similar)
  - [ ] Select All
  - [ ] Select None

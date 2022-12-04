@@ -1,33 +1,25 @@
 import { createContainer } from "unstated-next";
 
 import { WasmContext } from "./wasm";
-import { AppContext } from "./app";
 import { Layer } from "./layers";
 
-interface SerializedProject {
+export interface Project {
   uid: string;
+  name: string;
   width: number;
   height: number;
-  name: string;
-  layers: Array<Layer>;
+  image_hash: string;
+  layers: Map<string, Layer>;
 }
-
-const BLANK_DATA: SerializedProject = {
-  uid: "",
-  width: 0,
-  height: 0,
-  name: "",
-  layers: [],
-};
 
 function useActiveProject() {
   const wasm = WasmContext.useContainer();
-  const app = AppContext.useContainer();
-  let data = BLANK_DATA;
-  if (app.activeTab && app.activeTab.type == "project" && wasm.data.projects) {
-    data = wasm.data.projects.get(app.activeTab.uid);
-  }
-  return data;
+  let data: Project | null = wasm.state.active_project_uid
+    ? wasm.state.projects.get(wasm.state.active_project_uid) || null
+    : null;
+  return {
+    activeProject: data,
+  };
 }
 
 export const ActiveProjectContext = createContainer(useActiveProject);

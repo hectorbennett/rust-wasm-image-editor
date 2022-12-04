@@ -1,5 +1,8 @@
-use super::{app::App, app::Colour, app::Layer};
+use crate::app::{colour::Colour, layer::Layer};
+
+use super::app::App;
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
+extern crate console_error_panic_hook;
 
 pub mod serialize;
 
@@ -24,17 +27,33 @@ impl Api {
 impl Api {
     #[wasm_bindgen(constructor)]
     pub fn init() -> Api {
+        console_error_panic_hook::set_once();
         return Api { app: App::new() };
     }
 
     pub fn set_active_project(&mut self, project_uid: u64) -> () {
-        self.app.set_active_project(project_uid);
+        self.app.set_active_project(Some(project_uid));
     }
 
-    pub fn create_project(&mut self, name: String, width: u16, height: u16) {
+    pub fn clear_active_project(&mut self) -> () {
+        self.app.set_active_project(None);
+    }
+
+    pub fn create_project(&mut self, name: String, width: u16, height: u16) -> u64 {
         let project = self.app.new_project();
         project.set_name(&name);
         project.resize_canvas(width, height);
+        let layer = project.new_layer();
+        layer.set_name("Background");
+        layer.resize(width, height);
+        return project.uid.clone();
+    }
+
+    pub fn resize_canvas(&mut self, width: u16, height: u16) -> () {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .resize_canvas(width, height);
     }
 
     pub fn create_layer(&mut self, name: String, width: u16, height: u16) -> u64 {
@@ -55,6 +74,14 @@ impl Api {
         match _layer {
             None => (),
             Some(layer) => layer.set_visible(visible),
+        }
+    }
+
+    pub fn set_layer_locked(&mut self, layer_uid: u64, locked: bool) {
+        let _layer = self.get_layer(layer_uid);
+        match _layer {
+            None => (),
+            Some(layer) => layer.set_locked(locked),
         }
     }
 
@@ -86,7 +113,13 @@ impl Api {
         }
     }
 
-    pub fn to_json(&self) -> JsValue {
+    pub fn get_layer_thumbnail(&mut self, layer_uid: u64) -> Clamped<Vec<u8>> {
+        let img = self.get_layer(layer_uid).unwrap().get_thumbnail();
+        return Clamped(img.into_vec());
+    }
+
+    #[wasm_bindgen(getter)]
+    pub fn state(&self) -> JsValue {
         return serialize::ApiSerializer::to_json(&self.app);
     }
 }

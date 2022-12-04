@@ -1,12 +1,12 @@
 import { Tabs } from "@mantine/core";
 import { IconPhoto, IconSettings } from "@tabler/icons";
 import { CloseButton } from "@mantine/core";
-import { AppContext } from "../../context/app";
 import { WasmContext } from "../../context/wasm";
+import { TabsContext } from "../../context/tabs";
 
 export function TabBar() {
-  const app = AppContext.useContainer();
-  if (!app.tabs.length) {
+  const tabs = TabsContext.useContainer();
+  if (!tabs.tabs.length) {
     return null;
   }
   return (
@@ -26,8 +26,8 @@ export function TabBar() {
           maxWidth: 100,
         },
       })}
-      value={app.activeTab.uid}
-      onTabChange={app.focusTab}
+      value={tabs.activeTab.uid}
+      onTabChange={(uid) => (uid ? tabs.focusTab(uid) : null)}
     >
       <Tabs.List>
         <TabBarTabs />
@@ -37,42 +37,15 @@ export function TabBar() {
 }
 
 function TabBarTabs() {
-  const app = AppContext.useContainer();
+  const tabs = TabsContext.useContainer();
 
-  //   const moveTab = useCallback((dragIndex: number, hoverIndex: number) => {
-  //     console.log("moveTab");
-  //     console.log(dragIndex);
-  //     console.log(hoverIndex);
-  //     app.setTabs((prevTabs) =>
-  //       update(prevTabs, {
-  //         $splice: [
-  //           [dragIndex, 1],
-  //           [hoverIndex, 0, prevTabs[dragIndex]],
-  //         ],
-  //       })
-  //     );
-  //   }, []);
-
-  //   const renderTab = (tab: { id: string; type: string }, index: number) => {
-  //     return (
-  //       <TabBarTab
-  //         key={tab.id}
-  //         index={index}
-  //         id={tab.id}
-  //         type={tab.type}
-  //         // moveTab={moveTab}
-  //       />
-  //     );
-  //   };
-
-  // const renderTab =
-  // console.log("tabs");
-  // console.log(app.tabs);
+  console.log("tabs");
+  console.log(tabs);
 
   return (
     <>
-      {app.tabs.map((tab, i) => (
-        <TabBarTab key={tab.uid} uid={tab.uid} type={tab.type} />
+      {tabs.tabs.map((tab, i) => (
+        <TabBarTab key={tab.uid.toString()} uid={tab.uid} type={tab.type} />
       ))}
     </>
   );
@@ -99,9 +72,9 @@ interface SettingsTabProps {
 function SettingsTab(props: SettingsTabProps) {
   return (
     <Tabs.Tab
-      value={props.uid}
+      value={props.uid.toString()}
       icon={<IconSettings size={14} />}
-      rightSection={<TabCloseButton id={props.uid} />}
+      rightSection={<TabCloseButton uid={props.uid} />}
     >
       Settings
     </Tabs.Tab>
@@ -114,27 +87,27 @@ interface ProjectTabProps {
 
 function ProjectTab(props: ProjectTabProps) {
   const wasm = WasmContext.useContainer();
-  const project_name = wasm.data.projects.get(props.uid).name;
+  const project_name = wasm.state.projects.get(props.uid)?.name || "error";
   return (
     <Tabs.Tab
-      value={props.uid}
+      value={props.uid.toString()}
       icon={<IconPhoto size={14} />}
-      rightSection={<TabCloseButton id={props.uid} />}
+      rightSection={<TabCloseButton uid={props.uid} />}
     >
       Project {project_name}
     </Tabs.Tab>
   );
 }
 
-function TabCloseButton(props: { id: string }) {
-  const app = AppContext.useContainer();
+function TabCloseButton(props: { uid: string }) {
+  const tabs = TabsContext.useContainer();
   return (
     <CloseButton
       component="div"
       size={14}
       onClick={(e) => {
         e.stopPropagation();
-        app.closeTab(props.id);
+        tabs.closeTab(props.uid);
       }}
     />
   );

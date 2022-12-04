@@ -1,10 +1,9 @@
-use std::{collections::HashMap};
+use std::collections::HashMap;
 
 use serde::Serialize;
 use wasm_bindgen::JsValue;
-// use wasm_bindgen_test::console_log;
 
-use crate::app::{App, Layer, Project};
+use crate::app::{layer::Layer, project::Project, App};
 
 #[derive(Serialize)]
 pub struct ApiSerializer {}
@@ -18,6 +17,7 @@ impl ApiSerializer {
 
 #[derive(Serialize, Debug)]
 struct ApiSerializerSchema {
+    active_project_uid: Option<String>,
     projects: HashMap<String, ProjectSerializer>,
 }
 
@@ -29,11 +29,15 @@ impl ApiSerializerSchema {
             projects.insert(uid.to_string(), s);
         });
 
-        // let mut projects_2: HashMap<u64, ProjectSerializer> = HashMap::new();
-        // let p = ProjectSerializer { uid: 10 };
-        // projects_2.insert(10, p);
-        // // console_log!("{:?}", projects);
-        return ApiSerializerSchema { projects: projects };
+        let active_project_uid: Option<String> = match app.active_project_uid {
+            None => None,
+            Some(uid) => Some(uid.to_string()),
+        };
+
+        return ApiSerializerSchema {
+            projects,
+            active_project_uid,
+        };
     }
 }
 
@@ -43,6 +47,7 @@ struct ProjectSerializer {
     name: String,
     width: u16,
     height: u16,
+    image_hash: String,
     layers: HashMap<String, LayerSerializer>,
 }
 
@@ -59,7 +64,8 @@ impl ProjectSerializer {
             name: project.name.clone(),
             width: project.width.clone(),
             height: project.height.clone(),
-            layers: layers,
+            image_hash: project.get_image_hash().to_string(),
+            layers,
         };
     }
 }
@@ -71,6 +77,8 @@ struct LayerSerializer {
     width: u16,
     height: u16,
     visible: bool,
+    locked: bool,
+    thumbnail_hash: String,
 }
 
 impl LayerSerializer {
@@ -81,6 +89,8 @@ impl LayerSerializer {
             width: layer.width.clone(),
             height: layer.height.clone(),
             visible: layer.visible.clone(),
+            locked: layer.locked.clone(),
+            thumbnail_hash: layer.get_thumbnail_hash().to_string(),
         };
     }
 }

@@ -1,6 +1,5 @@
 use api::Api;
 use wasm_bindgen::prelude::*;
-extern crate console_error_panic_hook;
 
 pub mod app;
 
@@ -18,6 +17,5 @@ pub fn greet() {
 
 #[wasm_bindgen]
 pub fn init_api() -> Api {
-    console_error_panic_hook::set_once();
     return Api::init();
 }

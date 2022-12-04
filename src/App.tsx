@@ -12,15 +12,20 @@ import { WasmContext } from "./context/wasm";
 // @ts-ignore
 import Main from "./main/Main";
 import { CustomSpotlightAction } from "./components/CustomSpotlightAction";
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 
 function Testing() {
   const wasm = WasmContext.useContainer();
+  const testCalled = useRef(false);
   useEffect(() => {
     test();
   }, []);
 
   function test() {
+    if (testCalled.current) {
+      return;
+    }
+    testCalled.current = true;
     wasm.api.create_project("Test project", 500, 500);
 
     // red square layer
@@ -37,8 +42,6 @@ function Testing() {
     let layer_3_uid = wasm.api.create_layer("Test layer 3", 500, 500);
     let blue = [0, 0, 255, 100];
     wasm.api.fill_rect(layer_3_uid, blue, 180, 150, 200, 200);
-
-    wasm.refresh_data();
   }
   return null;
 }

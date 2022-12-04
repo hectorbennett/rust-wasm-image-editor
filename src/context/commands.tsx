@@ -11,13 +11,13 @@ import {
   IconLogout,
   TablerIconProps,
 } from "@tabler/icons";
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import type { SpotlightAction } from "@mantine/spotlight";
 import { IconSettings } from "@tabler/icons";
 import { KeyboardShortcutName, SettingsContext } from "./settings";
 import { AppContext } from "./app";
-// import { WasmContext } from "./wasm";
+import { LayersContext } from "./layers";
 
 export type CommandCategory =
   | "app"
@@ -41,9 +41,10 @@ interface Command {
 function useCommands() {
   const settings = SettingsContext.useContainer();
   const app = AppContext.useContainer();
+  const layers = LayersContext.useContainer();
   const spotlight = useSpotlight();
 
-  const [commands, setCommands] = useState<Array<Command>>([
+  const commands: Array<Command> = [
     /* app */
     {
       category: "app",
@@ -63,7 +64,7 @@ function useCommands() {
       id: "app.exit",
       label: "Exit",
       icon: IconLogout,
-      action: () => console.warn("not implemented"),
+      action: () => app.exit(),
     },
     /* file */
     {
@@ -81,14 +82,14 @@ function useCommands() {
       category: "file",
       id: "file.open",
       label: "Open",
-      action: () => console.warn("not implemented"),
+      action: () => app.file.open(),
     },
     {
       category: "file",
       id: "file.save",
       label: "Save",
       icon: IconDeviceFloppy,
-      action: () => console.warn("not implemented"),
+      action: () => app.file.save(),
     },
     {
       category: "file",
@@ -105,7 +106,7 @@ function useCommands() {
       id: "file.close",
       label: "Close",
       icon: IconFileOff,
-      action: () => console.warn("not implemented"),
+      action: () => app.file.close(),
     },
     /* edit */
     {
@@ -113,35 +114,35 @@ function useCommands() {
       id: "edit.undo",
       label: "Undo",
       icon: IconArrowBackUp,
-      action: () => console.warn("not implemented"),
+      action: () => app.edit.undo(),
     },
     {
       category: "edit",
       id: "edit.redo",
       label: "Redo",
       icon: IconArrowForwardUp,
-      action: () => console.warn("not implemented"),
+      action: () => app.edit.redo(),
     },
     {
       category: "edit",
       id: "edit.cut",
       label: "Cut",
       icon: IconCut,
-      action: () => console.warn("not implemented"),
+      action: () => app.edit.cut(),
     },
     {
       category: "edit",
       id: "edit.copy",
       label: "Copy",
       icon: IconCopy,
-      action: () => console.warn("not implemented"),
+      action: () => app.edit.copy(),
     },
     {
       category: "edit",
       id: "edit.paste",
       label: "Paste",
       //   icon: IconP
-      action: () => console.warn("not implemented"),
+      action: () => app.edit.paste(),
     },
     /* view */
     /* select */
@@ -223,9 +224,9 @@ function useCommands() {
       category: "layer",
       id: "layer.new",
       label: "New layer",
-      action: () => console.warn("not implemented"),
+      action: () => layers.createNewLayer(),
     },
-  ]);
+  ];
 
   /* register commands to the spotlight */
   useEffect(() => {
@@ -244,7 +245,7 @@ function useCommands() {
           : null,
     }));
     spotlight.registerActions(actions);
-  }, [commands]);
+  }, []);
 
   const executeCommand = (command_id: string) => {
     const command = commands.find((c) => c.id === command_id);

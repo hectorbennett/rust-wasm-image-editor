@@ -1,19 +1,19 @@
 import { useHotkeys } from "@mantine/hooks";
 import Ui from "../ui/Ui";
-import { AppContext } from "../context/app";
 import { SettingsContext } from "../context/settings";
 import { Settings } from "../settings";
 import { CommandsContext } from "../context";
 import Workspace from "../workspace/Workspace";
+import { TabsContext } from "../context/tabs";
 
 function Tabs() {
-  const app = AppContext.useContainer();
-  if (!app.activeTab) {
+  const tabs = TabsContext.useContainer();
+  if (!tabs.activeTab) {
     return null;
   }
-  if (app.activeTab.type === "project") {
+  if (tabs.activeTab.type === "project") {
     return <Workspace />;
-  } else if (app.activeTab.type === "settings") {
+  } else if (tabs.activeTab.type === "settings") {
     return <Settings />;
   }
   return null;

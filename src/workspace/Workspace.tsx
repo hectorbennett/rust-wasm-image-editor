@@ -9,6 +9,7 @@ interface WorkspaceProps {
 interface CanvasProps {
   width: number;
   height: number;
+  image_hash: string;
 }
 
 const Canvas = function (props: CanvasProps) {
@@ -27,7 +28,7 @@ const Canvas = function (props: CanvasProps) {
     let newData = ctx.createImageData(props.width, props.height);
     newData.data.set(wasm.api.image_data);
     ctx.putImageData(newData, 0, 0);
-  }, [props]);
+  }, [props.image_hash]);
 
   return (
     <canvas
@@ -60,14 +61,21 @@ function Background(props: { width: number; height: number }) {
 export default function Workspace(props: WorkspaceProps) {
   const activeProject = ActiveProjectContext.useContainer();
 
-  if (!activeProject.uid) {
+  if (!activeProject.activeProject) {
     return null;
   }
 
   return (
     <div>
-      <Canvas width={activeProject.width} height={activeProject.height} />
-      <Background width={activeProject.width} height={activeProject.height} />
+      <Canvas
+        width={activeProject.activeProject.width}
+        height={activeProject.activeProject.height}
+        image_hash={activeProject.activeProject.image_hash}
+      />
+      <Background
+        width={activeProject.activeProject.width}
+        height={activeProject.activeProject.height}
+      />
     </div>
   );
 }

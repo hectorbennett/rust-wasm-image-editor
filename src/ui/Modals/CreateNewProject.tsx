@@ -32,7 +32,7 @@ export default function CreateNewProject({
         mt="md"
         onClick={() => {
           context.closeModal(id);
-          app.createNewProject(width, height);
+          app.file.new(width, height);
         }}
       >
         New project
