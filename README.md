@@ -16,6 +16,7 @@ Version 1:
  - [x] Layer previews
  - [x] Fix layer order
  - [x] active layer uid
+ - [ ] different cursors for different tools
  - [ ] Sort layers
  - [ ] Square select
  - [ ] Oval select
