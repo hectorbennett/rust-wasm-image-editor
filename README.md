@@ -15,6 +15,8 @@ Version 1:
  - [x] Toggle layer visibility
  - [x] Layer previews
  - [ ] Use snowflake for uuids https://crates.io/keywords/snowflake https://en.wikipedia.org/wiki/Snowflake_ID
+ - [ ] enforce formatting/linting with git hook
+ - [ ] write tests / output test coverage automatically
  - [ ] Sort layers
  - [ ] Square select
  - [ ] Oval select
