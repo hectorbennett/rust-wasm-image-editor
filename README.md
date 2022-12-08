@@ -14,6 +14,7 @@ Version 1:
  - [x] Resize Canvas
  - [x] Toggle layer visibility
  - [x] Layer previews
+ - [ ] Use snowflake for uuids https://crates.io/keywords/snowflake https://en.wikipedia.org/wiki/Snowflake_ID
  - [ ] Sort layers
  - [ ] Square select
  - [ ] Oval select
