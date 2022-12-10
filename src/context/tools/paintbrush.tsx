@@ -1,6 +1,7 @@
+import { Box } from "@mantine/core";
 import { SyntheticEvent } from "react";
 import { Brush } from "react-bootstrap-icons";
-import { ToolEventParams } from ".";
+import { Tool, ToolEventParams } from ".";
 
 let prevX = 0;
 let prevY = 0;
@@ -41,7 +42,23 @@ function processDrawEvent({ event, cursorX, cursorY, ctx }: ToolEventParams) {
   }
 }
 
-export const paintbrush = {
+function Cursor() {
+  return (
+    <Box
+      sx={{
+        position: "absolute",
+        width: 10,
+        height: 10,
+        border: "1px solid black",
+        top: -5,
+        left: -5,
+        borderRadius: "100%",
+      }}
+    />
+  );
+}
+
+export const paintbrush: Tool = {
   name: "paintbrush",
   label: "Paintbrush",
   icon: Brush,
@@ -59,4 +76,5 @@ export const paintbrush = {
       processDrawEvent(params);
     },
   },
+  cursor: <Cursor />,
 };

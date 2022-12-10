@@ -18,7 +18,7 @@ import {
   BoundingBoxCircles,
 } from "react-bootstrap-icons";
 
-import { TbRectangle, TbOvalVertical } from "react-icons/tb"
+import { TbRectangle, TbOvalVertical } from "react-icons/tb";
 
 import { paintbrush } from "./paintbrush";
 import { eye_dropper } from "./eye_dropper";
@@ -38,9 +38,11 @@ export interface ToolEventParams {
 }
 
 export interface ToolEvents {
-  // onClick?: Function;
   onClick?: (params: ToolEventParams) => void;
+  onMouseDown?: (params: ToolEventParams) => void;
   onMouseMove?: (params: ToolEventParams) => void;
+  onMouseOut?: (params: ToolEventParams) => void;
+  onMouseUp?: (params: ToolEventParams) => void;
 }
 
 export interface Tool {
@@ -48,6 +50,7 @@ export interface Tool {
   label: string;
   icon: Function;
   events: ToolEvents;
+  cursor?: ReactElement;
 }
 
 function useTools() {

@@ -1,10 +1,25 @@
-import { Eyedropper } from "react-bootstrap-icons";
+import { Box } from "@mantine/core";
+import { IconColorPicker } from "@tabler/icons";
 
-import { ToolEventParams } from ".";
-export const eye_dropper = {
+import { Tool, ToolEventParams } from ".";
+
+function Cursor() {
+  return (
+    <Box
+      sx={{
+        display: "flex",
+        position: "absolute",
+      }}
+    >
+      <IconColorPicker size={24} stroke={1} />
+    </Box>
+  );
+}
+
+export const eye_dropper: Tool = {
   name: "eye_dropper",
   label: "Eye dropper",
-  icon: Eyedropper,
+  icon: IconColorPicker,
   events: {
     onMouseMove: function ({
       canvas,
@@ -31,4 +46,5 @@ export const eye_dropper = {
       project.setActiveColour(data);
     },
   },
+  cursor: <Cursor />,
 };
