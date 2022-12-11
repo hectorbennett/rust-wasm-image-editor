@@ -1,4 +1,5 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import { Cursor } from "../components/Cursor";
 import { ActiveProjectContext } from "../context/activeProject";
 import { WasmContext } from "../context/wasm";
 
@@ -60,13 +61,23 @@ function Background(props: { width: number; height: number }) {
 
 export default function Workspace(props: WorkspaceProps) {
   const activeProject = ActiveProjectContext.useContainer();
+  const [cursorVisible, setCursorVisible] = useState(false);
+  const cursorRef = useRef<HTMLDivElement>(null);
+  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
   if (!activeProject.activeProject) {
     return null;
   }
 
   return (
-    <div>
+    <div
+      onMouseEnter={() => setCursorVisible(true)}
+      onMouseLeave={() => setCursorVisible(false)}
+      onMouseMove={(e) => {
+        setCursorPosition({ x: e.clientX, y: e.clientY });
+      }}
+      style={{ cursor: "none" }}
+    >
       <Canvas
         width={activeProject.activeProject.width}
         height={activeProject.activeProject.height}
@@ -76,6 +87,9 @@ export default function Workspace(props: WorkspaceProps) {
         width={activeProject.activeProject.width}
         height={activeProject.activeProject.height}
       />
+      {cursorVisible ? (
+        <Cursor ref={cursorRef} position={cursorPosition} />
+      ) : null}
     </div>
   );
 }

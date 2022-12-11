@@ -14,6 +14,9 @@ Version 1:
  - [x] Resize Canvas
  - [x] Toggle layer visibility
  - [x] Layer previews
+ - [x] Fix layer order
+ - [x] active layer uid
+ - [x] Custom cursors
  - [ ] Use snowflake for uuids https://crates.io/keywords/snowflake https://en.wikipedia.org/wiki/Snowflake_ID
  - [ ] enforce formatting/linting with git hook
  - [ ] write tests / output test coverage automatically

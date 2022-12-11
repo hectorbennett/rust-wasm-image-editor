@@ -1,7 +1,7 @@
 import { PaintBucket } from "react-bootstrap-icons";
-import { ToolEventParams } from ".";
+import { Tool, ToolEventParams } from ".";
 
-export const bucket_fill = {
+export const bucket_fill: Tool = {
   name: "bucket_fill",
   label: "Bucket Fill",
   icon: PaintBucket,

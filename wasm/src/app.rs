@@ -34,7 +34,7 @@ impl App {
     }
 
     pub fn set_active_project(&mut self, uid: Option<u64>) {
-        self.active_project_uid = uid.clone()
+        self.active_project_uid = uid.clone();
     }
 
     pub fn get_active_project(&mut self) -> Option<&mut Project> {

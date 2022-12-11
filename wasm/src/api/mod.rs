@@ -69,6 +69,13 @@ impl Api {
         }
     }
 
+    pub fn set_active_layer(&mut self, layer_uid: u64) {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .set_active_layer(Some(layer_uid));
+    }
+
     pub fn set_layer_visibile(&mut self, layer_uid: u64, visible: bool) {
         let _layer = self.get_layer(layer_uid);
         match _layer {

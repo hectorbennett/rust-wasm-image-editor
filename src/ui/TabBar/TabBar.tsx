@@ -21,7 +21,7 @@ export function TabBar() {
           },
         },
         tabLabel: {
-          overflow: "hidden",
+          overflowX: "clip",
           textOverflow: "ellipsis",
           maxWidth: 100,
         },
@@ -38,10 +38,6 @@ export function TabBar() {
 
 function TabBarTabs() {
   const tabs = TabsContext.useContainer();
-
-  console.log("tabs");
-  console.log(tabs);
-
   return (
     <>
       {tabs.tabs.map((tab, i) => (
@@ -94,7 +90,7 @@ function ProjectTab(props: ProjectTabProps) {
       icon={<IconPhoto size={14} />}
       rightSection={<TabCloseButton uid={props.uid} />}
     >
-      Project {project_name}
+      {project_name}
     </Tabs.Tab>
   );
 }

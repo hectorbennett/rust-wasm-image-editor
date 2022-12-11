@@ -48,16 +48,22 @@ struct ProjectSerializer {
     width: u16,
     height: u16,
     image_hash: String,
-    layers: HashMap<String, LayerSerializer>,
+    layers: Vec<LayerSerializer>,
+    active_layer_uid: Option<String>,
 }
 
 impl ProjectSerializer {
     pub fn from_project(project: &Project) -> ProjectSerializer {
-        let mut layers: HashMap<String, LayerSerializer> = HashMap::new();
-        project.layers.iter().for_each(|(uid, l)| {
+        let mut layers: Vec<LayerSerializer> = vec![];
+        project.layers.iter().for_each(|l| {
             let s = LayerSerializer::from_layer(l);
-            layers.insert(uid.to_string(), s);
+            layers.push(s);
         });
+
+        let active_layer_uid: Option<String> = match project.active_layer_uid {
+            None => None,
+            Some(uid) => Some(uid.to_string()),
+        };
 
         return ProjectSerializer {
             uid: project.uid.to_string(),
@@ -66,6 +72,7 @@ impl ProjectSerializer {
             height: project.height.clone(),
             image_hash: project.get_image_hash().to_string(),
             layers,
+            active_layer_uid,
         };
     }
 }

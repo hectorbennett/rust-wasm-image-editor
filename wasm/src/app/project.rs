@@ -4,7 +4,6 @@ use std::{
 };
 
 use image::{ImageBuffer, RgbaImage};
-use indexmap::IndexMap;
 use rand::Rng;
 
 use super::layer::Layer;
@@ -19,7 +18,8 @@ pub struct Project {
     pub name: String,
     pub width: u16,
     pub height: u16,
-    pub layers: IndexMap<u64, Layer>,
+    pub layers: Vec<Layer>,
+    pub active_layer_uid: Option<u64>,
 }
 
 impl Project {
@@ -29,7 +29,8 @@ impl Project {
             name: "".into(),
             width: 20,
             height: 20,
-            layers: IndexMap::new(),
+            layers: vec![],
+            active_layer_uid: None,
         };
     }
 
@@ -45,12 +46,17 @@ impl Project {
     pub fn new_layer(&mut self) -> &mut Layer {
         let layer: Layer = Layer::new();
         let uid: u64 = layer.uid.clone();
-        self.layers.insert(uid.clone(), layer);
+        self.layers.push(layer);
+        self.set_active_layer(Some(uid.clone()));
         return self.get_layer(uid);
     }
 
     pub fn get_layer(&mut self, uid: u64) -> &mut Layer {
-        return self.layers.get_mut(&uid).unwrap();
+        return self.layers.iter_mut().find(|l| l.uid == uid).unwrap();
+    }
+
+    pub fn set_active_layer(&mut self, uid: Option<u64>) {
+        self.active_layer_uid = uid.clone();
     }
 
     pub fn get_image(&self) -> RgbaImage {
@@ -71,8 +77,8 @@ impl Project {
     }
 
     fn get_compiled_pixel(&self, x: u16, y: u16) -> [u8; 4] {
-        let mut output = [0, 0, 0, 0];
-        for (_uid, layer) in self.layers.iter().filter(|l| l.1.visible) {
+        let mut output: [u8; 4] = [0, 0, 0, 0];
+        for layer in self.layers.iter().filter(|l| l.visible) {
             let pixel = layer.get_pixel_from_canvas_coordinates(x, y);
             output = blend_pixels(output, pixel);
         }

@@ -68,17 +68,6 @@ function LayerThumbnail(props: LayerThumbnailProps) {
       }}
     />
   );
-  // return (
-  //   <Paper
-  //     shadow="xs"
-  //     radius="xs"
-  //     p={0}
-  //     m={1}
-  //     mx={5}
-  //     withBorder
-  //     sx={{ width: 20, height: 20, background: "white" }}
-  //   />
-  // );
 }
 
 interface LayerLabelProps {
@@ -174,17 +163,19 @@ export default function Layers() {
     <>
       <NewLayerButton />
       <SegmentedControl
-        // value={layers.activeLayerId.toString()}
-        //   onChange={setValue}
+        value={layers.active_layer_uid || ""}
+        onChange={layers.setActiveLayer}
         fullWidth
         orientation="vertical"
+        transitionDuration={0}
         data={
           layers.layers
-            ? [...layers.layers.values()].map((layer: Layer) => ({
-                value: layer.uid.toString(),
-                label: <LayerRow layer={layer} />,
-              }))
-            : []
+            ?.slice(0)
+            .reverse()
+            .map((layer) => ({
+              value: layer.uid,
+              label: <LayerRow layer={layer} />,
+            })) || []
         }
       />
     </>

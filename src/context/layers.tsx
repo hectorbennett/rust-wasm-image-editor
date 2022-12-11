@@ -19,11 +19,14 @@ function useLayers() {
   const activeProject = ActiveProjectContext.useContainer();
 
   return {
-    layers: activeProject.activeProject
-      ? activeProject.activeProject.layers
-      : null,
+    layers: activeProject?.activeProject?.layers || null,
+    active_layer_uid: activeProject?.activeProject?.active_layer_uid || null,
     createNewLayer: function createNewLayer() {
-      wasm.api.create_layer("A new layer :)", 500, 500);
+      wasm.api.create_layer(
+        `layer ${(this.layers?.length || 0) + 1}`,
+        500,
+        500
+      );
     },
     setLayerLocked: function setLayerLocked(
       layer_uid: string,
@@ -39,6 +42,9 @@ function useLayers() {
     },
     renameLayer: function renameLayer(layer_uid: string, name: string) {
       console.log("rename layer");
+    },
+    setActiveLayer: function (layer_uid: string) {
+      wasm.api.set_active_layer(layer_uid);
     },
   };
 }
