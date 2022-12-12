@@ -4,10 +4,8 @@ See a very early example in action at
 
 https://seahorse-app-r8jlv.ondigitalocean.app/
 
-
-
-
 ## DigitalOcean app spec:
+
 ```
 name: orca-app
 region: lon
