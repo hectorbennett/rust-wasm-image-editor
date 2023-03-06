@@ -30,6 +30,7 @@
     "dev": "npm run wasm && vite --host",
     "build": "npm run wasm && tsc && vite build",
     "preview": "view preview",
-    "serve": "serve -s dist -p 3000"
+    "serve": "serve -s dist -p 3000",
+    "test:wasm": "cd wasm && cargo test"
   }
 }

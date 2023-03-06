@@ -43,3 +43,19 @@ impl Colour {
         self.alpha = colour.alpha;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_as_rgba() {
+        let colour = Colour {
+            red: 50,
+            green: 100,
+            blue: 120,
+            alpha: 150,
+        };
+        assert_eq!(colour.as_rgba(), [50, 100, 120, 150])
+    }
+}
