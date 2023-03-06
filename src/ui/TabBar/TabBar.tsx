@@ -40,7 +40,7 @@ function TabBarTabs() {
   const tabs = TabsContext.useContainer();
   return (
     <>
-      {tabs.tabs.map((tab, i) => (
+      {tabs.tabs.map((tab) => (
         <TabBarTab key={tab.uid.toString()} uid={tab.uid} type={tab.type} />
       ))}
     </>

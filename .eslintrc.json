@@ -10,6 +10,7 @@
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
+  "ignorePatterns": ["wasm/*", "dist/*"],
   "overrides": [],
   "parser": "@typescript-eslint/parser",
   "parserOptions": {
@@ -25,6 +26,9 @@
   "settings": {
     "import/resolver": {
       "typescript": {}
+    },
+    "react": {
+      "version": "detect"
     }
   }
 }

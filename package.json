@@ -45,9 +45,9 @@
     "test": "yarn run test:lint && yarn run test:cypress && yarn run test:wasm",
     "test:wasm": "cd wasm && cargo test",
     "test:cypress": "yarn cypress run",
-    "test:lint": "yarn run eslint .",
-    "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
-    "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'",
-    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc.json"
+    "lint:check": "eslint . --config ./.eslintrc.json",
+    "lint": "eslint --fix . --config ./.eslintrc.json",
+    "format:check": "prettier --check . --config ./.prettierrc.json",
+    "format": "prettier --write . --config ./.prettierrc.json"
   }
 }
