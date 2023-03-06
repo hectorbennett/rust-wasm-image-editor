@@ -72,8 +72,7 @@ function useSettings() {
 
   const [activeTabId, setActiveTabId] = useState<string>("user_interface");
 
-  const activeTab: SettingsTab =
-    tabs.find((tab) => tab.id === activeTabId) || tabs[0];
+  const activeTab: SettingsTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
 
   const openSettingsTab = (tabId: TabId) => {
     setActiveTabId(tabId);

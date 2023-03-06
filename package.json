@@ -24,7 +24,14 @@
     "@typescript-eslint/parser": "^5.54.1",
     "@vitejs/plugin-react": "^2.2.0",
     "cypress": "^12.7.0",
-    "prettier": "2.8.4",
+    "eslint": "^8.35.0",
+    "eslint-config-prettier": "^8.7.0",
+    "eslint-import-resolver-typescript": "^3.5.3",
+    "eslint-plugin-import": "^2.27.5",
+    "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "prettier": "^2.8.4",
     "typescript": "^4.9.5",
     "vite": "^3.2.3",
     "vite-plugin-wasm-pack": "^0.1.9"
@@ -35,10 +42,12 @@
     "build": "yarn run wasm && tsc && vite build",
     "preview": "view preview",
     "serve": "serve -s dist -p 3000",
-    "lint": "yarn run eslint . --fix",
     "test": "yarn run test:lint && yarn run test:cypress && yarn run test:wasm",
     "test:wasm": "cd wasm && cargo test",
     "test:cypress": "yarn cypress run",
-    "test:lint": "yarn run eslint ."
+    "test:lint": "yarn run eslint .",
+    "lint": "eslint src/**/*.{js,jsx,ts,tsx,json}",
+    "lint:fix": "eslint --fix 'src/**/*.{js,jsx,ts,tsx,json}'",
+    "format": "prettier --write 'src/**/*.{js,jsx,ts,tsx,css,md,json}' --config ./.prettierrc.json"
   }
 }

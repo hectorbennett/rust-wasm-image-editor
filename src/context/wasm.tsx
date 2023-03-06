@@ -57,8 +57,7 @@ function useWasm() {
   });
 
   useEffect(() => {
-    const refreshAppState = () =>
-      setAppState(() => (api ? api.state : DEFAULT_APP_STATE));
+    const refreshAppState = () => setAppState(() => (api ? api.state : DEFAULT_APP_STATE));
     methodCallback.current = refreshAppState;
     refreshAppState();
   }, [api]);

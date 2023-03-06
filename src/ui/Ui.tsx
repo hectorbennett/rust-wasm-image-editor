@@ -87,9 +87,7 @@ export default function Ui(props: UiProps) {
           className={classes.leftPane}
           handles={["right"]}
           width={leftPaneWidth}
-          onResize={({ width, height }: Size) =>
-            setLeftPaneWidth(width as number)
-          }
+          onResize={({ width, height }: Size) => setLeftPaneWidth(width as number)}
         >
           <LeftPane />
         </Resizable>
@@ -106,9 +104,7 @@ export default function Ui(props: UiProps) {
           className={classes.rightPane}
           handles={["left"]}
           width={rightPaneWidth}
-          onResize={({ width, height }: Size) =>
-            setRightPaneWidth(width as number)
-          }
+          onResize={({ width, height }: Size) => setRightPaneWidth(width as number)}
         >
           <RightPane />
         </Resizable>

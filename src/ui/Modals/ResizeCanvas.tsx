@@ -5,11 +5,7 @@ import { ContextModalProps } from "@mantine/modals";
 
 import { WasmContext } from "../../context/wasm";
 
-export default function ResizeCanvas({
-  context,
-  id,
-  innerProps,
-}: ContextModalProps) {
+export default function ResizeCanvas({ context, id, innerProps }: ContextModalProps) {
   const wasm = WasmContext.useContainer();
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);

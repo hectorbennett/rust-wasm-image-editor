@@ -52,8 +52,7 @@ function Background(props: { width: number; height: number }) {
         height: props.height,
         position: "relative",
         zIndex: 0,
-        background:
-          "repeating-conic-gradient(#878787 0% 25%, #5a5a5a 0% 50%) 50% / 20px 20px",
+        background: "repeating-conic-gradient(#878787 0% 25%, #5a5a5a 0% 50%) 50% / 20px 20px",
       }}
     />
   );
@@ -87,9 +86,7 @@ export default function Workspace(props: WorkspaceProps) {
         width={activeProject.activeProject.width}
         height={activeProject.activeProject.height}
       />
-      {cursorVisible ? (
-        <Cursor ref={cursorRef} position={cursorPosition} />
-      ) : null}
+      {cursorVisible ? <Cursor ref={cursorRef} position={cursorPosition} /> : null}
     </div>
   );
 }

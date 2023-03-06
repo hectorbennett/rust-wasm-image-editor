@@ -18,7 +18,7 @@ function useBucketFillTool({ activeLayer, selectionMaskLayer }) {
           0,
           0,
           selectionMaskLayer.canvas.width,
-          selectionMaskLayer.canvas.height
+          selectionMaskLayer.canvas.height,
         );
 
         const newImage = new OffscreenCanvas(500, 500);
@@ -39,7 +39,7 @@ function useBucketFillTool({ activeLayer, selectionMaskLayer }) {
           0,
           0,
           activeLayer.canvas.width,
-          activeLayer.canvas.height
+          activeLayer.canvas.height,
         );
       },
     },
@@ -88,7 +88,7 @@ function useRectangleSelectTool({ selectionOutlineLayer, selectionMaskLayer }) {
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     setDrawing(true);
   };
@@ -104,7 +104,7 @@ function useRectangleSelectTool({ selectionOutlineLayer, selectionMaskLayer }) {
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     selectionMaskLayer.ctx.fillStyle = "black";
     selectionMaskLayer.ctx.fillRect(x, y, width, height);
@@ -122,7 +122,7 @@ function useRectangleSelectTool({ selectionOutlineLayer, selectionMaskLayer }) {
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     selectionOutlineLayer.ctx.lineWidth = 1;
     selectionOutlineLayer.ctx.strokeStyle = "white";
@@ -155,7 +155,7 @@ function useOvalSelectTool({ selectionOutlineLayer, selectionMaskLayer }) {
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     setDrawing(true);
   };
@@ -176,18 +176,10 @@ function useOvalSelectTool({ selectionOutlineLayer, selectionMaskLayer }) {
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     selectionMaskLayer.ctx.beginPath();
-    selectionMaskLayer.ctx.ellipse(
-      centerX,
-      centerY,
-      radiusX,
-      radiusY,
-      0,
-      0,
-      2 * Math.PI
-    );
+    selectionMaskLayer.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
     selectionMaskLayer.ctx.fill();
   };
 
@@ -209,36 +201,20 @@ function useOvalSelectTool({ selectionOutlineLayer, selectionMaskLayer }) {
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     selectionOutlineLayer.ctx.lineWidth = 1;
     selectionOutlineLayer.ctx.strokeStyle = "white";
     selectionOutlineLayer.ctx.setLineDash([4, 2]);
     selectionOutlineLayer.ctx.beginPath();
-    selectionOutlineLayer.ctx.ellipse(
-      centerX,
-      centerY,
-      radiusX,
-      radiusY,
-      0,
-      0,
-      2 * Math.PI
-    );
+    selectionOutlineLayer.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
     selectionOutlineLayer.ctx.stroke();
 
     selectionOutlineLayer.ctx.lineWidth = 1;
     selectionOutlineLayer.ctx.strokeStyle = "black";
     selectionOutlineLayer.ctx.setLineDash([4, 8]);
     selectionOutlineLayer.ctx.beginPath();
-    selectionOutlineLayer.ctx.ellipse(
-      centerX,
-      centerY,
-      radiusX,
-      radiusY,
-      0,
-      0,
-      2 * Math.PI
-    );
+    selectionOutlineLayer.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
     selectionOutlineLayer.ctx.stroke();
   };
 
@@ -302,8 +278,7 @@ function Background() {
         height: 500,
         position: "relative",
         zIndex: -1,
-        background:
-          "repeating-conic-gradient(#878787 0% 25%, #5a5a5a 0% 50%) 50% / 20px 20px",
+        background: "repeating-conic-gradient(#878787 0% 25%, #5a5a5a 0% 50%) 50% / 20px 20px",
       }}
     />
   );

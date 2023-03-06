@@ -14,8 +14,7 @@ function useTabs() {
   const [activeTabId, setActiveTabId] = useState<string | null>(null);
   const [tabs, setTabs] = useState<Array<Tab>>([]);
 
-  const activeTab: Tab =
-    tabs.find((tab) => tab.uid === activeTabId) || tabs[0] || null;
+  const activeTab: Tab = tabs.find((tab) => tab.uid === activeTabId) || tabs[0] || null;
 
   useEffect(() => {
     if (!activeTab || activeTab.type !== "project") {

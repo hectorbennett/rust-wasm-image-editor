@@ -9,11 +9,7 @@ import {
   Box,
   Flex,
 } from "@mantine/core";
-import {
-  SpotlightProvider,
-  SpotlightAction,
-  SpotlightActionProps,
-} from "@mantine/spotlight";
+import { SpotlightProvider, SpotlightAction, SpotlightActionProps } from "@mantine/spotlight";
 import { ReactEventHandler } from "react";
 import { CommandCategory } from "../context/commands";
 import { CommandTypeBadge } from "./CommandTypeBadge";
@@ -54,10 +50,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 
   actionHovered: {
-    backgroundColor:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[4]
-        : theme.colors.gray[1],
+    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[1],
   },
 
   actionBody: {
@@ -98,15 +91,11 @@ export function CustomSpotlightAction({
         </Box>
 
         <Box className={classes.category} ml="xl">
-          {action.category && (
-            <CommandTypeBadge category={action.category as CommandCategory} />
-          )}
+          {action.category && <CommandTypeBadge category={action.category as CommandCategory} />}
         </Box>
 
         <Box className={classes.keyboardShortcuts}>
-          {action.keyboard_shortcut && (
-            <KeyboardShortcut keys={action.keyboard_shortcut} />
-          )}
+          {action.keyboard_shortcut && <KeyboardShortcut keys={action.keyboard_shortcut} />}
         </Box>
       </Box>
     </UnstyledButton>

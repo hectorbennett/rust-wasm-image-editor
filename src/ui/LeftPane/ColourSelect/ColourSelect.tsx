@@ -30,9 +30,7 @@ function ColourPicker(props: ColourPickerProps) {
         sx={{ width: "100%" }}
         format="rgba"
         value={valueString}
-        onChange={(stringValue) =>
-          props.onChange(parse_rgba_string_to_array(stringValue))
-        }
+        onChange={(stringValue) => props.onChange(parse_rgba_string_to_array(stringValue))}
       />
       <Text>{props.value}</Text>
     </Stack>

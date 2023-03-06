@@ -22,11 +22,9 @@ function Tabs() {
 function HotkeyProvider(props) {
   const settings = SettingsContext.useContainer();
   const commands = CommandsContext.useContainer();
-  const hotkeys = Object.entries(settings.keyboardShortcuts).map(
-    ([command, shortcut]) => {
-      return [shortcut.join("+"), () => commands.executeCommand(command)];
-    }
-  );
+  const hotkeys = Object.entries(settings.keyboardShortcuts).map(([command, shortcut]) => {
+    return [shortcut.join("+"), () => commands.executeCommand(command)];
+  });
   useHotkeys(hotkeys);
   return <div>{props.children}</div>;
 }
