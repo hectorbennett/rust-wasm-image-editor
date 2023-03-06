@@ -4,17 +4,17 @@ import { AppContext } from "../../../context/app";
 // import { ProjectContext } from "../../../context";
 
 function parse_rgba_string_to_array(rgbaString: string) {
-    const rgbaArray = rgbaString
-        .replace("rgba(", "")
-        .replace(")", "")
-        .split(",")
-        .map((c) => parseFloat(c));
-    rgbaArray[3] = Math.floor(rgbaArray[3] * 255);
-    return rgbaArray;
+  const rgbaArray = rgbaString
+    .replace("rgba(", "")
+    .replace(")", "")
+    .split(",")
+    .map((c) => parseFloat(c));
+  rgbaArray[3] = Math.floor(rgbaArray[3] * 255);
+  return rgbaArray;
 }
 
 function parse_rgba_array_to_string(array: Array<number>) {
-    return `rgba(${array[0]}, ${array[1]}, ${array[2]}, ${array[3] / 255})`;
+  return `rgba(${array[0]}, ${array[1]}, ${array[2]}, ${array[3] / 255})`;
 }
 
 interface ColourPickerProps {
@@ -23,27 +23,27 @@ interface ColourPickerProps {
 }
 
 function ColourPicker(props: ColourPickerProps) {
-    const valueString = parse_rgba_array_to_string(props.value);
-    return (
-        <Stack align="center">
-            <ColorPicker
-                sx={{ width: "100%" }}
-                format="rgba"
-                value={valueString}
-                onChange={(stringValue) =>
-                    props.onChange(parse_rgba_string_to_array(stringValue))
-                }
-            />
-            <Text>{props.value}</Text>
-        </Stack>
-    );
+  const valueString = parse_rgba_array_to_string(props.value);
+  return (
+    <Stack align="center">
+      <ColorPicker
+        sx={{ width: "100%" }}
+        format="rgba"
+        value={valueString}
+        onChange={(stringValue) =>
+          props.onChange(parse_rgba_string_to_array(stringValue))
+        }
+      />
+      <Text>{props.value}</Text>
+    </Stack>
+  );
 }
 
 export default function ColourSelect() {
-    const app = AppContext.useContainer();
-    return (
-        <div>
-            <ColourPicker onChange={app.setActiveColour} value={app.activeColour} />
-        </div>
-    );
+  const app = AppContext.useContainer();
+  return (
+    <div>
+      <ColourPicker onChange={app.setActiveColour} value={app.activeColour} />
+    </div>
+  );
 }

@@ -5,46 +5,46 @@ import { WasmContext } from "../../context/wasm";
 import { TabsContext } from "../../context/tabs";
 
 export function TabBar() {
-    const tabs = TabsContext.useContainer();
-    if (!tabs.tabs.length) {
-        return null;
-    }
-    return (
-        <Tabs
-            styles={(theme) => ({
-                tabsList: {
-                    flexWrap: "nowrap",
-                },
-                tab: {
-                    "&[data-active]": {
-                        backgroundColor: theme.colors.dark[5],
-                    },
-                },
-                tabLabel: {
-                    overflowX: "clip",
-                    textOverflow: "ellipsis",
-                    maxWidth: 100,
-                },
-            })}
-            value={tabs.activeTab.uid}
-            onTabChange={(uid) => (uid ? tabs.focusTab(uid) : null)}
-        >
-            <Tabs.List>
-                <TabBarTabs />
-            </Tabs.List>
-        </Tabs>
-    );
+  const tabs = TabsContext.useContainer();
+  if (!tabs.tabs.length) {
+    return null;
+  }
+  return (
+    <Tabs
+      styles={(theme) => ({
+        tabsList: {
+          flexWrap: "nowrap",
+        },
+        tab: {
+          "&[data-active]": {
+            backgroundColor: theme.colors.dark[5],
+          },
+        },
+        tabLabel: {
+          overflowX: "clip",
+          textOverflow: "ellipsis",
+          maxWidth: 100,
+        },
+      })}
+      value={tabs.activeTab.uid}
+      onTabChange={(uid) => (uid ? tabs.focusTab(uid) : null)}
+    >
+      <Tabs.List>
+        <TabBarTabs />
+      </Tabs.List>
+    </Tabs>
+  );
 }
 
 function TabBarTabs() {
-    const tabs = TabsContext.useContainer();
-    return (
-        <>
-            {tabs.tabs.map((tab, i) => (
-                <TabBarTab key={tab.uid.toString()} uid={tab.uid} type={tab.type} />
-            ))}
-        </>
-    );
+  const tabs = TabsContext.useContainer();
+  return (
+    <>
+      {tabs.tabs.map((tab, i) => (
+        <TabBarTab key={tab.uid.toString()} uid={tab.uid} type={tab.type} />
+      ))}
+    </>
+  );
 }
 
 interface TabBarTabProps {
@@ -53,12 +53,12 @@ interface TabBarTabProps {
 }
 
 function TabBarTab(props: TabBarTabProps) {
-    if (props.type === "settings") {
-        return <SettingsTab uid={props.uid} />;
-    } else if (props.type === "project") {
-        return <ProjectTab uid={props.uid} />;
-    }
-    return null;
+  if (props.type === "settings") {
+    return <SettingsTab uid={props.uid} />;
+  } else if (props.type === "project") {
+    return <ProjectTab uid={props.uid} />;
+  }
+  return null;
 }
 
 interface SettingsTabProps {
@@ -66,15 +66,15 @@ interface SettingsTabProps {
 }
 
 function SettingsTab(props: SettingsTabProps) {
-    return (
-        <Tabs.Tab
-            value={props.uid.toString()}
-            icon={<IconSettings size={14} />}
-            rightSection={<TabCloseButton uid={props.uid} />}
-        >
+  return (
+    <Tabs.Tab
+      value={props.uid.toString()}
+      icon={<IconSettings size={14} />}
+      rightSection={<TabCloseButton uid={props.uid} />}
+    >
       Settings
-        </Tabs.Tab>
-    );
+    </Tabs.Tab>
+  );
 }
 
 interface ProjectTabProps {
@@ -82,29 +82,29 @@ interface ProjectTabProps {
 }
 
 function ProjectTab(props: ProjectTabProps) {
-    const wasm = WasmContext.useContainer();
-    const project_name = wasm.state.projects.get(props.uid)?.name || "error";
-    return (
-        <Tabs.Tab
-            value={props.uid.toString()}
-            icon={<IconPhoto size={14} />}
-            rightSection={<TabCloseButton uid={props.uid} />}
-        >
-            {project_name}
-        </Tabs.Tab>
-    );
+  const wasm = WasmContext.useContainer();
+  const project_name = wasm.state.projects.get(props.uid)?.name || "error";
+  return (
+    <Tabs.Tab
+      value={props.uid.toString()}
+      icon={<IconPhoto size={14} />}
+      rightSection={<TabCloseButton uid={props.uid} />}
+    >
+      {project_name}
+    </Tabs.Tab>
+  );
 }
 
 function TabCloseButton(props: { uid: string }) {
-    const tabs = TabsContext.useContainer();
-    return (
-        <CloseButton
-            component="div"
-            size={14}
-            onClick={(e) => {
-                e.stopPropagation();
-                tabs.closeTab(props.uid);
-            }}
-        />
-    );
+  const tabs = TabsContext.useContainer();
+  return (
+    <CloseButton
+      component="div"
+      size={14}
+      onClick={(e) => {
+        e.stopPropagation();
+        tabs.closeTab(props.uid);
+      }}
+    />
+  );
 }

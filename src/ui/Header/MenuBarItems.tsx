@@ -18,42 +18,42 @@ interface RootMenuItem {
 }
 
 const MENUS = [
-    "app",
-    "file",
-    "edit",
-    "view",
-    "select",
-    "tools",
-    "filters",
-    "image",
-    "layer",
+  "app",
+  "file",
+  "edit",
+  "view",
+  "select",
+  "tools",
+  "filters",
+  "image",
+  "layer",
 ];
 
 export function MenuBarItems() {
-    const commands = CommandsContext.useContainer();
-    const menu_items: Array<RootMenuItem> = MENUS.map((m) => ({
-        label: m,
-        items: commands.commands
-            .filter((c) => c.category === m)
-            .map((c) => ({
-                label: c.label,
-                icon: c.icon,
-                onClick: () => c.action(),
-            })),
-    }));
+  const commands = CommandsContext.useContainer();
+  const menu_items: Array<RootMenuItem> = MENUS.map((m) => ({
+    label: m,
+    items: commands.commands
+      .filter((c) => c.category === m)
+      .map((c) => ({
+        label: c.label,
+        icon: c.icon,
+        onClick: () => c.action(),
+      })),
+  }));
 
-    return (
-        <Group>
-            {menu_items.map((menuItem) => {
-                return (
-                    <MenuBarItem
-                        key={menuItem.label}
-                        width={menuItem.width}
-                        label={menuItem.label}
-                        items={menuItem.items}
-                    />
-                );
-            })}
-        </Group>
-    );
+  return (
+    <Group>
+      {menu_items.map((menuItem) => {
+        return (
+          <MenuBarItem
+            key={menuItem.label}
+            width={menuItem.width}
+            label={menuItem.label}
+            items={menuItem.items}
+          />
+        );
+      })}
+    </Group>
+  );
 }
