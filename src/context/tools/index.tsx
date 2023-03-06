@@ -1,22 +1,7 @@
-import {
-  ComponentClass,
-  Dispatch,
-  JSXElementConstructor,
-  ReactComponentElement,
-  ReactElement,
-  SyntheticEvent,
-  useEffect,
-  useState,
-} from "react";
+import { ReactElement, useState } from "react";
 import { createContainer } from "unstated-next";
-// import { CanvasContext } from "../canvas";
 
-import {
-  Cursor,
-  ArrowRight,
-  Crop,
-  BoundingBoxCircles,
-} from "react-bootstrap-icons";
+import { Cursor, Crop, BoundingBoxCircles } from "react-bootstrap-icons";
 
 import { TbRectangle, TbOvalVertical } from "react-icons/tb";
 

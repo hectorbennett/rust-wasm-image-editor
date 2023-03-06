@@ -18,7 +18,5 @@ interface CommandTypeProps {
 }
 
 export function CommandTypeBadge(props: CommandTypeProps) {
-  return (
-    <Badge color={COMMAND_COLOURS[props.category]}>{props.category}</Badge>
-  );
+  return <Badge color={COMMAND_COLOURS[props.category]}>{props.category}</Badge>;
 }

@@ -21,14 +21,7 @@ export const eye_dropper: Tool = {
   label: "Eye dropper",
   icon: IconColorPicker,
   events: {
-    onMouseMove: function ({
-      canvas,
-      ctx,
-      event,
-      project,
-      cursorX,
-      cursorY,
-    }: ToolEventParams) {
+    onMouseMove: function ({ canvas, ctx, event, project, cursorX, cursorY }: ToolEventParams) {
       const pixel = ctx.getImageData(cursorX, cursorY, 1, 1);
       const data = pixel.data;
       project.setActiveColour(pixel.data);

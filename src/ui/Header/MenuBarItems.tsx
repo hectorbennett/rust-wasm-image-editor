@@ -17,17 +17,7 @@ interface RootMenuItem {
   width?: number;
 }
 
-const MENUS = [
-  "app",
-  "file",
-  "edit",
-  "view",
-  "select",
-  "tools",
-  "filters",
-  "image",
-  "layer",
-];
+const MENUS = ["app", "file", "edit", "view", "select", "tools", "filters", "image", "layer"];
 
 export function MenuBarItems() {
   const commands = CommandsContext.useContainer();

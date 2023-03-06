@@ -99,10 +99,7 @@ export default function Resizable(props: ResizableProps) {
     props.onResize(size);
   }
   return (
-    <div
-      className={props.className}
-      style={{ width: width, position: "relative" }}
-    >
+    <div className={props.className} style={{ width: width, position: "relative" }}>
       {props.handles.includes("left") ? (
         <EdgeHandle position="left" onResize={handleResize} width={width} />
       ) : null}

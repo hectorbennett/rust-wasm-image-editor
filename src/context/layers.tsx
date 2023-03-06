@@ -22,22 +22,12 @@ function useLayers() {
     layers: activeProject?.activeProject?.layers || null,
     active_layer_uid: activeProject?.activeProject?.active_layer_uid || null,
     createNewLayer: function createNewLayer() {
-      wasm.api.create_layer(
-        `layer ${(this.layers?.length || 0) + 1}`,
-        500,
-        500
-      );
+      wasm.api.create_layer(`layer ${(this.layers?.length || 0) + 1}`, 500, 500);
     },
-    setLayerLocked: function setLayerLocked(
-      layer_uid: string,
-      locked: boolean
-    ) {
+    setLayerLocked: function setLayerLocked(layer_uid: string, locked: boolean) {
       wasm.api.set_layer_locked(layer_uid, locked);
     },
-    setLayerVisibility: function setLayerVisibility(
-      layer_uid: string,
-      visible: boolean
-    ) {
+    setLayerVisibility: function setLayerVisibility(layer_uid: string, visible: boolean) {
       wasm.api.set_layer_visibile(layer_uid, visible);
     },
     renameLayer: function renameLayer(layer_uid: string, name: string) {

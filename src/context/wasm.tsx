@@ -31,8 +31,8 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
           if (p instanceof Function) {
             return function () {
               // @ts-ignore
-              let that: any = this;
-              let thing = p.apply(that, arguments);
+              const that: any = this;
+              const thing = p.apply(that, arguments);
               methodCallback();
               return thing;
             };
@@ -57,8 +57,7 @@ function useWasm() {
   });
 
   useEffect(() => {
-    const refreshAppState = () =>
-      setAppState(() => (api ? api.state : DEFAULT_APP_STATE));
+    const refreshAppState = () => setAppState(() => (api ? api.state : DEFAULT_APP_STATE));
     methodCallback.current = refreshAppState;
     refreshAppState();
   }, [api]);

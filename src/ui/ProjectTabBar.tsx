@@ -1,21 +1,4 @@
-// import styled from "styled-components";
-
-import { AppShell, Navbar, Header } from "@mantine/core";
-import { Button } from "@mantine/core";
-import { TextInput } from "@mantine/core";
-import { Menu, Text } from "@mantine/core";
-import {
-  IconSettings,
-  IconSearch,
-  IconPhoto,
-  IconMessageCircle,
-  IconTrash,
-  IconArrowsLeftRight,
-} from "@tabler/icons";
-
 import { Tabs } from "@mantine/core";
-// import { IconPhoto, IconMessageCircle, IconSettings } from "@tabler/icons";
-
 
 export default function ProjectTabBar() {
   return (

@@ -1,11 +1,5 @@
 import { useState, MouseEventHandler, useRef, useEffect } from "react";
-import {
-  SegmentedControl,
-  Box,
-  ActionIcon,
-  TextInput,
-  Paper,
-} from "@mantine/core";
+import { SegmentedControl, Box, ActionIcon, TextInput } from "@mantine/core";
 import { EyeFill, EyeSlash, LockFill, Lock, Plus } from "react-bootstrap-icons";
 import { useRightClick } from "../../../hooks";
 import { Layer, LayersContext } from "../../../context/layers";
@@ -52,7 +46,7 @@ function LayerThumbnail(props: LayerThumbnailProps) {
     if (!ctx) {
       return;
     }
-    let newData = ctx.createImageData(width, height);
+    const newData = ctx.createImageData(width, height);
     newData.data.set(wasm.api.get_layer_thumbnail(props.layer.uid));
     ctx.putImageData(newData, 0, 0);
   }, [props.layer.thumbnail_hash]);
