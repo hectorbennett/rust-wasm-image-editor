@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect, forwardRef, createRef } from "react";
-import { setConstantValue } from "typescript";
+import { useState, useRef, useEffect, forwardRef } from "react";
 // import ProjectContainer from "../../active/Project";
-import { ProjectContext, CanvasContext, ToolsContext } from "../context";
+import { ProjectContext, ToolsContext } from "../context";
 import { LayersContext } from "../context";
 
 function useNoopTool() {
@@ -12,7 +11,6 @@ function useNoopTool() {
 
 function useBucketFillTool({
     activeLayer,
-    selectionOutlineLayer,
     selectionMaskLayer,
 }) {
     const project = ProjectContext.useContainer();
@@ -51,7 +49,7 @@ function useBucketFillTool({
     };
 }
 
-function usePaintbrushTool({ activeLayer, selectionOutlineLayer }) {
+function usePaintbrushTool({ activeLayer }) {
     const [drawing, setDrawing] = useState(false);
 
     const startDraw = ({ nativeEvent }) => {
@@ -83,7 +81,6 @@ function usePaintbrushTool({ activeLayer, selectionOutlineLayer }) {
 }
 
 function useRectangleSelectTool({
-    activeLayer,
     selectionOutlineLayer,
     selectionMaskLayer,
 }) {
@@ -154,7 +151,6 @@ function useRectangleSelectTool({
 }
 
 function useOvalSelectTool({
-    activeLayer,
     selectionOutlineLayer,
     selectionMaskLayer,
 }) {
@@ -293,7 +289,7 @@ function useTool({ activeLayer, selectionOutlineLayer, selectionMaskLayer }) {
     return tools[activeTool];
 }
 
-const Canvas = forwardRef(function (props, ref) {
+const Canvas = forwardRef(function Canvas (props, ref) {
     return (
         <canvas
             ref={ref}

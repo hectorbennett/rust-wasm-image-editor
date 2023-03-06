@@ -40,6 +40,6 @@
     "test": "yarn run test:lint && yarn run test:cypress && yarn run test:wasm",
     "test:wasm": "cd wasm && cargo test",
     "test:cypress": "yarn cypress run",
-    "test:lint": "yarn run estlint ."
+    "test:lint": "yarn run eslint ."
   }
 }
