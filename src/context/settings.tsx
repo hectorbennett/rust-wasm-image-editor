@@ -26,23 +26,23 @@ export interface Settings {
 export type KeyboardShortcutName = keyof KeyboardShortcuts;
 
 const DEFAULT_SETTINGS: Settings = {
-  keyboard_shortcuts: {
-    "app.settings": [],
-    "app.exit": [],
-    "app.command_palette": ["CTRL", "P"],
-    "file.new": ["CTRL", "N"],
-    "file.open": ["CTRL", "O"],
-    "file.close": ["CTRL", "F4"],
-    "file.save": ["CTRL", "S"],
-    "file.export": ["CTRL", "E"],
-    "edit.undo": ["CTRL", "Z"],
-    "edit.redo": ["CTRL", "Y"],
-    "edit.cut": ["CTRL", "X"],
-    "edit.copy": ["CTRL", "C"],
-    "edit.paste": ["CTRL", "V"],
-    "select.all": ["CTRL", "A"],
-    "select.none": ["CTRL", "SHIFT", "A"],
-  },
+    keyboard_shortcuts: {
+        "app.settings": [],
+        "app.exit": [],
+        "app.command_palette": ["CTRL", "P"],
+        "file.new": ["CTRL", "N"],
+        "file.open": ["CTRL", "O"],
+        "file.close": ["CTRL", "F4"],
+        "file.save": ["CTRL", "S"],
+        "file.export": ["CTRL", "E"],
+        "edit.undo": ["CTRL", "Z"],
+        "edit.redo": ["CTRL", "Y"],
+        "edit.cut": ["CTRL", "X"],
+        "edit.copy": ["CTRL", "C"],
+        "edit.paste": ["CTRL", "V"],
+        "select.all": ["CTRL", "A"],
+        "select.none": ["CTRL", "SHIFT", "A"],
+    },
 };
 
 type TabId = "user_interface" | "keyboard_shortcuts";
@@ -54,37 +54,37 @@ interface SettingsTab {
 }
 
 function useSettings() {
-  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
-  const tabs: Array<SettingsTab> = [
-    {
-      id: "user_interface",
-      icon: IconGauge,
-      label: "User interface",
-    },
-    {
-      id: "keyboard_shortcuts",
-      icon: IconKeyboard,
-      label: "Keyboard shortcuts",
-    },
-  ];
+    const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+    const tabs: Array<SettingsTab> = [
+        {
+            id: "user_interface",
+            icon: IconGauge,
+            label: "User interface",
+        },
+        {
+            id: "keyboard_shortcuts",
+            icon: IconKeyboard,
+            label: "Keyboard shortcuts",
+        },
+    ];
 
-//   useEffect(() => {}, [settings.keyboard_shortcuts]);
+    //   useEffect(() => {}, [settings.keyboard_shortcuts]);
 
-  const [activeTabId, setActiveTabId] = useState<string>("user_interface");
+    const [activeTabId, setActiveTabId] = useState<string>("user_interface");
 
-  const activeTab: SettingsTab =
+    const activeTab: SettingsTab =
     tabs.find((tab) => tab.id === activeTabId) || tabs[0];
 
-  const openSettingsTab = (tabId: TabId) => {
-    setActiveTabId(tabId);
-  };
+    const openSettingsTab = (tabId: TabId) => {
+        setActiveTabId(tabId);
+    };
 
-  return {
-    tabs,
-    activeTab,
-    openSettingsTab,
-    keyboardShortcuts: settings.keyboard_shortcuts,
-  };
+    return {
+        tabs,
+        activeTab,
+        openSettingsTab,
+        keyboardShortcuts: settings.keyboard_shortcuts,
+    };
 }
 
 export const SettingsContext = createContainer(useSettings);

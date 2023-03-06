@@ -1,21 +1,21 @@
 import {
-  ComponentClass,
-  Dispatch,
-  JSXElementConstructor,
-  ReactComponentElement,
-  ReactElement,
-  SyntheticEvent,
-  useEffect,
-  useState,
+    ComponentClass,
+    Dispatch,
+    JSXElementConstructor,
+    ReactComponentElement,
+    ReactElement,
+    SyntheticEvent,
+    useEffect,
+    useState,
 } from "react";
 import { createContainer } from "unstated-next";
 // import { CanvasContext } from "../canvas";
 
 import {
-  Cursor,
-  ArrowRight,
-  Crop,
-  BoundingBoxCircles,
+    Cursor,
+    ArrowRight,
+    Crop,
+    BoundingBoxCircles,
 } from "react-bootstrap-icons";
 
 import { TbRectangle, TbOvalVertical } from "react-icons/tb";
@@ -54,50 +54,50 @@ export interface Tool {
 }
 
 function useTools() {
-  // const canvas = CanvasContext.useContainer();
-  const tools: Array<Tool> = [
-    {
-      name: "select",
-      label: "Select",
-      icon: Cursor,
-      events: {},
-    },
-    {
-      name: "rectangle_select",
-      label: "Rectangle Select",
-      icon: TbRectangle,
-      events: {},
-    },
-    {
-      name: "oval_select",
-      label: "Oval Select",
-      icon: TbOvalVertical,
-      events: {},
-    },
-    bucket_fill,
-    eye_dropper,
-    paintbrush,
-    {
-      name: "crop",
-      label: "Crop",
-      icon: Crop,
-      events: {},
-    },
-    {
-      name: "rectangle_select",
-      label: "Rectangle select",
-      icon: BoundingBoxCircles,
-      events: {},
-    },
-  ];
+    // const canvas = CanvasContext.useContainer();
+    const tools: Array<Tool> = [
+        {
+            name: "select",
+            label: "Select",
+            icon: Cursor,
+            events: {},
+        },
+        {
+            name: "rectangle_select",
+            label: "Rectangle Select",
+            icon: TbRectangle,
+            events: {},
+        },
+        {
+            name: "oval_select",
+            label: "Oval Select",
+            icon: TbOvalVertical,
+            events: {},
+        },
+        bucket_fill,
+        eye_dropper,
+        paintbrush,
+        {
+            name: "crop",
+            label: "Crop",
+            icon: Crop,
+            events: {},
+        },
+        {
+            name: "rectangle_select",
+            label: "Rectangle select",
+            icon: BoundingBoxCircles,
+            events: {},
+        },
+    ];
 
-  const [activeTool, setActiveTool] = useState(tools[0]);
+    const [activeTool, setActiveTool] = useState(tools[0]);
 
-  return {
-    setActiveTool,
-    activeTool,
-    tools,
-  };
+    return {
+        setActiveTool,
+        activeTool,
+        tools,
+    };
 }
 
 export const ToolsContext = createContainer(useTools);
