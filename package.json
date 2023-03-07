@@ -53,7 +53,7 @@
     "test:cypress": "yarn cypress run",
     "lint:js:check": "eslint . --config ./.eslintrc.json",
     "lint:js": "eslint --fix . --config ./.eslintrc.json",
-    "lint:wasm:check": "cd wasm && cargo clippy",
+    "lint:wasm:check": "cd wasm && cargo clippy -- -D warnings",
     "lint:wasm": "cd wasm && cargo clippy --fix",
     "format:check": "prettier --check . --config ./.prettierrc.json",
     "format": "prettier --write . --config ./.prettierrc.json"
