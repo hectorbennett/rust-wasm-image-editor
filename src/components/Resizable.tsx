@@ -53,7 +53,7 @@ function EdgeHandle(props: EdgeHandleProps) {
     }
   }
 
-  function stopDrag(_e) {
+  function stopDrag(_e: any) {
     setDragging(false);
     document.documentElement.removeEventListener("mousemove", doDrag, false);
     document.documentElement.removeEventListener("mouseup", stopDrag, false);

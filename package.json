@@ -7,6 +7,7 @@
     "node": "19.7.0"
   },
   "dependencies": {
+    "@emotion/react": "^11.10.6",
     "@mantine/core": "^5.8.4",
     "@mantine/hooks": "^5.8.4",
     "@mantine/modals": "^5.8.4",
@@ -18,8 +19,7 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.7.1",
     "serve": "^14.1.2",
-    "unstated-next": "^1.1.0",
-    "wasm-pack": "^0.10.3"
+    "unstated-next": "^1.1.0"
   },
   "devDependencies": {
     "@types/react": "^18.0.25",
