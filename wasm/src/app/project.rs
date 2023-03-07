@@ -22,11 +22,11 @@ pub struct Project {
     pub active_layer_uid: Option<u64>,
 }
 
-// impl Default for Project {
-//     fn default() -> Self {
-//         Self::new()
-//     }
-// }
+impl Default for Project {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl Project {
     pub fn new() -> Project {
