@@ -47,7 +47,7 @@ impl Project {
     }
 
     pub fn new_layer(&mut self) -> &mut Layer {
-        let layer: Layer = Layer::new();
+        let layer: Layer = Layer::new(self.width.clone(), self.height.clone());
         let uid: u64 = layer.uid.clone();
         self.layers.push(layer);
         self.set_active_layer(Some(uid.clone()));
