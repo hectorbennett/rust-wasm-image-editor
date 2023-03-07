@@ -32,12 +32,14 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "husky": "^8.0.3",
     "prettier": "^2.8.4",
     "typescript": "^4.9.5",
     "vite": "^3.2.3",
     "vite-plugin-wasm-pack": "^0.1.9"
   },
   "scripts": {
+    "prepare": "husky install",
     "wasm": "wasm-pack build ./wasm --target web",
     "dev": "yarn run wasm && vite --host",
     "build": "yarn run wasm && tsc && vite build",
