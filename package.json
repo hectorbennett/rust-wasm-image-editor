@@ -38,6 +38,7 @@
     "vite-plugin-wasm-pack": "^0.1.9"
   },
   "scripts": {
+    "preinstall": "git config core.hooksPath hooks",
     "wasm": "wasm-pack build ./wasm --target web",
     "dev": "yarn run wasm && vite --host",
     "build": "yarn run wasm && tsc && vite build",
