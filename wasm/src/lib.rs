@@ -16,5 +16,5 @@ pub fn greet() {
 
 #[wasm_bindgen]
 pub fn init_api() -> Api {
-    return Api::init();
+    Api::init()
 }

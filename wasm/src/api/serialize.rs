@@ -11,7 +11,7 @@ pub struct ApiSerializer {}
 impl ApiSerializer {
     pub fn to_json(app: &App) -> JsValue {
         let data = ApiSerializerSchema::from_app(app);
-        return serde_wasm_bindgen::to_value(&data).unwrap();
+        serde_wasm_bindgen::to_value(&data).unwrap()
     }
 }
 
@@ -29,15 +29,12 @@ impl ApiSerializerSchema {
             projects.insert(uid.to_string(), s);
         });
 
-        let active_project_uid: Option<String> = match app.active_project_uid {
-            None => None,
-            Some(uid) => Some(uid.to_string()),
-        };
+        let active_project_uid: Option<String> = app.active_project_uid.map(|uid| uid.to_string());
 
-        return ApiSerializerSchema {
+        ApiSerializerSchema {
             projects,
             active_project_uid,
-        };
+        }
     }
 }
 
@@ -60,20 +57,17 @@ impl ProjectSerializer {
             layers.push(s);
         });
 
-        let active_layer_uid: Option<String> = match project.active_layer_uid {
-            None => None,
-            Some(uid) => Some(uid.to_string()),
-        };
+        let active_layer_uid: Option<String> = project.active_layer_uid.map(|uid| uid.to_string());
 
-        return ProjectSerializer {
+        ProjectSerializer {
             uid: project.uid.to_string(),
             name: project.name.clone(),
-            width: project.width.clone(),
-            height: project.height.clone(),
+            width: project.width,
+            height: project.height,
             image_hash: project.get_image_hash().to_string(),
             layers,
             active_layer_uid,
-        };
+        }
     }
 }
 
@@ -90,14 +84,14 @@ struct LayerSerializer {
 
 impl LayerSerializer {
     pub fn from_layer(layer: &Layer) -> LayerSerializer {
-        return LayerSerializer {
+        LayerSerializer {
             uid: layer.uid.to_string(),
             name: layer.name.clone(),
-            width: layer.width.clone(),
-            height: layer.height.clone(),
-            visible: layer.visible.clone(),
-            locked: layer.locked.clone(),
+            width: layer.width,
+            height: layer.height,
+            visible: layer.visible,
+            locked: layer.locked,
             thumbnail_hash: layer.get_thumbnail_hash().to_string(),
-        };
+        }
     }
 }

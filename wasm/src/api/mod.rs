@@ -28,14 +28,14 @@ impl Api {
     #[wasm_bindgen(constructor)]
     pub fn init() -> Api {
         console_error_panic_hook::set_once();
-        return Api { app: App::new() };
+        Api { app: App::new() }
     }
 
-    pub fn set_active_project(&mut self, project_uid: u64) -> () {
+    pub fn set_active_project(&mut self, project_uid: u64) {
         self.app.set_active_project(Some(project_uid));
     }
 
-    pub fn clear_active_project(&mut self) -> () {
+    pub fn clear_active_project(&mut self) {
         self.app.set_active_project(None);
     }
 
@@ -46,10 +46,10 @@ impl Api {
         let layer = project.new_layer();
         layer.set_name("Background");
         layer.resize(width, height);
-        return project.uid.clone();
+        project.uid
     }
 
-    pub fn resize_canvas(&mut self, width: u16, height: u16) -> () {
+    pub fn resize_canvas(&mut self, width: u16, height: u16) {
         self.app
             .get_active_project()
             .unwrap()
@@ -64,7 +64,7 @@ impl Api {
                 let layer = project.new_layer();
                 layer.set_name(&name);
                 layer.resize(width, height);
-                return layer.uid.clone();
+                layer.uid
             }
         }
     }
@@ -115,27 +115,27 @@ impl Api {
             None => Clamped(vec![]),
             Some(project) => {
                 let image = project.get_image();
-                return Clamped(image.into_vec());
+                Clamped(image.into_vec())
             }
         }
     }
 
     pub fn get_layer_thumbnail(&mut self, layer_uid: u64) -> Clamped<Vec<u8>> {
         let img = self.get_layer(layer_uid).unwrap().get_thumbnail();
-        return Clamped(img.into_vec());
+        Clamped(img.into_vec())
     }
 
     #[wasm_bindgen(getter)]
     pub fn state(&self) -> JsValue {
-        return serialize::ApiSerializer::to_json(&self.app);
+        serialize::ApiSerializer::to_json(&self.app)
     }
 }
 
 pub fn get_colour(colour: &[u8]) -> Colour {
-    return Colour::from_rgba(
+    Colour::from_rgba(
         colour[0] as u8,
         colour[1] as u8,
         colour[2] as u8,
         colour[3] as u8,
-    );
+    )
 }
