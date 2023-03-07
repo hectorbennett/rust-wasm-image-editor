@@ -49,7 +49,7 @@ impl Project {
     pub fn resize_canvas(&mut self, width: u16, height: u16) {
         self.width = width;
         self.height = height;
-        self.selection = Selection::new(self.width.clone(), self.height.clone());
+        self.selection = Selection::new(self.width, self.height);
     }
 
     pub fn new_layer(&mut self) -> &mut Layer {

@@ -8,11 +8,11 @@ pub struct Selection {
 
 impl Selection {
     pub fn new(width: u16, height: u16) -> Selection {
-        return Selection {
+        Selection {
             width,
             height,
             buffer: vec![0; (width * height).into()],
-        };
+        }
     }
 
     pub fn put(&mut self, x: u16, y: u16, alpha: u8) {

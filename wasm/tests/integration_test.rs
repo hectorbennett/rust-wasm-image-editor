@@ -1,4 +1,4 @@
-use wasm::api::Api;
+
 
 #[test]
 fn it_adds_two() {

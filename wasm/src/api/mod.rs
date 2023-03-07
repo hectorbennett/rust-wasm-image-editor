@@ -1,4 +1,4 @@
-use crate::app::{colour::Colour, layer::Layer, selection::Selection};
+use crate::app::{colour::Colour, layer::Layer};
 
 use super::app::App;
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
@@ -70,7 +70,7 @@ impl Api {
     }
 
     pub fn fill_selection(&mut self) {
-        let project = self.app.get_active_project().unwrap();
+        let _project = self.app.get_active_project().unwrap();
         // project.fill_selection(self.app.primary_colour);
         // let selection: &mut Selection = &mut project.selection;
         // let layer = project.get_active_layer().unwrap();

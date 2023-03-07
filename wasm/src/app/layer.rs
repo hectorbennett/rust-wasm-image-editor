@@ -74,7 +74,7 @@ impl Layer {
         self.locked = locked;
     }
 
-    pub fn fill_selection(&mut self, selection: &Selection, colour: &Colour) -> () {}
+    pub fn fill_selection(&mut self, _selection: &Selection, _colour: &Colour) {}
 
     pub fn fill_rect(
         &mut self,
@@ -83,7 +83,7 @@ impl Layer {
         top: u16,
         width: u16,
         height: u16,
-    ) -> () {
+    ) {
         let right = left + width;
         let bottom = top + height;
         (left..=right).for_each(|i: u16| {
