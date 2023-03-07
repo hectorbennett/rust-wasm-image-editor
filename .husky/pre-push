@@ -1,4 +1,7 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
+# todo: fix lint errors and then enable
+# yarn run lint:check
+yarn run format:check
 yarn run test

@@ -5,7 +5,6 @@ import { SpotlightProvider } from "@mantine/spotlight";
 // import { DndProvider } from "react-dnd";
 // import { HTML5Backend } from "react-dnd-html5-backend";
 
-
 import modals from "./ui/Modals";
 import Provider from "./context";
 import { WasmContext } from "./context/wasm";
