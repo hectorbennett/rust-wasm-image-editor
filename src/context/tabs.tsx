@@ -34,7 +34,7 @@ function useTabs() {
     setActiveTabId(uid);
   }
 
-  function closeTab(uid: string) {
+  function closeTab(_uid: string) {
     console.log("close tab");
   }
 

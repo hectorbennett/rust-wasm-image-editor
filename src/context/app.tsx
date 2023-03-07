@@ -5,7 +5,7 @@ import { WasmContext } from "./wasm";
 
 function useFile() {
   const wasm = WasmContext.useContainer();
-  const tabs = TabsContext.useContainer();
+  // const tabs = TabsContext.useContainer();
   return {
     new: function _new(width: number, height: number) {
       wasm.api.create_project("Untitled", width, height);
@@ -46,8 +46,10 @@ function useEdit() {
 }
 
 function useFilters() {
-  const wasm = WasmContext.useContainer();
-  function generateNoise() {}
+  // const wasm = WasmContext.useContainer();
+  function generateNoise() {
+    // todo
+  }
   return {
     generateNoise,
   };

@@ -30,7 +30,7 @@ function useLayers() {
     setLayerVisibility: function setLayerVisibility(layer_uid: string, visible: boolean) {
       wasm.api.set_layer_visibile(layer_uid, visible);
     },
-    renameLayer: function renameLayer(layer_uid: string, name: string) {
+    renameLayer: function renameLayer(_layer_uid: string, _name: string) {
       console.log("rename layer");
     },
     setActiveLayer: function (layer_uid: string) {

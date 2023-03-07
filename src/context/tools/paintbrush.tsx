@@ -1,5 +1,4 @@
 import { Box } from "@mantine/core";
-import { SyntheticEvent } from "react";
 import { Brush } from "react-bootstrap-icons";
 import { Tool, ToolEventParams } from ".";
 

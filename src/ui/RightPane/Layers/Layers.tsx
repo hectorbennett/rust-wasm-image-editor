@@ -104,7 +104,7 @@ interface LayerProps {
 
 function LayerRow(props: LayerProps) {
   const layers = LayersContext.useContainer();
-  const rightClickRef = useRightClick(function (event: Event) {
+  const rightClickRef = useRightClick(function (_event: Event) {
     // console.log("right click");
     // console.log(event);
   });

@@ -1,21 +1,10 @@
-import {
-  createStyles,
-  UnstyledButton,
-  Group,
-  Text,
-  Image,
-  Center,
-  Badge,
-  Box,
-  Flex,
-} from "@mantine/core";
-import { SpotlightProvider, SpotlightAction, SpotlightActionProps } from "@mantine/spotlight";
-import { ReactEventHandler } from "react";
+import { createStyles, UnstyledButton, Text, Box } from "@mantine/core";
+import { SpotlightActionProps } from "@mantine/spotlight";
 import { CommandCategory } from "../context/commands";
 import { CommandTypeBadge } from "./CommandTypeBadge";
 import KeyboardShortcut from "./KeyboardShortcut";
 
-const useStyles = createStyles((theme, _params, getRef) => ({
+const useStyles = createStyles((theme, _params, _getRef) => ({
   action: {
     position: "relative",
     display: "flex",
@@ -60,8 +49,6 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 
 export function CustomSpotlightAction({
   action,
-  styles,
-  classNames,
   hovered,
   onTrigger,
   ...others

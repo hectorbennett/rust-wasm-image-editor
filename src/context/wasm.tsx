@@ -49,7 +49,9 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
 
 function useWasm() {
   const [appState, setAppState] = useState<AppState>(DEFAULT_APP_STATE);
-  const methodCallback = useRef<() => void>(() => {});
+  const methodCallback = useRef<() => void>(() => {
+    /* noop */
+  });
   const api = useWasmApi({
     methodCallback: () => {
       methodCallback.current();
