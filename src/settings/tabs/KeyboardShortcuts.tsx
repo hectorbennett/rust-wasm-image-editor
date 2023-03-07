@@ -1,5 +1,4 @@
-// import { useState } from "react";
-import { Box, Table, Input, UnstyledButton } from "@mantine/core";
+import { Box, Table, UnstyledButton } from "@mantine/core";
 import KeyboardShortcut from "../../components/KeyboardShortcut";
 
 import { CommandsContext } from "../../context";

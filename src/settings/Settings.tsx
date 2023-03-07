@@ -40,7 +40,7 @@ function SettingsInner() {
 
 export function Settings() {
   return (
-    <Box p="xl" sx={(theme) => ({ display: "flex", height: "100%" })}>
+    <Box p="xl" sx={(_theme) => ({ display: "flex", height: "100%" })}>
       <NavBar />
       <Box ml="xl" sx={{ flex: 1, display: "flex" }}>
         <SettingsInner />

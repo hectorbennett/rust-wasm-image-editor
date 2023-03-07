@@ -4,7 +4,7 @@ import { ToolsContext } from "../../../context";
 
 import { createStyles } from "@mantine/core";
 
-const useStyles = createStyles((theme, _params, getRef) => ({
+const useStyles = createStyles((_theme, _params, _getRef) => ({
   tools: {
     display: "flex",
     flexWrap: "wrap",

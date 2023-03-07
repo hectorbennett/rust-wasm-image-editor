@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { createContainer } from "unstated-next";
 import { IconGauge, IconKeyboard, TablerIconProps } from "@tabler/icons";
 
@@ -54,7 +54,7 @@ interface SettingsTab {
 }
 
 function useSettings() {
-  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  const [settings, _setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const tabs: Array<SettingsTab> = [
     {
       id: "user_interface",

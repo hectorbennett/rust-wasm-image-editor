@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 
-import { Box, ThemeIcon, useMantineTheme } from "@mantine/core";
+import { Box, useMantineTheme } from "@mantine/core";
 
 export interface Size {
   width?: number;
@@ -53,7 +53,7 @@ function EdgeHandle(props: EdgeHandleProps) {
     }
   }
 
-  function stopDrag(e: any) {
+  function stopDrag(_e) {
     setDragging(false);
     document.documentElement.removeEventListener("mousemove", doDrag, false);
     document.documentElement.removeEventListener("mouseup", stopDrag, false);

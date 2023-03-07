@@ -3,9 +3,9 @@ import { Cursor } from "../components/Cursor";
 import { ActiveProjectContext } from "../context/activeProject";
 import { WasmContext } from "../context/wasm";
 
-interface WorkspaceProps {
-  id: string;
-}
+// interface WorkspaceProps {
+//   id: string;
+// }
 
 interface CanvasProps {
   width: number;
@@ -58,7 +58,7 @@ function Background(props: { width: number; height: number }) {
   );
 }
 
-export default function Workspace(props: WorkspaceProps) {
+export default function Workspace() {
   const activeProject = ActiveProjectContext.useContainer();
   const [cursorVisible, setCursorVisible] = useState(false);
   const cursorRef = useRef<HTMLDivElement>(null);
