@@ -1,11 +1,13 @@
 pub mod colour;
 pub mod layer;
 pub mod project;
+pub mod selection;
+pub mod utils;
 
 use rand::Rng;
 use std::collections::HashMap;
 
-use self::project::Project;
+use self::{colour::Colour, project::Project};
 
 pub fn generate_uid() -> u64 {
     let mut rng = rand::thread_rng();
@@ -15,6 +17,7 @@ pub fn generate_uid() -> u64 {
 pub struct App {
     pub projects: HashMap<u64, Project>,
     pub active_project_uid: Option<u64>,
+    pub primary_colour: Colour,
 }
 
 impl App {
@@ -22,6 +25,7 @@ impl App {
         return App {
             projects: HashMap::new(),
             active_project_uid: None,
+            primary_colour: Colour::BLACK,
         };
     }
 

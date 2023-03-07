@@ -6,7 +6,7 @@ use std::{
 use image::{ImageBuffer, RgbaImage};
 use rand::Rng;
 
-use super::layer::Layer;
+use super::{layer::Layer, selection::Selection};
 
 pub fn generate_uid() -> u64 {
     let mut rng = rand::thread_rng();
@@ -20,6 +20,7 @@ pub struct Project {
     pub height: u16,
     pub layers: Vec<Layer>,
     pub active_layer_uid: Option<u64>,
+    pub selection: Selection,
 }
 
 impl Project {
@@ -31,6 +32,7 @@ impl Project {
             height: 20,
             layers: vec![],
             active_layer_uid: None,
+            selection: Selection::new(20, 20),
         };
     }
 
@@ -41,6 +43,7 @@ impl Project {
     pub fn resize_canvas(&mut self, width: u16, height: u16) -> () {
         self.width = width;
         self.height = height;
+        self.selection = Selection::new(self.width.clone(), self.height.clone());
     }
 
     pub fn new_layer(&mut self) -> &mut Layer {
@@ -57,6 +60,13 @@ impl Project {
 
     pub fn set_active_layer(&mut self, uid: Option<u64>) {
         self.active_layer_uid = uid.clone();
+    }
+
+    pub fn get_active_layer(&mut self) -> Option<&mut Layer> {
+        match self.active_layer_uid {
+            None => None,
+            Some(layer_uid) => return Some(self.get_layer(layer_uid)),
+        }
     }
 
     pub fn get_image(&self) -> RgbaImage {

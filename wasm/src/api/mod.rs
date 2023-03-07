@@ -1,4 +1,4 @@
-use crate::app::{colour::Colour, layer::Layer};
+use crate::app::{colour::Colour, layer::Layer, selection::Selection};
 
 use super::app::App;
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
@@ -67,6 +67,29 @@ impl Api {
                 return layer.uid.clone();
             }
         }
+    }
+
+    pub fn fill_selection(&mut self) {
+        let project = self.app.get_active_project().unwrap();
+        // project.fill_selection(self.app.primary_colour);
+        // let selection: &mut Selection = &mut project.selection;
+        // let layer = project.get_active_layer().unwrap();
+        // layer.fill_s
+        // selection.fill_layer(layer, self.app.primary_colour);
+        // layer.fill_selection(selection, self.app.primary_colour)
+        //    .fill_selection();
+    }
+
+    pub fn set_primary_colour(&mut self, red: u8, green: u8, blue: u8, alpha: u8) {
+        self.app.primary_colour = Colour::from_rgba(red, green, blue, alpha);
+    }
+
+    pub fn select_rect(&mut self, x: u16, y: u16, width: u16, height: u16) {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .selection
+            .select_rect(x, y, width, height);
     }
 
     pub fn set_active_layer(&mut self, layer_uid: u64) {

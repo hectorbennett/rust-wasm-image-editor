@@ -9,7 +9,7 @@ use image::{
 };
 use rand::Rng;
 
-use super::colour::Colour;
+use super::{colour::Colour, selection::Selection};
 
 pub fn generate_uid() -> u64 {
     let mut rng = rand::thread_rng();
@@ -27,12 +27,12 @@ pub struct Layer {
 }
 
 impl Layer {
-    pub fn new() -> Layer {
+    pub fn new(width: u16, height: u16) -> Layer {
         return Layer {
             uid: generate_uid(),
             name: "".into(),
-            width: 500,
-            height: 500,
+            width,
+            height,
             visible: true,
             locked: false,
             img: ImageBuffer::from_fn(500, 500, |_x, _y| image::Rgba([0, 0, 0, 0])),
@@ -68,6 +68,8 @@ impl Layer {
         self.locked = locked;
     }
 
+    pub fn fill_selection(&mut self, selection: &Selection, colour: &Colour) -> () {}
+
     pub fn fill_rect(
         &mut self,
         colour: Colour,
@@ -90,5 +92,24 @@ impl Layer {
         let pixel = *self.img.get_pixel(x as u32, y as u32);
         let rgba = pixel.to_rgba();
         return rgba.0;
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_fill_selection() {
+        let mut layer = Layer::new(4, 4);
+        let mut selection = Selection::new(4, 4);
+
+        selection.select_rect(0, 0, 2, 2);
+
+        let mut colour = Colour::BLACK;
+
+        layer.fill_selection(&selection, &colour);
+
+        assert_eq!(layer.img.into_raw(), vec![1, 1, 1, 1]);
     }
 }
