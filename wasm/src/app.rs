@@ -17,6 +17,12 @@ pub struct App {
     pub active_project_uid: Option<u64>,
 }
 
+impl Default for App {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl App {
     pub fn new() -> App {
         App {

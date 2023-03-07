@@ -22,6 +22,12 @@ pub struct Project {
     pub active_layer_uid: Option<u64>,
 }
 
+// impl Default for Project {
+//     fn default() -> Self {
+//         Self::new()
+//     }
+// }
+
 impl Project {
     pub fn new() -> Project {
         Project {
@@ -71,10 +77,10 @@ impl Project {
         s.finish()
     }
 
-    fn render_image(&self) {
-        let img = self.get_image();
-        img.save("test.png").unwrap();
-    }
+    // fn render_image(&self) {
+    //     let img = self.get_image();
+    //     img.save("test.png").unwrap();
+    // }
 
     fn get_compiled_pixel(&self, x: u16, y: u16) -> [u8; 4] {
         let mut output: [u8; 4] = [0, 0, 0, 0];

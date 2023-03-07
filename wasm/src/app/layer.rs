@@ -26,6 +26,12 @@ pub struct Layer {
     img: RgbaImage,
 }
 
+impl Default for Layer {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Layer {
     pub fn new() -> Layer {
         Layer {
@@ -68,14 +74,7 @@ impl Layer {
         self.locked = locked;
     }
 
-    pub fn fill_rect(
-        &mut self,
-        colour: Colour,
-        left: u16,
-        top: u16,
-        width: u16,
-        height: u16,
-    ) {
+    pub fn fill_rect(&mut self, colour: Colour, left: u16, top: u16, width: u16, height: u16) {
         let right = left + width;
         let bottom = top + height;
         (left..=right).for_each(|i: u16| {
