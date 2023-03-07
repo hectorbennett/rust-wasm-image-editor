@@ -28,7 +28,7 @@ pub struct Layer {
 
 impl Default for Layer {
     fn default() -> Self {
-        Self::new()
+        Self::new(500, 500)
     }
 }
 
