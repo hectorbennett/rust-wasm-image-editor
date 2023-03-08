@@ -9,7 +9,6 @@ import modals from "./ui/Modals";
 import Provider from "./context";
 import { WasmContext } from "./context/wasm";
 
-// @ts-ignore
 import Main from "./main/Main";
 import { CustomSpotlightAction } from "./components/CustomSpotlightAction";
 import { useEffect, useRef } from "react";

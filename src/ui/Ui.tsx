@@ -62,7 +62,6 @@ const useStyles = createStyles((theme, _params, _getRef) => ({
 }));
 
 interface UiProps {
-  width: number;
   children: ReactNode;
 }
 

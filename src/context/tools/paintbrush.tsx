@@ -8,12 +8,12 @@ let currX = 0;
 let currY = 0;
 let drawing = false;
 
-function draw({ ctx, from, to }: any) {
+function draw({ ctx, from, to }: { ctx: CanvasRenderingContext2D; from: number[]; to: number[] }) {
   ctx.beginPath();
   ctx.moveTo(Math.floor(from[0]), Math.floor(from[1]));
   ctx.lineTo(Math.floor(to[0]), Math.floor(to[1]));
   ctx.strokeStyle = "blue";
-  ctx.lineWidth = "2";
+  ctx.lineWidth = 2;
   ctx.stroke();
   ctx.closePath();
 }

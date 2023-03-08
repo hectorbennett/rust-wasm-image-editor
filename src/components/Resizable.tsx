@@ -28,7 +28,7 @@ function EdgeHandle(props: EdgeHandleProps) {
     }
   })();
 
-  function handleMousedown(e: any) {
+  function handleMousedown(e: React.MouseEvent) {
     setDragging(true);
     setStartX(e.clientX);
     setStartWidth(props.width);
@@ -41,7 +41,7 @@ function EdgeHandle(props: EdgeHandleProps) {
     }
   }, [startX]);
 
-  function doDrag(e: any) {
+  function doDrag(e: MouseEvent) {
     if (props.position == "left") {
       const diff = e.clientX - startX;
       const width = startWidth - diff;
@@ -53,7 +53,7 @@ function EdgeHandle(props: EdgeHandleProps) {
     }
   }
 
-  function stopDrag(_e: any) {
+  function stopDrag() {
     setDragging(false);
     document.documentElement.removeEventListener("mousemove", doDrag, false);
     document.documentElement.removeEventListener("mouseup", stopDrag, false);
@@ -68,7 +68,6 @@ function EdgeHandle(props: EdgeHandleProps) {
         zIndex: 1000,
         cursor: "e-resize",
         position: "absolute",
-        // background: theme.primaryColor,
         background: colour,
         opacity: dragging ? 1 : 0,
 

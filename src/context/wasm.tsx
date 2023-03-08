@@ -1,4 +1,3 @@
-// @ts-ignore
 import initWasm, { Api } from "wasm";
 
 import { useEffect, useRef, useState } from "react";
@@ -16,7 +15,7 @@ const DEFAULT_APP_STATE: AppState = {
 };
 
 const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
-  const [api, setApi] = useState<any>(null);
+  const [api, setApi] = useState<null | Api>(null);
   const inited = useRef(false);
   useEffect(() => {
     if (inited.current) {
@@ -24,17 +23,14 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
     }
     inited.current = true;
     initWasm().then(() => {
-      const apiHandler: any = {
-        get(target: any, prop: any, receiver: any) {
+      const apiHandler: ProxyHandler<Api> = {
+        get(target: Api, prop: string, _receiver: unknown) {
           const p = Reflect.get(target, prop);
-          console.log(target);
           if (p instanceof Function) {
-            return function () {
-              // @ts-ignore
-              const that: any = this;
-              const thing = p.apply(that, arguments);
+            return (...args: Array<unknown>) => {
+              const result = p.apply(target, args);
               methodCallback();
-              return thing;
+              return result;
             };
           } else {
             return p;

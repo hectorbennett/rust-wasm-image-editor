@@ -1,13 +1,14 @@
 import { ReactElement, useState } from "react";
 import { createContainer } from "unstated-next";
 
-import { Cursor, Crop, BoundingBoxCircles } from "react-bootstrap-icons";
+import { Cursor, Crop, BoundingBoxCircles, Icon } from "react-bootstrap-icons";
 
 import { TbRectangle, TbOvalVertical } from "react-icons/tb";
 
 import { paintbrush } from "./paintbrush";
 import { eye_dropper } from "./eye_dropper";
 import { bucket_fill } from "./bucket_fill";
+import { Project } from "../activeProject";
 
 export interface ToolEventParams {
   canvas: HTMLCanvasElement;
@@ -18,7 +19,7 @@ export interface ToolEventParams {
   canvasHeight: number;
   cursorX: number;
   cursorY: number;
-  project: any;
+  project: Project;
   event: MouseEvent;
 }
 
@@ -33,7 +34,7 @@ export interface ToolEvents {
 export interface Tool {
   name: string;
   label: string;
-  icon: Function;
+  icon: Icon;
   events: ToolEvents;
   cursor?: ReactElement;
 }

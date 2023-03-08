@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 
-export function useRightClick(callback: Function) {
+export function useRightClick(callback: (event: Event) => unknown) {
   const ref = useRef<HTMLDivElement>(null);
   function handleContextMenu(event: Event) {
     event.preventDefault();
