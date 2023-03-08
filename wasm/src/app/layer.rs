@@ -7,14 +7,10 @@ use image::{
     imageops::{self, FilterType::Nearest},
     ImageBuffer, Pixel, RgbaImage,
 };
-use rand::Rng;
+
+use crate::utils::generate_uid;
 
 use super::colour::Colour;
-
-pub fn generate_uid() -> u64 {
-    let mut rng = rand::thread_rng();
-    rng.gen()
-}
 
 pub struct Layer {
     pub uid: u64,
