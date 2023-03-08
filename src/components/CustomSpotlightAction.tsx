@@ -1,5 +1,6 @@
 import { createStyles, UnstyledButton, Text, Box } from "@mantine/core";
 import { SpotlightActionProps } from "@mantine/spotlight";
+import { MouseEvent } from "react";
 import { CommandCategory } from "../context/commands";
 import { CommandTypeBadge } from "./CommandTypeBadge";
 import KeyboardShortcut from "./KeyboardShortcut";
@@ -53,14 +54,13 @@ export function CustomSpotlightAction({
   onTrigger,
   ...others
 }: SpotlightActionProps) {
-  // const { classes, cx } = useStyles({ styles, classNames, name: 'Spotlight' });
   const { classes, cx } = useStyles();
 
   return (
     <UnstyledButton
       className={cx(classes.action, { [classes.actionHovered]: hovered })}
       tabIndex={-1}
-      onMouseDown={(event: any) => event.preventDefault()}
+      onMouseDown={(event: MouseEvent) => event.preventDefault()}
       onClick={onTrigger}
       {...others}
     >

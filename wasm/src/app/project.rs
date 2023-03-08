@@ -4,14 +4,9 @@ use std::{
 };
 
 use image::{ImageBuffer, RgbaImage};
-use rand::Rng;
 
 use super::{layer::Layer, selection::Selection};
-
-pub fn generate_uid() -> u64 {
-    let mut rng = rand::thread_rng();
-    rng.gen()
-}
+use crate::utils::generate_uid;
 
 pub struct Project {
     pub uid: u64,

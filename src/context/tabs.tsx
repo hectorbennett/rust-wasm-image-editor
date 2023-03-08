@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { createContainer } from "unstated-next";
+import { Project } from "./activeProject";
 import { WasmContext } from "./wasm";
 
 type TabType = "project" | "settings";
@@ -18,9 +19,9 @@ function useTabs() {
 
   useEffect(() => {
     if (!activeTab || activeTab.type !== "project") {
-      wasm.api.clear_active_project();
+      wasm.api && wasm.api.clear_active_project();
     } else {
-      wasm.api.set_active_project(activeTab.uid);
+      wasm.api && wasm.api.set_active_project(BigInt(activeTab.uid));
     }
   }, [activeTab]);
 
@@ -47,7 +48,7 @@ function useTabs() {
       return;
     }
     const current_uids = tabs.map((tab) => tab.uid);
-    wasm.state.projects.forEach((project: any) => {
+    wasm.state.projects.forEach((project: Project) => {
       if (!current_uids.includes(project.uid)) {
         newTab(project.uid, "project");
       }

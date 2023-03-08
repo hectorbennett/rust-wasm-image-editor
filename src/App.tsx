@@ -9,7 +9,6 @@ import modals from "./ui/Modals";
 import Provider from "./context";
 import { WasmContext } from "./context/wasm";
 
-// @ts-ignore
 import Main from "./main/Main";
 import { CustomSpotlightAction } from "./components/CustomSpotlightAction";
 import { useEffect, useRef } from "react";
@@ -26,21 +25,24 @@ function Testing() {
       return;
     }
     testCalled.current = true;
+    if (!wasm.api) {
+      return;
+    }
     wasm.api.create_project("Test project", 500, 500);
 
     // red square layer
     const layer_1_uid = wasm.api.create_layer("Test layer 1", 500, 500);
-    const red = [255, 0, 0, 100];
+    const red = new Uint8Array([255, 0, 0, 100]);
     wasm.api.fill_rect(layer_1_uid, red, 100, 100, 150, 150);
 
     // green square layer
     const layer_2_uid = wasm.api.create_layer("Test layer 2", 500, 500);
-    const green = [0, 255, 0, 100];
+    const green = new Uint8Array([0, 255, 0, 100]);
     wasm.api.fill_rect(layer_2_uid, green, 220, 50, 180, 150);
 
     // blue square layer
     const layer_3_uid = wasm.api.create_layer("Test layer 3", 500, 500);
-    const blue = [0, 0, 255, 100];
+    const blue = new Uint8Array([0, 0, 255, 100]);
     wasm.api.fill_rect(layer_3_uid, blue, 180, 150, 200, 200);
   }
   return null;

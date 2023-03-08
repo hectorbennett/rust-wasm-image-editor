@@ -7,14 +7,9 @@ use image::{
     imageops::{self, FilterType::Nearest},
     ImageBuffer, Pixel, RgbaImage,
 };
-use rand::Rng;
 
 use super::{colour::Colour, selection::Selection};
-
-pub fn generate_uid() -> u64 {
-    let mut rng = rand::thread_rng();
-    rng.gen()
-}
+use crate::utils::generate_uid;
 
 pub struct Layer {
     pub uid: u64,
@@ -76,14 +71,7 @@ impl Layer {
 
     pub fn fill_selection(&mut self, _selection: &Selection, _colour: &Colour) {}
 
-    pub fn fill_rect(
-        &mut self,
-        colour: Colour,
-        left: u16,
-        top: u16,
-        width: u16,
-        height: u16,
-    ) {
+    pub fn fill_rect(&mut self, colour: Colour, left: u16, top: u16, width: u16, height: u16) {
         let right = left + width;
         let bottom = top + height;
         (left..=right).for_each(|i: u16| {

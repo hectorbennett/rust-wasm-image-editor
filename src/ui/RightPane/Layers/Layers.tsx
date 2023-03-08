@@ -47,7 +47,9 @@ function LayerThumbnail(props: LayerThumbnailProps) {
       return;
     }
     const newData = ctx.createImageData(width, height);
-    newData.data.set(wasm.api.get_layer_thumbnail(props.layer.uid));
+    if (wasm.api) {
+      newData.data.set(wasm.api.get_layer_thumbnail(BigInt(props.layer.uid)));
+    }
     ctx.putImageData(newData, 0, 0);
   }, [props.layer.thumbnail_hash]);
 
