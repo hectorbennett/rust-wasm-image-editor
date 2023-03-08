@@ -13,6 +13,5 @@ mod tests {
     fn test_generate_uid() {
         let uid = generate_uid();
         assert!(uid > 0);
-        assert_eq!(uid, 0);
     }
 }
