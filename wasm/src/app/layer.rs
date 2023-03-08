@@ -14,8 +14,8 @@ use crate::utils::generate_uid;
 pub struct Layer {
     pub uid: u64,
     pub name: String,
-    pub width: u16,
-    pub height: u16,
+    pub width: u32,
+    pub height: u32,
     pub visible: bool,
     pub locked: bool,
     img: RgbaImage,
@@ -28,7 +28,7 @@ impl Default for Layer {
 }
 
 impl Layer {
-    pub fn new(width: u16, height: u16) -> Layer {
+    pub fn new(width: u32, height: u32) -> Layer {
         Layer {
             uid: generate_uid(),
             name: "".into(),
@@ -36,7 +36,7 @@ impl Layer {
             height,
             visible: true,
             locked: false,
-            img: ImageBuffer::from_fn(500, 500, |_x, _y| image::Rgba([0, 0, 0, 0])),
+            img: ImageBuffer::from_fn(width, height, |_x, _y| image::Rgba([255, 255, 255, 0])),
         }
     }
 
@@ -54,7 +54,7 @@ impl Layer {
         s.finish()
     }
 
-    pub fn resize(&mut self, width: u16, height: u16) {
+    pub fn resize(&mut self, width: u32, height: u32) {
         self.width = width;
         self.height = height;
         let sub_img = imageops::crop(&mut self.img, 0, 0, width as u32, height as u32);
@@ -69,21 +69,33 @@ impl Layer {
         self.locked = locked;
     }
 
-    pub fn fill_selection(&mut self, _selection: &Selection, _colour: &Colour) {}
-
-    pub fn fill_rect(&mut self, colour: Colour, left: u16, top: u16, width: u16, height: u16) {
-        let right = left + width;
-        let bottom = top + height;
-        (left..=right).for_each(|i: u16| {
-            (top..=bottom).for_each(|j: u16| {
-                let pixel = image::Rgba(colour.as_rgba());
-                self.img.put_pixel(i as u32, j as u32, pixel);
+    pub fn fill_selection(&mut self, selection: &Selection, colour: &Colour) {
+        (0..self.width).for_each(|i| {
+            (0..=self.height).for_each(|j| {
+                let value = selection.from_coords(i, j);
+                if value != 0 {
+                    let mut c = colour.clone();
+                    c.alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
+                    let pixel = image::Rgba(colour.as_rgba());
+                    self.img.put_pixel(i, j, pixel);
+                }
             });
         });
     }
 
-    pub fn get_pixel_from_canvas_coordinates(&self, x: u16, y: u16) -> [u8; 4] {
-        let pixel = *self.img.get_pixel(x as u32, y as u32);
+    pub fn fill_rect(&mut self, colour: Colour, left: u32, top: u32, width: u32, height: u32) {
+        let right = left + width;
+        let bottom = top + height;
+        (left..=right).for_each(|i| {
+            (top..=bottom).for_each(|j| {
+                let pixel = image::Rgba(colour.as_rgba());
+                self.img.put_pixel(i, j, pixel);
+            });
+        });
+    }
+
+    pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> [u8; 4] {
+        let pixel = *self.img.get_pixel(x, y);
         let rgba = pixel.to_rgba();
         rgba.0
     }
@@ -95,15 +107,18 @@ mod tests {
 
     #[test]
     fn test_fill_selection() {
-        let mut layer = Layer::new(4, 4);
-        let mut selection = Selection::new(4, 4);
+        let mut layer = Layer::new(2, 2);
+        let mut selection = Selection::new(2, 2);
 
-        selection.select_rect(0, 0, 2, 2);
+        selection.select_rect(0, 0, 2, 1);
 
-        let colour = Colour::BLACK;
+        let colour = Colour::from_rgba(1, 2, 3, 4);
 
         layer.fill_selection(&selection, &colour);
 
-        // assert_eq!(layer.img.into_raw(), vec![1, 1, 1, 1]);
+        assert_eq!(
+            layer.img.into_raw(),
+            vec![1, 2, 3, 4, 1, 2, 3, 4, 255, 255, 255, 0, 255, 255, 255, 0]
+        );
     }
 }

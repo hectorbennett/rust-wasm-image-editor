@@ -1,9 +1,9 @@
 #[derive(Clone, Copy)]
 pub struct Colour {
-    red: u8,
-    green: u8,
-    blue: u8,
-    alpha: u8,
+    pub red: u8,
+    pub green: u8,
+    pub blue: u8,
+    pub alpha: u8,
 }
 
 impl Colour {

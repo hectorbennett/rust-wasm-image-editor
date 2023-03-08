@@ -1,5 +1,5 @@
-pub fn get_1d_index_from_2d_coord(width: u16, x: u16, y: u16) -> u16 {
-    (y * width) + x
+pub fn get_1d_index_from_2d_coord(width: u32, x: u32, y: u32) -> usize {
+    ((y * width) + x) as usize
 }
 
 #[cfg(test)]

@@ -42,8 +42,8 @@ impl ApiSerializerSchema {
 struct ProjectSerializer {
     uid: String,
     name: String,
-    width: u16,
-    height: u16,
+    width: u32,
+    height: u32,
     image_hash: String,
     layers: Vec<LayerSerializer>,
     active_layer_uid: Option<String>,
@@ -75,8 +75,8 @@ impl ProjectSerializer {
 struct LayerSerializer {
     uid: String,
     name: String,
-    width: u16,
-    height: u16,
+    width: u32,
+    height: u32,
     visible: bool,
     locked: bool,
     thumbnail_hash: String,

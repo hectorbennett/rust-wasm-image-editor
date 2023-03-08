@@ -11,8 +11,8 @@ use crate::utils::generate_uid;
 pub struct Project {
     pub uid: u64,
     pub name: String,
-    pub width: u16,
-    pub height: u16,
+    pub width: u32,
+    pub height: u32,
     pub layers: Vec<Layer>,
     pub active_layer_uid: Option<u64>,
     pub selection: Selection,
@@ -41,7 +41,7 @@ impl Project {
         self.name = name.into();
     }
 
-    pub fn resize_canvas(&mut self, width: u16, height: u16) {
+    pub fn resize_canvas(&mut self, width: u32, height: u32) {
         self.width = width;
         self.height = height;
         self.selection = Selection::new(self.width, self.height);
@@ -72,7 +72,7 @@ impl Project {
 
     pub fn get_image(&self) -> RgbaImage {
         ImageBuffer::from_fn(self.width as u32, self.height as u32, |x, y| {
-            image::Rgba(self.get_compiled_pixel(x as u16, y as u16))
+            image::Rgba(self.get_compiled_pixel(x, y))
         })
     }
 
@@ -87,7 +87,7 @@ impl Project {
     //     img.save("test.png").unwrap();
     // }
 
-    fn get_compiled_pixel(&self, x: u16, y: u16) -> [u8; 4] {
+    fn get_compiled_pixel(&self, x: u32, y: u32) -> [u8; 4] {
         let mut output: [u8; 4] = [0, 0, 0, 0];
         for layer in self.layers.iter().filter(|l| l.visible) {
             let pixel = layer.get_pixel_from_canvas_coordinates(x, y);

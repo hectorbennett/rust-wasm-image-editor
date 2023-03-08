@@ -39,7 +39,7 @@ impl Api {
         self.app.set_active_project(None);
     }
 
-    pub fn create_project(&mut self, name: String, width: u16, height: u16) -> u64 {
+    pub fn create_project(&mut self, name: String, width: u32, height: u32) -> u64 {
         let project = self.app.new_project();
         project.set_name(&name);
         project.resize_canvas(width, height);
@@ -49,14 +49,14 @@ impl Api {
         project.uid
     }
 
-    pub fn resize_canvas(&mut self, width: u16, height: u16) {
+    pub fn resize_canvas(&mut self, width: u32, height: u32) {
         self.app
             .get_active_project()
             .unwrap()
             .resize_canvas(width, height);
     }
 
-    pub fn create_layer(&mut self, name: String, width: u16, height: u16) -> u64 {
+    pub fn create_layer(&mut self, name: String, width: u32, height: u32) -> u64 {
         let _project = self.app.get_active_project();
         match _project {
             None => 0,
@@ -84,7 +84,7 @@ impl Api {
         self.app.primary_colour = Colour::from_rgba(red, green, blue, alpha);
     }
 
-    pub fn select_rect(&mut self, x: u16, y: u16, width: u16, height: u16) {
+    pub fn select_rect(&mut self, x: u32, y: u32, width: u32, height: u32) {
         self.app
             .get_active_project()
             .unwrap()
@@ -119,10 +119,10 @@ impl Api {
         &mut self,
         layer_uid: u64,
         colour: &[u8],
-        left: u16,
-        top: u16,
-        width: u16,
-        height: u16,
+        left: u32,
+        top: u32,
+        width: u32,
+        height: u32,
     ) {
         let _layer = self.get_layer(layer_uid);
         match _layer {
