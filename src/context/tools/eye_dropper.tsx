@@ -1,7 +1,7 @@
 import { Box } from "@mantine/core";
 import { IconColorPicker } from "@tabler/icons";
 
-import { Tool, ToolEventParams } from ".";
+import { Tool } from ".";
 
 function Cursor() {
   return (
