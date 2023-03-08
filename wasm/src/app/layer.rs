@@ -74,9 +74,8 @@ impl Layer {
             (0..=self.height).for_each(|j| {
                 let value = selection.from_coords(i, j);
                 if value != 0 {
-                    let mut c = colour.clone();
-                    c.alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
-                    let pixel = image::Rgba(colour.as_rgba());
+                    let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
+                    let pixel = image::Rgba([colour.red, colour.green, colour.blue, alpha]);
                     self.img.put_pixel(i, j, pixel);
                 }
             });
