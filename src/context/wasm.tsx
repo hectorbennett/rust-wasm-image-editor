@@ -15,7 +15,7 @@ const DEFAULT_APP_STATE: AppState = {
 };
 
 const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
-  const [api, setApi] = useState<null | Api>(null);
+  const [api, setApi] = useState<Api>();
   const inited = useRef(false);
   useEffect(() => {
     if (inited.current) {

@@ -9,6 +9,7 @@ import { paintbrush } from "./paintbrush";
 import { eye_dropper } from "./eye_dropper";
 import { bucket_fill } from "./bucket_fill";
 import { Project } from "../activeProject";
+import { TablerIcon } from "@tabler/icons";
 
 export interface ToolEventParams {
   canvas: HTMLCanvasElement;
@@ -34,7 +35,7 @@ export interface ToolEvents {
 export interface Tool {
   name: string;
   label: string;
-  icon: Icon;
+  icon: Icon | TablerIcon;
   events: ToolEvents;
   cursor?: ReactElement;
 }

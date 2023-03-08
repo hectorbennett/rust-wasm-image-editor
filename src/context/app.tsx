@@ -8,7 +8,7 @@ function useFile() {
   // const tabs = TabsContext.useContainer();
   return {
     new: function _new(width: number, height: number) {
-      wasm.api.create_project("Untitled", width, height);
+      wasm.api && wasm.api.create_project("Untitled", width, height);
     },
     open: function open() {
       console.log("open");

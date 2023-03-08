@@ -12,9 +12,9 @@ export const bucket_fill: Tool = {
       canvasTop,
       canvasWidth,
       canvasHeight,
-      project,
+      // project,
     }: ToolEventParams) {
-      ctx.fillStyle = project.activeColourAsString;
+      // ctx.fillStyle = project.activeColourAsString;
       ctx.fillRect(canvasLeft, canvasTop, canvasWidth, canvasHeight);
     },
   },
