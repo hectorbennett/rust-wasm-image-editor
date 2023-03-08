@@ -1,8 +1,17 @@
 #!/usr/bin/env sh
 . "$(dirname -- "$0")/_/husky.sh"
 
-# todo: fix lint errors and then enable lint:js:check
-# yarn run lint:js:check
+# check typescript errors
+yarn run type:check
+
+# check js linting errors
+yarn run lint:js:check
+
+# check formatting errors
 yarn run format:check
+
+# check wasm linting errors
 yarn run lint:wasm:check
+
+# run tests
 yarn run test

@@ -29,7 +29,7 @@ export default function ResizeCanvas({ context, id }: ContextModalProps) {
         fullWidth
         mt="md"
         onClick={() => {
-          wasm.api.resize_canvas(width, height);
+          wasm.api && wasm.api.resize_canvas(width, height);
           context.closeModal(id);
         }}
       >
