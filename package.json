@@ -22,6 +22,13 @@
     "unstated-next": "^1.1.0"
   },
   "devDependencies": {
+    "@storybook/addon-essentials": "^7.0.0-beta.64",
+    "@storybook/addon-interactions": "^7.0.0-beta.64",
+    "@storybook/addon-links": "^7.0.0-beta.64",
+    "@storybook/blocks": "^7.0.0-beta.64",
+    "@storybook/react": "^7.0.0-beta.64",
+    "@storybook/react-vite": "^7.0.0-beta.64",
+    "@storybook/testing-library": "^0.0.14-next.1",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
@@ -35,8 +42,11 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-react-hooks": "^4.6.0",
+    "eslint-plugin-storybook": "^0.6.11",
     "husky": "^8.0.3",
     "prettier": "^2.8.4",
+    "prop-types": "^15.8.1",
+    "storybook": "^7.0.0-beta.64",
     "typescript": "^4.9.5",
     "vite": "^3.2.3",
     "vite-plugin-wasm-pack": "^0.1.9"
@@ -57,6 +67,8 @@
     "lint:wasm:check": "cd wasm && cargo clippy -- -D warnings",
     "lint:wasm": "cd wasm && cargo clippy --fix",
     "format:check": "prettier --check . --config ./.prettierrc.json",
-    "format": "prettier --write . --config ./.prettierrc.json"
+    "format": "prettier --write . --config ./.prettierrc.json",
+    "storybook": "storybook dev -p 6006",
+    "build-storybook": "storybook build"
   }
 }

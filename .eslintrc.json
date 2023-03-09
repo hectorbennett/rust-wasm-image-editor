@@ -9,7 +9,8 @@
     "plugin:react/recommended",
     "plugin:@typescript-eslint/recommended",
     "prettier",
-    "plugin:cypress/recommended"
+    "plugin:cypress/recommended",
+    "plugin:storybook/recommended"
   ],
   "ignorePatterns": ["wasm/*", "dist/*"],
   "overrides": [],
