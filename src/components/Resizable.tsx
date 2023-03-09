@@ -80,30 +80,46 @@ function EdgeHandle(props: EdgeHandleProps) {
   );
 }
 
+type handle = "left" | "right" | "top" | "bottom";
+type handlePropOptions = "all" | "x" | "y" | Array<handle>;
+
 interface ResizableProps {
   width: number;
-  className: string;
-  handles: Array<"left" | "right">;
+  className?: string;
+  handles: handlePropOptions;
   children: ReactNode;
-  onResize: (size: Size) => void;
+  onResize?: (size: Size) => void;
+}
+
+function parseHandleProp(h: handlePropOptions): Array<handle> {
+  if (h === "all") {
+    return ["left", "right", "top", "bottom"];
+  } else if (h === "x") {
+    return ["left", "right"];
+  } else if (h === "y") {
+    return ["top", "bottom"];
+  }
+  return h;
 }
 
 export default function Resizable(props: ResizableProps) {
   const [width, setWidth] = useState(props.width);
 
+  const selectedHandles: Array<handle> = parseHandleProp(props.handles);
+
   function handleResize(size: Size) {
     if (size.width) {
       setWidth(size.width);
     }
-    props.onResize(size);
+    props.onResize && props.onResize(size);
   }
   return (
     <div className={props.className} style={{ width: width, position: "relative" }}>
-      {props.handles.includes("left") ? (
+      {selectedHandles.includes("left") ? (
         <EdgeHandle position="left" onResize={handleResize} width={width} />
       ) : null}
       {props.children}
-      {props.handles.includes("right") ? (
+      {selectedHandles.includes("right") ? (
         <EdgeHandle position="right" onResize={handleResize} width={width} />
       ) : null}
     </div>

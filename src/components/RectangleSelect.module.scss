@@ -1,0 +1,37 @@
+.rectangle_select {
+  outline: 1px solid lightgrey;
+}
+
+.corner {
+  outline: 1px solid lightgrey;
+  &:hover,
+  &:active {
+    outline: 1px solid grey;
+    z-index: 1;
+  }
+}
+
+.top_left {
+  top: 0;
+  left: 0;
+}
+.top_right {
+  top: 0;
+  right: 0;
+}
+.bottom_right {
+  bottom: 0;
+  right: 0;
+}
+.bottom_left {
+  bottom: 0;
+  left: 0;
+}
+
+.edge {
+  &:hover,
+  &:active {
+    outline: 1px solid grey;
+    z-index: 1;
+  }
+}
