@@ -3,10 +3,6 @@ import { Cursor } from "../components/Cursor";
 import { ActiveProjectContext } from "../context/activeProject";
 import { WasmContext } from "../context/wasm";
 
-// interface WorkspaceProps {
-//   id: string;
-// }
-
 interface CanvasProps {
   width: number;
   height: number;
@@ -83,7 +79,7 @@ export default function Workspace() {
       onMouseMove={(e) => {
         setCursorPosition({ x: e.clientX, y: e.clientY });
       }}
-      // style={{ cursor: "none" }}
+      style={{ cursor: "none" }}
     >
       <Canvas
         width={activeProject.activeProject.width}
