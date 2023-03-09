@@ -30,5 +30,5 @@ fn test_fill_rectangle() {
     assert_eq!(api.get_pixel(100, 100), [255, 100, 100, 255]);
 
     // the pixel in the bottom right corner is the second colour
-    assert_eq!(api.get_pixel(499, 499), [1, 2, 3, 4]);
+    assert_eq!(api.get_pixel(450, 450), [1, 2, 3, 4]);
 }
