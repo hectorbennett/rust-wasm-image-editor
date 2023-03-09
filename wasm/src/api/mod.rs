@@ -41,7 +41,7 @@ impl Api {
 
     pub fn create_project(&mut self, name: &str, width: u32, height: u32) -> u64 {
         let project = self.app.new_project();
-        project.set_name(&name);
+        project.set_name(name);
         project.resize_canvas(width, height);
         let layer = project.new_layer();
         layer.set_name("Background");
@@ -62,7 +62,7 @@ impl Api {
             None => 0,
             Some(project) => {
                 let layer = project.new_layer();
-                layer.set_name(&name);
+                layer.set_name(name);
                 layer.resize(width, height);
                 layer.uid
             }
@@ -71,7 +71,7 @@ impl Api {
 
     pub fn fill_selection(&mut self) {
         let selection = self.app.get_active_project().unwrap().selection.clone();
-        let colour = self.app.primary_colour.clone();
+        let colour = self.app.primary_colour;
 
         let layer = self
             .app
