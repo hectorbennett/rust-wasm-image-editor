@@ -8,8 +8,7 @@ use image::{
     ImageBuffer, Pixel, RgbaImage,
 };
 
-use super::{colour::Colour, selection::Selection};
-use crate::utils::generate_uid;
+use super::{colour::Colour, selection::Selection, utils::generate_uid};
 
 pub struct Layer {
     pub uid: u64,

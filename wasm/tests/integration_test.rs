@@ -1,4 +1,4 @@
-
+use wasm::api::Api;
 
 #[test]
 fn it_adds_two() {
@@ -7,15 +7,28 @@ fn it_adds_two() {
 
 #[test]
 fn test_fill_rectangle() {
-    // let mut api: Api = Api::init();
-    // let project_uid = api.create_project("test_project".to_string(), 500, 500);
-    // api.set_active_project(project_uid);
-    // let layer_uid = api.create_layer("layer 1".to_string(), 500, 500);
-    // api.set_active_layer(layer_uid);
-    // api.set_primary_colour(255, 100, 100, 255);
-    // api.select_rect(100, 100, 100, 100);
-    // api.fill_selection();
+    let mut api: Api = Api::init();
+    let project_uid = api.create_project("test_project", 500, 500);
+    api.set_active_project(project_uid);
+    let layer_uid = api.create_layer("layer 1", 500, 500);
+    api.set_active_layer(layer_uid);
 
-    assert_eq!(1, 1);
-    // assert_eq!(api.get_active_project().uid, project_uid);
+    // draw a rectangle near the middle
+    api.set_primary_colour(255, 100, 100, 255);
+    api.select_rect(100, 100, 100, 100);
+    api.fill_selection();
+
+    // draw a second rectangle in the bottom right corner
+    api.set_primary_colour(1, 2, 3, 4);
+    api.select_rect(400, 400, 100, 100);
+    api.fill_selection();
+
+    // top left pixel is empty
+    assert_eq!(api.get_pixel(0, 0), [0, 0, 0, 0]);
+
+    // the pixel at (100, 100) is the first colour
+    assert_eq!(api.get_pixel(100, 100), [255, 100, 100, 255]);
+
+    // the pixel in the bottom right corner is the second colour
+    assert_eq!(api.get_pixel(499, 499), [1, 2, 3, 4]);
 }

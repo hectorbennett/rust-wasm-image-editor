@@ -39,7 +39,7 @@ impl Api {
         self.app.set_active_project(None);
     }
 
-    pub fn create_project(&mut self, name: String, width: u32, height: u32) -> u64 {
+    pub fn create_project(&mut self, name: &str, width: u32, height: u32) -> u64 {
         let project = self.app.new_project();
         project.set_name(&name);
         project.resize_canvas(width, height);
@@ -56,7 +56,7 @@ impl Api {
             .resize_canvas(width, height);
     }
 
-    pub fn create_layer(&mut self, name: String, width: u32, height: u32) -> u64 {
+    pub fn create_layer(&mut self, name: &str, width: u32, height: u32) -> u64 {
         let _project = self.app.get_active_project();
         match _project {
             None => 0,
@@ -70,14 +70,17 @@ impl Api {
     }
 
     pub fn fill_selection(&mut self) {
-        let _project = self.app.get_active_project().unwrap();
-        // project.fill_selection(self.app.primary_colour);
-        // let selection: &mut Selection = &mut project.selection;
-        // let layer = project.get_active_layer().unwrap();
-        // layer.fill_s
-        // selection.fill_layer(layer, self.app.primary_colour);
-        // layer.fill_selection(selection, self.app.primary_colour)
-        //    .fill_selection();
+        let selection = self.app.get_active_project().unwrap().selection.clone();
+        let colour = self.app.primary_colour.clone();
+
+        let layer = self
+            .app
+            .get_active_project()
+            .unwrap()
+            .get_active_layer()
+            .unwrap();
+
+        layer.fill_selection(&selection, &colour);
     }
 
     pub fn set_primary_colour(&mut self, red: u8, green: u8, blue: u8, alpha: u8) {
@@ -141,6 +144,14 @@ impl Api {
                 Clamped(image.into_vec())
             }
         }
+    }
+
+    pub fn get_pixel(&mut self, x: u32, y: u32) -> Vec<u8> {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .get_compiled_pixel(x, y)
+            .to_vec()
     }
 
     pub fn get_layer_thumbnail(&mut self, layer_uid: u64) -> Clamped<Vec<u8>> {

@@ -1,9 +1,28 @@
+use uuid::Uuid;
+
+pub fn generate_uid() -> u64 {
+    let id = Uuid::new_v4();
+    id.to_u128_le() as u64
+}
+
+#[cfg(test)]
+mod generate_uid_tests {
+    use super::*;
+
+    #[test]
+    fn test_generate_uid() {
+        let uid = generate_uid();
+        assert!(uid > 0);
+    }
+}
+
 pub fn get_1d_index_from_2d_coord(width: u32, x: u32, y: u32) -> usize {
+    // todo: shall we rename this function?
     ((y * width) + x) as usize
 }
 
 #[cfg(test)]
-mod tests {
+mod get_1d_index_from_2d_coord_tests {
     use super::*;
 
     #[test]

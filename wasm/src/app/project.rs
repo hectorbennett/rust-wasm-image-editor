@@ -5,8 +5,7 @@ use std::{
 
 use image::{ImageBuffer, RgbaImage};
 
-use super::{layer::Layer, selection::Selection};
-use crate::utils::generate_uid;
+use super::{layer::Layer, selection::Selection, utils::generate_uid};
 
 pub struct Project {
     pub uid: u64,
@@ -87,7 +86,7 @@ impl Project {
     //     img.save("test.png").unwrap();
     // }
 
-    fn get_compiled_pixel(&self, x: u32, y: u32) -> [u8; 4] {
+    pub fn get_compiled_pixel(&self, x: u32, y: u32) -> [u8; 4] {
         let mut output: [u8; 4] = [0, 0, 0, 0];
         for layer in self.layers.iter().filter(|l| l.visible) {
             let pixel = layer.get_pixel_from_canvas_coordinates(x, y);

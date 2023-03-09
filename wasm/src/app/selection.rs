@@ -1,5 +1,6 @@
 use super::utils;
 
+#[derive(Clone)]
 pub struct Selection {
     width: u32,
     height: u32,

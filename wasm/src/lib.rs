@@ -3,7 +3,6 @@ use wasm_bindgen::prelude::*;
 
 pub mod api;
 pub mod app;
-pub mod utils;
 
 #[wasm_bindgen]
 extern "C" {
