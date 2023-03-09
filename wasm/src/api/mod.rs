@@ -82,7 +82,7 @@ impl Api {
         }
     }
 
-    pub fn fill_selection(&mut self) -> Result<(), JsValue> {
+    pub fn fill_selection(&mut self) {
         let selection = self.app.get_active_project().unwrap().selection.clone();
         let colour = self.app.primary_colour;
 
@@ -94,27 +94,21 @@ impl Api {
             .unwrap();
 
         layer.fill_selection(&selection, &colour);
-        self.render_to_canvas()
+        self.render_to_canvas();
     }
 
-    pub fn set_primary_colour(
-        &mut self,
-        red: u8,
-        green: u8,
-        blue: u8,
-        alpha: u8,
-    ) -> Result<(), JsValue> {
+    pub fn set_primary_colour(&mut self, red: u8, green: u8, blue: u8, alpha: u8) {
         self.app.primary_colour = Colour::from_rgba(red, green, blue, alpha);
-        self.render_to_canvas()
+        self.render_to_canvas();
     }
 
-    pub fn select_rect(&mut self, x: u32, y: u32, width: u32, height: u32) -> Result<(), JsValue> {
+    pub fn select_rect(&mut self, x: u32, y: u32, width: u32, height: u32) {
         self.app
             .get_active_project()
             .unwrap()
             .selection
             .select_rect(x, y, width, height);
-        self.render_to_canvas()
+        self.render_to_canvas();
     }
 
     pub fn set_active_layer(&mut self, layer_uid: u64) {
@@ -170,9 +164,9 @@ impl Api {
         serialize::ApiSerializer::to_json(&self.app)
     }
 
-    pub fn render_to_canvas(&mut self) -> Result<(), JsValue> {
+    pub fn render_to_canvas(&mut self) {
         if !self.canvas_inited {
-            return Ok(());
+            return;
         }
         let document = web_sys::window().unwrap().document().unwrap();
         let canvas = document.get_element_by_id("wasm-canvas").unwrap();
@@ -198,7 +192,9 @@ impl Api {
         )
         .unwrap();
 
-        return context.put_image_data(&data, 0.0, 0.0);
+        let _result = context.put_image_data(&data, 0.0, 0.0);
+
+
     }
 }
 
