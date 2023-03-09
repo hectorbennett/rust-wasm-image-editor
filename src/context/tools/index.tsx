@@ -1,15 +1,16 @@
 import { ReactElement, useState } from "react";
 import { createContainer } from "unstated-next";
 
-import { Cursor, Crop, BoundingBoxCircles, Icon } from "react-bootstrap-icons";
+import { Cursor, Crop, Icon } from "react-bootstrap-icons";
 
-import { TbRectangle, TbOvalVertical } from "react-icons/tb";
+import { TbOvalVertical } from "react-icons/tb";
 
 import { paintbrush } from "./paintbrush";
 import { eye_dropper } from "./eye_dropper";
 import { bucket_fill } from "./bucket_fill";
 import { Project } from "../activeProject";
 import { TablerIcon } from "@tabler/icons";
+import { rectangle_select } from "./rectangle_select";
 
 export interface ToolEventParams {
   canvas: HTMLCanvasElement;
@@ -49,12 +50,7 @@ function useTools() {
       icon: Cursor,
       events: {},
     },
-    {
-      name: "rectangle_select",
-      label: "Rectangle Select",
-      icon: TbRectangle,
-      events: {},
-    },
+    rectangle_select,
     {
       name: "oval_select",
       label: "Oval Select",
@@ -68,12 +64,6 @@ function useTools() {
       name: "crop",
       label: "Crop",
       icon: Crop,
-      events: {},
-    },
-    {
-      name: "rectangle_select",
-      label: "Rectangle select",
-      icon: BoundingBoxCircles,
       events: {},
     },
   ];

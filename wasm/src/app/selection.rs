@@ -64,6 +64,43 @@ impl Selection {
         self.select_none();
         self.add_rect(x, y, width, height);
     }
+
+    // pub fn get_border_indices(&self) -> Vec<usize> {
+    //     // return coordinates for all the pixels that are on the border of the selection
+    //     let indices = vec![];
+    //     (0..self.width).for_each(|i| {
+    //         (0..self.height).for_each(|j| {
+
+    //         })
+    //     });
+    //     indices
+    // }
+
+    pub fn pixel_is_on_border(&self, x: u32, y: u32) -> bool {
+        if self.from_coords(x, y) != 0 && self.coord_has_empty_neighbour(x, y) {
+            return true;
+        }
+        false
+    }
+
+    fn coord_has_empty_neighbour(&self, row: u32, column: u32) -> bool {
+        for delta_row in [self.height - 1, 0, 1].iter().cloned() {
+            for delta_col in [self.width - 1, 0, 1].iter().cloned() {
+                if delta_row == 0 && delta_col == 0 {
+                    continue;
+                }
+                let neighbor_row = (row + delta_row) % self.height;
+                let neighbor_col = (column + delta_col) % self.width;
+
+                let idx = utils::get_1d_index_from_2d_coord(self.width, neighbor_row, neighbor_col);
+
+                if self.buffer[idx] == 0 {
+                    return true;
+                }
+            }
+        }
+        false
+    }
 }
 
 #[cfg(test)]

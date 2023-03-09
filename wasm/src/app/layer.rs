@@ -81,17 +81,6 @@ impl Layer {
         });
     }
 
-    pub fn fill_rect(&mut self, colour: Colour, left: u32, top: u32, width: u32, height: u32) {
-        let right = left + width;
-        let bottom = top + height;
-        (left..=right).for_each(|i| {
-            (top..=bottom).for_each(|j| {
-                let pixel = image::Rgba(colour.as_rgba());
-                self.img.put_pixel(i, j, pixel);
-            });
-        });
-    }
-
     pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> [u8; 4] {
         let pixel = *self.img.get_pixel(x, y);
         let rgba = pixel.to_rgba();

@@ -16,23 +16,30 @@ interface CanvasProps {
 const Canvas = function (props: CanvasProps) {
   const ref = useRef<HTMLCanvasElement>(null);
   const wasm = WasmContext.useContainer();
+  // const [apiInited, setApiInted] = useState(false);
 
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) {
-      return;
-    }
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      return;
-    }
-    const newData = ctx.createImageData(props.width, props.height);
-    wasm.api && newData.data.set(wasm.api.image_data);
-    ctx.putImageData(newData, 0, 0);
-  }, [props.image_hash]);
+  // useEffect(() => {
+  //   const canvas = ref.current;
+  //   if (!canvas) {
+  //     return;
+  //   }
+  //   const ctx = canvas.getContext("2d");
+  //   if (!ctx) {
+  //     return;
+  //   }
+  //   if (!wasm.api) {
+  //     return;
+  //   }
+  //   if (apiInited) {
+  //     return;
+  //   }
+  //   // wasm.api.init_canvas_rendering_context(ctx);
+  //   // setApiInted(true);
+  // }, []);
 
   return (
     <canvas
+      id="wasm-canvas"
       ref={ref}
       width={props.width}
       height={props.height}
@@ -75,7 +82,7 @@ export default function Workspace() {
       onMouseMove={(e) => {
         setCursorPosition({ x: e.clientX, y: e.clientY });
       }}
-      style={{ cursor: "none" }}
+      // style={{ cursor: "none" }}
     >
       <Canvas
         width={activeProject.activeProject.width}
