@@ -51,6 +51,13 @@ function Testing() {
     wasm.api.set_primary_colour(0, 0, 255, 100);
     wasm.api.select_rect(180, 150, 200, 200);
     wasm.api.fill_selection();
+
+    // invert selection
+    wasm.api.create_layer("Test layer 4", 500, 500);
+    wasm.api.set_primary_colour(100, 0, 255, 100);
+    wasm.api.select_rect(50, 50, 400, 400);
+    wasm.api.invert_selection();
+    wasm.api.fill_selection();
   }
   return null;
 }

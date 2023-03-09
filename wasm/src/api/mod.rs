@@ -111,6 +111,15 @@ impl Api {
         self.render_to_canvas();
     }
 
+    pub fn invert_selection(&mut self) {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .selection
+            .invert_selection();
+        self.render_to_canvas();
+    }
+
     pub fn set_active_layer(&mut self, layer_uid: u64) {
         self.app
             .get_active_project()
@@ -193,8 +202,6 @@ impl Api {
         .unwrap();
 
         let _result = context.put_image_data(&data, 0.0, 0.0);
-
-
     }
 }
 
