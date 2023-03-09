@@ -2,7 +2,7 @@ use crate::app::{colour::Colour, layer::Layer};
 
 use super::app::App;
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
-use web_sys::{CanvasRenderingContext2d, ImageData};
+use web_sys::ImageData;
 extern crate console_error_panic_hook;
 use wasm_bindgen::JsCast;
 pub mod serialize;
@@ -10,6 +10,8 @@ pub mod serialize;
 #[wasm_bindgen]
 pub struct Api {
     app: App,
+    canvas_id: String,
+    canvas_inited: bool,
 }
 
 impl Api {
@@ -29,12 +31,17 @@ impl Api {
     #[wasm_bindgen(constructor)]
     pub fn init() -> Api {
         console_error_panic_hook::set_once();
-        Api { app: App::new() }
+        Api {
+            app: App::new(),
+            canvas_inited: false,
+            canvas_id: "".to_string(),
+        }
     }
 
-    // pub fn init_canvas_rendering_context(&mut self, ctx: CanvasRenderingContext2d) {
-    //     self.ctx = Some(ctx)
-    // }
+    pub fn init_canvas(&mut self, canvas_id: String) {
+        self.canvas_id = canvas_id;
+        self.canvas_inited = true;
+    }
 
     pub fn set_active_project(&mut self, project_uid: u64) {
         self.app.set_active_project(Some(project_uid));
@@ -75,7 +82,7 @@ impl Api {
         }
     }
 
-    pub fn fill_selection(&mut self) {
+    pub fn fill_selection(&mut self) -> Result<(), JsValue> {
         let selection = self.app.get_active_project().unwrap().selection.clone();
         let colour = self.app.primary_colour;
 
@@ -87,21 +94,27 @@ impl Api {
             .unwrap();
 
         layer.fill_selection(&selection, &colour);
-        self.render_to_canvas();
+        self.render_to_canvas()
     }
 
-    pub fn set_primary_colour(&mut self, red: u8, green: u8, blue: u8, alpha: u8) {
+    pub fn set_primary_colour(
+        &mut self,
+        red: u8,
+        green: u8,
+        blue: u8,
+        alpha: u8,
+    ) -> Result<(), JsValue> {
         self.app.primary_colour = Colour::from_rgba(red, green, blue, alpha);
-        self.render_to_canvas();
+        self.render_to_canvas()
     }
 
-    pub fn select_rect(&mut self, x: u32, y: u32, width: u32, height: u32) {
+    pub fn select_rect(&mut self, x: u32, y: u32, width: u32, height: u32) -> Result<(), JsValue> {
         self.app
             .get_active_project()
             .unwrap()
             .selection
             .select_rect(x, y, width, height);
-        self.render_to_canvas();
+        self.render_to_canvas()
     }
 
     pub fn set_active_layer(&mut self, layer_uid: u64) {
@@ -157,9 +170,13 @@ impl Api {
         serialize::ApiSerializer::to_json(&self.app)
     }
 
-    pub fn render_to_canvas(&mut self) {
+    pub fn render_to_canvas(&mut self) -> Result<(), JsValue> {
+        if !self.canvas_inited {
+            return Ok(());
+        }
         let document = web_sys::window().unwrap().document().unwrap();
         let canvas = document.get_element_by_id("wasm-canvas").unwrap();
+
         let canvas: web_sys::HtmlCanvasElement = canvas
             .dyn_into::<web_sys::HtmlCanvasElement>()
             .map_err(|_| ())
@@ -175,13 +192,13 @@ impl Api {
         let image = self.app.get_active_project().unwrap().get_image();
 
         let data = ImageData::new_with_u8_clamped_array_and_sh(
-            Clamped(&image.as_raw()),
+            Clamped(image.as_raw()),
             image.width(),
             image.height(),
         )
         .unwrap();
 
-        context.put_image_data(&data, 0.0, 0.0);
+        return context.put_image_data(&data, 0.0, 0.0);
     }
 }
 

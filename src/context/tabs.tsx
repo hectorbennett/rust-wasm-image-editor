@@ -19,7 +19,7 @@ function useTabs() {
 
   useEffect(() => {
     if (!activeTab || activeTab.type !== "project") {
-      wasm.api && wasm.api.clear_active_project();
+      // wasm.api && wasm.api.clear_active_project();
     } else {
       wasm.api && wasm.api.set_active_project(BigInt(activeTab.uid));
     }

@@ -16,26 +16,27 @@ interface CanvasProps {
 const Canvas = function (props: CanvasProps) {
   const ref = useRef<HTMLCanvasElement>(null);
   const wasm = WasmContext.useContainer();
-  // const [apiInited, setApiInted] = useState(false);
+  const [apiInited, setApiInted] = useState(false);
 
-  // useEffect(() => {
-  //   const canvas = ref.current;
-  //   if (!canvas) {
-  //     return;
-  //   }
-  //   const ctx = canvas.getContext("2d");
-  //   if (!ctx) {
-  //     return;
-  //   }
-  //   if (!wasm.api) {
-  //     return;
-  //   }
-  //   if (apiInited) {
-  //     return;
-  //   }
-  //   // wasm.api.init_canvas_rendering_context(ctx);
-  //   // setApiInted(true);
-  // }, []);
+  useEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) {
+      return;
+    }
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return;
+    }
+    if (!wasm.api) {
+      return;
+    }
+    if (apiInited) {
+      return;
+    }
+
+    wasm.api.init_canvas("wasm-canvas");
+    setApiInted(true);
+  }, [ref.current, wasm.api, apiInited]);
 
   return (
     <canvas
