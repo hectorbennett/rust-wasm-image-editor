@@ -1,7 +1,5 @@
 FROM node:19.7.0
 
-ENV NODE_ENV=production
-
 # Install rust
 # Get Rust; NOTE: using sh for better compatibility with other base images
 RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
