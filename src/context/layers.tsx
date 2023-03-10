@@ -1,33 +1,20 @@
 import { createContainer } from "unstated-next";
-import { ActiveProjectContext } from "./activeProject";
 import { WasmContext } from "./wasm";
-
-export interface Layer {
-  uid: string;
-  name: string;
-  width: number;
-  height: number;
-  left: number;
-  top: number;
-  visible: boolean;
-  locked: boolean;
-  thumbnail_hash: string;
-}
 
 function useLayers() {
   const wasm = WasmContext.useContainer();
-  const activeProject = ActiveProjectContext.useContainer();
 
   return {
-    layers: activeProject?.activeProject?.layers || null,
-    active_layer_uid: activeProject?.activeProject?.active_layer_uid || null,
+    layers: wasm.state?.projects.get(wasm.state?.active_project_uid || "")?.layers,
+    active_layer_uid: wasm.state?.projects.get(wasm.state?.active_project_uid || "")
+      ?.active_layer_uid,
     createNewLayer: function createNewLayer() {
       wasm.api && wasm.api.create_layer(`layer ${(this.layers?.length || 0) + 1}`, 500, 500);
     },
-    setLayerLocked: function setLayerLocked(layer_uid: string, locked: boolean) {
+    setLayerLocked: function setLayerLocked(layer_uid: number, locked: boolean) {
       wasm.api && wasm.api.set_layer_locked(BigInt(layer_uid), locked);
     },
-    setLayerVisibility: function setLayerVisibility(layer_uid: string, visible: boolean) {
+    setLayerVisibility: function setLayerVisibility(layer_uid: number, visible: boolean) {
       wasm.api && wasm.api.set_layer_visibile(BigInt(layer_uid), visible);
     },
     renameLayer: function renameLayer(_layer_uid: string, _name: string) {
