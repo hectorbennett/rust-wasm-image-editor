@@ -111,12 +111,30 @@ impl Api {
         self.render_to_canvas();
     }
 
-    pub fn invert_selection(&mut self) {
+    pub fn select_all(&mut self) {
         self.app
             .get_active_project()
             .unwrap()
             .selection
-            .invert_selection();
+            .select_all();
+        self.render_to_canvas();
+    }
+
+    pub fn select_none(&mut self) {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .selection
+            .select_none();
+        self.render_to_canvas();
+    }
+
+    pub fn select_inverse(&mut self) {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .selection
+            .select_inverse();
         self.render_to_canvas();
     }
 
