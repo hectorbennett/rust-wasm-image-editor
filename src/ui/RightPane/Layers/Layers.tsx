@@ -2,8 +2,10 @@ import { useState, MouseEventHandler, useRef, useEffect } from "react";
 import { SegmentedControl, Box, ActionIcon, TextInput } from "@mantine/core";
 import { EyeFill, EyeSlash, LockFill, Lock, Plus } from "react-bootstrap-icons";
 import { useRightClick } from "../../../hooks";
-import { Layer, LayersContext } from "../../../context/layers";
+import { LayersContext } from "../../../context/layers";
 import { WasmContext } from "../../../context/wasm";
+
+import { LayerSerializer } from "wasm";
 
 interface LayerCheckboxProps {
   checked: boolean;
@@ -27,7 +29,7 @@ function LockedCheckbox(props: LayerCheckboxProps) {
 }
 
 interface LayerThumbnailProps {
-  layer: Layer;
+  layer: LayerSerializer;
 }
 
 function LayerThumbnail(props: LayerThumbnailProps) {
@@ -67,7 +69,7 @@ function LayerThumbnail(props: LayerThumbnailProps) {
 }
 
 interface LayerLabelProps {
-  layer: Layer;
+  layer: LayerSerializer;
 }
 
 function LayerLabel(props: LayerLabelProps) {
@@ -101,7 +103,7 @@ function LayerLabel(props: LayerLabelProps) {
 }
 
 interface LayerProps {
-  layer: Layer;
+  layer: LayerSerializer;
 }
 
 function LayerRow(props: LayerProps) {
