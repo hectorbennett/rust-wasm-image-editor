@@ -1,9 +1,9 @@
 use std::collections::HashMap;
 
-use serde::Serialize;
-use wasm_bindgen::JsValue;
-
 use crate::app::{layer::Layer, project::Project, App};
+use serde::Serialize;
+use tsify::Tsify;
+use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
 
 #[derive(Serialize)]
 pub struct ApiSerializer {}
@@ -15,10 +15,11 @@ impl ApiSerializer {
     }
 }
 
-#[derive(Serialize, Debug)]
-struct ApiSerializerSchema {
+#[derive(Serialize, Debug, Tsify)]
+pub struct ApiSerializerSchema {
     active_project_uid: Option<String>,
     projects: HashMap<String, ProjectSerializer>,
+    primary_colour: [u8; 4],
 }
 
 impl ApiSerializerSchema {
@@ -30,15 +31,17 @@ impl ApiSerializerSchema {
         });
 
         let active_project_uid: Option<String> = app.active_project_uid.map(|uid| uid.to_string());
+        let primary_colour: [u8; 4] = app.primary_colour.as_rgba();
 
         ApiSerializerSchema {
             projects,
             active_project_uid,
+            primary_colour,
         }
     }
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Tsify)]
 struct ProjectSerializer {
     uid: String,
     name: String,
@@ -71,7 +74,7 @@ impl ProjectSerializer {
     }
 }
 
-#[derive(Serialize, Debug)]
+#[derive(Serialize, Debug, Tsify)]
 struct LayerSerializer {
     uid: String,
     name: String,

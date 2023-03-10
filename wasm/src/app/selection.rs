@@ -7,6 +7,19 @@ pub struct Selection {
     buffer: Vec<u8>,
 }
 
+pub fn f(x0: i32, y0: i32, width: u32, height: u32) -> f64 {
+    (x0 as f64 / (width / 2) as f64).powi(2) + (y0 as f64 / (height / 2) as f64).powi(2)
+}
+
+pub fn within_ellipse(i: u32, j: u32, x: u32, y: u32, width: u32, height: u32) -> bool {
+    let i0: i32 = i as i32 - x as i32 - (width as i32 / 2);
+    let j0: i32 = j as i32 - y as i32 - (height as i32 / 2);
+    if f(i0, j0, width, height) < 1.0 {
+        return true;
+    }
+    false
+}
+
 impl Selection {
     pub fn new(width: u32, height: u32) -> Selection {
         Selection {
@@ -42,7 +55,7 @@ impl Selection {
         self.buffer = vec![255; (self.width * self.height) as usize]
     }
 
-    pub fn invert_selection(&mut self) {
+    pub fn select_inverse(&mut self) {
         for i in 0..self.buffer.len() {
             self.buffer[i] = 255 - self.buffer[i]
         }
@@ -59,10 +72,28 @@ impl Selection {
         });
     }
 
+    pub fn add_ellipse(&mut self, x: u32, y: u32, width: u32, height: u32) {
+        // add a rectangle to the buffer
+        let right = x + width;
+        let bottom = y + height;
+        (x..right).for_each(|i| {
+            (y..bottom).for_each(|j| {
+                if within_ellipse(i, j, x, y, width, height) {
+                    self.put(i, j, 255);
+                }
+            });
+        });
+    }
+
     pub fn select_rect(&mut self, x: u32, y: u32, width: u32, height: u32) {
         // clear the current selection and select a new rectangle
         self.select_none();
         self.add_rect(x, y, width, height);
+    }
+
+    pub fn select_ellipse(&mut self, x: u32, y: u32, width: u32, height: u32) {
+        self.select_none();
+        self.add_ellipse(x, y, width, height);
     }
 
     // pub fn get_border_indices(&self) -> Vec<usize> {
@@ -135,12 +166,12 @@ mod tests {
     }
 
     #[test]
-    fn test_invert_selection() {
+    fn test_select_inverse() {
         let mut s = Selection::new(4, 2);
 
         // select a square to the right
         s.select_rect(2, 0, 2, 2);
-        s.invert_selection();
+        s.select_inverse();
 
         assert_eq!(s.buffer, [255, 255, 0, 0, 255, 255, 0, 0])
     }

@@ -24,11 +24,11 @@ fn test_fill_rectangle() {
     api.fill_selection();
 
     // top left pixel is empty
-    assert_eq!(api.get_pixel(0, 0), [0, 0, 0, 0]);
+    assert_eq!(api.pick_colour(0, 0), [0, 0, 0, 0]);
 
     // the pixel at (100, 100) is the first colour
-    assert_eq!(api.get_pixel(100, 100), [255, 100, 100, 255]);
+    assert_eq!(api.pick_colour(100, 100), [255, 100, 100, 255]);
 
     // the pixel in the bottom right corner is the second colour
-    assert_eq!(api.get_pixel(450, 450), [1, 2, 3, 4]);
+    assert_eq!(api.pick_colour(450, 450), [1, 2, 3, 4]);
 }

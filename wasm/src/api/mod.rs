@@ -111,12 +111,39 @@ impl Api {
         self.render_to_canvas();
     }
 
-    pub fn invert_selection(&mut self) {
+    pub fn select_ellipse(&mut self, x: u32, y: u32, width: u32, height: u32) {
         self.app
             .get_active_project()
             .unwrap()
             .selection
-            .invert_selection();
+            .select_ellipse(x, y, width, height);
+        self.render_to_canvas();
+    }
+
+    pub fn select_all(&mut self) {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .selection
+            .select_all();
+        self.render_to_canvas();
+    }
+
+    pub fn select_none(&mut self) {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .selection
+            .select_none();
+        self.render_to_canvas();
+    }
+
+    pub fn select_inverse(&mut self) {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .selection
+            .select_inverse();
         self.render_to_canvas();
     }
 
@@ -133,6 +160,7 @@ impl Api {
             None => (),
             Some(layer) => layer.set_visible(visible),
         }
+        self.render_to_canvas();
     }
 
     pub fn set_layer_locked(&mut self, layer_uid: u64, locked: bool) {
@@ -155,12 +183,23 @@ impl Api {
         }
     }
 
-    pub fn get_pixel(&mut self, x: u32, y: u32) -> Vec<u8> {
+    pub fn pick_colour(&mut self, x: u32, y: u32) -> Vec<u8> {
         self.app
             .get_active_project()
             .unwrap()
             .get_compiled_pixel(x, y)
             .to_vec()
+    }
+
+    pub fn eye_dropper(&mut self, x: u32, y: u32) {
+        let colour = self
+            .app
+            .get_active_project()
+            .unwrap()
+            .get_compiled_pixel(x, y);
+
+        self.app.primary_colour = Colour::from_rgba_array(colour);
+        self.render_to_canvas();
     }
 
     pub fn get_layer_thumbnail(&mut self, layer_uid: u64) -> Clamped<Vec<u8>> {

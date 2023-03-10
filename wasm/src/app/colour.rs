@@ -29,6 +29,15 @@ impl Colour {
         }
     }
 
+    pub const fn from_rgba_array(array: [u8; 4]) -> Colour {
+        Colour {
+            red: array[0],
+            green: array[1],
+            blue: array[2],
+            alpha: array[3],
+        }
+    }
+
     pub fn as_rgba(&self) -> [u8; 4] {
         [self.red, self.green, self.blue, self.alpha]
     }

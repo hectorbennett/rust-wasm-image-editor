@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { createContainer } from "unstated-next";
-import { Project } from "./activeProject";
 import { WasmContext } from "./wasm";
+
+import { ProjectSerializer } from "wasm";
 
 type TabType = "project" | "settings";
 
@@ -36,7 +37,7 @@ function useTabs() {
   }
 
   function closeTab(_uid: string) {
-    console.log("close tab");
+    // console.log("close tab");
   }
 
   function focusTab(uid: string) {
@@ -44,11 +45,11 @@ function useTabs() {
   }
 
   useEffect(() => {
-    if (!wasm.state.projects) {
+    if (!wasm.state?.projects) {
       return;
     }
     const current_uids = tabs.map((tab) => tab.uid);
-    wasm.state.projects.forEach((project: Project) => {
+    wasm.state.projects.forEach((project: ProjectSerializer) => {
       if (!current_uids.includes(project.uid)) {
         newTab(project.uid, "project");
       }

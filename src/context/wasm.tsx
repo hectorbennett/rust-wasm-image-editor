@@ -1,18 +1,9 @@
 import initWasm, { Api } from "wasm";
 
+import { ApiSerializerSchema } from "wasm";
+
 import { useEffect, useRef, useState } from "react";
 import { createContainer } from "unstated-next";
-import { Project } from "./activeProject";
-
-interface AppState {
-  projects: Map<string, Project>;
-  active_project_uid: string | null;
-}
-
-const DEFAULT_APP_STATE: AppState = {
-  projects: new Map(),
-  active_project_uid: null,
-};
 
 const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
   const [api, setApi] = useState<Api>();
@@ -44,7 +35,7 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
 };
 
 function useWasm() {
-  const [appState, setAppState] = useState<AppState>(DEFAULT_APP_STATE);
+  const [appState, setAppState] = useState<ApiSerializerSchema>();
   const methodCallback = useRef<() => void>(() => {
     /* noop */
   });
@@ -55,7 +46,7 @@ function useWasm() {
   });
 
   useEffect(() => {
-    const refreshAppState = () => setAppState(() => (api ? api.state : DEFAULT_APP_STATE));
+    const refreshAppState = () => setAppState(() => (api ? api.state : null));
     methodCallback.current = refreshAppState;
     refreshAppState();
   }, [api]);

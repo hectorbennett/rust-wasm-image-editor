@@ -1,7 +1,5 @@
 import { ColorPicker, Text, Stack } from "@mantine/core";
-import { AppContext } from "../../../context/app";
-
-// import { ProjectContext } from "../../../context";
+import { WasmContext } from "../../../context/wasm";
 
 function parse_rgba_string_to_array(rgbaString: string) {
   const rgbaArray = rgbaString
@@ -38,10 +36,16 @@ function ColourPicker(props: ColourPickerProps) {
 }
 
 export default function ColourSelect() {
-  const app = AppContext.useContainer();
+  const wasm = WasmContext.useContainer();
+
   return (
     <div>
-      <ColourPicker onChange={app.setActiveColour} value={app.activeColour} />
+      <ColourPicker
+        onChange={(colour) => {
+          wasm.api?.set_primary_colour(colour[0], colour[1], colour[2], colour[3]);
+        }}
+        value={wasm.api?.state?.primary_colour || [0, 0, 0, 0]}
+      />
     </div>
   );
 }

@@ -21,4 +21,4 @@ COPY . .
 ENV NODE_ENV=production
 EXPOSE 3000
 RUN yarn run build
-CMD ["npm", "run", "serve"]
+CMD ["yarn", "run", "serve"]
