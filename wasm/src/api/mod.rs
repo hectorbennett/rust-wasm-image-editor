@@ -151,6 +151,7 @@ impl Api {
             None => (),
             Some(layer) => layer.set_visible(visible),
         }
+        self.render_to_canvas();
     }
 
     pub fn set_layer_locked(&mut self, layer_uid: u64, locked: bool) {
