@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createContainer } from "unstated-next";
 import { TabsContext } from "./tabs";
 import { WasmContext } from "./wasm";
@@ -65,7 +65,17 @@ function useImage() {
 
 function useApp() {
   const tabs = TabsContext.useContainer();
-  const [activeColour, setActiveColour] = useState([255, 255, 255, 255]);
+  const wasm = WasmContext.useContainer();
+  const [activeColour, setActiveColour] = useState<number[]>([255, 255, 255, 255]);
+
+  useEffect(() => {
+    wasm.api?.set_primary_colour(
+      activeColour[0],
+      activeColour[1],
+      activeColour[2],
+      activeColour[3],
+    );
+  }, [activeColour]);
 
   return {
     openSettings: function openSettings() {
