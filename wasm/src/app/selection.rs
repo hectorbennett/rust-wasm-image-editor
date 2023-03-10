@@ -42,7 +42,7 @@ impl Selection {
         self.buffer = vec![255; (self.width * self.height) as usize]
     }
 
-    pub fn invert_selection(&mut self) {
+    pub fn select_inverse(&mut self) {
         for i in 0..self.buffer.len() {
             self.buffer[i] = 255 - self.buffer[i]
         }
@@ -135,12 +135,12 @@ mod tests {
     }
 
     #[test]
-    fn test_invert_selection() {
+    fn test_select_inverse() {
         let mut s = Selection::new(4, 2);
 
         // select a square to the right
         s.select_rect(2, 0, 2, 2);
-        s.invert_selection();
+        s.select_inverse();
 
         assert_eq!(s.buffer, [255, 255, 0, 0, 255, 255, 0, 0])
     }

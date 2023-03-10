@@ -18,6 +18,7 @@ import { IconSettings } from "@tabler/icons";
 import { KeyboardShortcutName, SettingsContext } from "./settings";
 import { AppContext } from "./app";
 import { LayersContext } from "./layers";
+import { WasmContext } from "./wasm";
 
 export type CommandCategory =
   | "app"
@@ -40,6 +41,7 @@ interface Command {
 
 function useCommands() {
   const settings = SettingsContext.useContainer();
+  const wasm = WasmContext.useContainer();
   const app = AppContext.useContainer();
   const layers = LayersContext.useContainer();
   const spotlight = useSpotlight();
@@ -150,19 +152,19 @@ function useCommands() {
       category: "select",
       id: "select.all",
       label: "Select all",
-      action: () => console.warn("not implemented"),
+      action: () => wasm.api?.select_all(),
     },
     {
       category: "select",
       id: "select.none",
       label: "Select none",
-      action: () => console.warn("not implemented"),
+      action: () => wasm.api?.select_none(),
     },
     {
       category: "select",
       id: "select.inverse",
       label: "Select inverse",
-      action: () => console.warn("not implemented"),
+      action: () => wasm.api?.select_inverse(),
     },
     /* tools */
     {
