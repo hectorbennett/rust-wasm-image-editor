@@ -173,12 +173,23 @@ impl Api {
         }
     }
 
-    pub fn get_pixel(&mut self, x: u32, y: u32) -> Vec<u8> {
+    pub fn pick_colour(&mut self, x: u32, y: u32) -> Vec<u8> {
         self.app
             .get_active_project()
             .unwrap()
             .get_compiled_pixel(x, y)
             .to_vec()
+    }
+
+    pub fn eye_dropper(&mut self, x: u32, y: u32) {
+        let colour = self
+            .app
+            .get_active_project()
+            .unwrap()
+            .get_compiled_pixel(x, y);
+
+        self.app.primary_colour = Colour::from_rgba_array(colour);
+        self.render_to_canvas();
     }
 
     pub fn get_layer_thumbnail(&mut self, layer_uid: u64) -> Clamped<Vec<u8>> {

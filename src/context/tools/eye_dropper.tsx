@@ -1,42 +1,18 @@
-import { Box } from "@mantine/core";
+// import { Box } from "@mantine/core";
 import { IconColorPicker } from "@tabler/icons";
 
-import { Tool } from ".";
-
-function Cursor() {
-  return (
-    <Box
-      sx={{
-        display: "flex",
-        position: "absolute",
-      }}
-    >
-      <IconColorPicker size={24} stroke={1} />
-    </Box>
-  );
-}
+import { Tool, ToolEventParams } from ".";
 
 export const eye_dropper: Tool = {
   name: "eye_dropper",
   label: "Eye dropper",
   icon: IconColorPicker,
-  events: {},
-  // events: {
-  //   onMouseMove: function ({ ctx, project, cursorX, cursorY }: ToolEventParams) {
-  //     // const pixel = ctx.getImageData(cursorX, cursorY, 1, 1);
-  //     // project.setActiveColour(pixel.data);
-  //   },
-  //   onClick: function ({
-  //     ctx,
-  //     // project,
-  //   }: //  cursorX, cursorY
-  //   ToolEventParams) {
-  //     // const x = event.nativeEvent.layerX;
-  //     // const y = event.nativeEvent.layerY;
-  //     const pixel = ctx.getImageData(0, 0, 1, 1);
-  //     const _data = pixel.data;
-  //     // project.setActiveColour(data);
-  //   },
-  // },
-  cursor: <Cursor />,
+  events: {
+    onClick: function ({ event, api }: ToolEventParams) {
+      const target = event.target as HTMLCanvasElement;
+      const x = event.nativeEvent.clientX - target.offsetLeft;
+      const y = event.nativeEvent.clientY - target.offsetTop;
+      api.eye_dropper(x, y);
+    },
+  },
 };
