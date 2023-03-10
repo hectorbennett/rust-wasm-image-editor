@@ -1,4 +1,5 @@
 import { BoundingBox } from "react-bootstrap-icons";
+import { Api } from "wasm";
 import { Tool, ToolEventParams } from ".";
 
 let startX = 0;
@@ -16,22 +17,32 @@ const events = {
     currX = startX;
     currY = startY;
   },
-  onMouseMove: function ({ event }: ToolEventParams) {
+  onMouseMove: function ({ event, api }: ToolEventParams) {
     if (!drawing) {
       return;
     }
     const target = event.target as HTMLCanvasElement;
     currX = event.nativeEvent.clientX - target.offsetLeft;
     currY = event.nativeEvent.clientY - target.offsetTop;
+    select_rect(api);
   },
   onMouseUp: function ({ api }: ToolEventParams) {
     drawing = false;
-    api.select_rect(startX, startY, currX - startX, currY - startY);
+
+    select_rect(api);
   },
   onMouseOut: function () {
     drawing = false;
   },
 };
+
+const select_rect = (api: Api) =>
+  api.select_rect(
+    Math.min(startX, currX),
+    Math.min(startY, currY),
+    Math.abs(currX - startX),
+    Math.abs(currY - startY),
+  );
 
 export const rectangle_select: Tool = {
   name: "rectangle_select",
