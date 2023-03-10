@@ -111,6 +111,15 @@ impl Api {
         self.render_to_canvas();
     }
 
+    pub fn select_ellipse(&mut self, x: u32, y: u32, width: u32, height: u32) {
+        self.app
+            .get_active_project()
+            .unwrap()
+            .selection
+            .select_ellipse(x, y, width, height);
+        self.render_to_canvas();
+    }
+
     pub fn select_all(&mut self) {
         self.app
             .get_active_project()
