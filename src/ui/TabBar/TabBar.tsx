@@ -83,7 +83,7 @@ interface ProjectTabProps {
 
 function ProjectTab(props: ProjectTabProps) {
   const wasm = WasmContext.useContainer();
-  const project_name = wasm.state.projects.get(props.uid)?.name || "error";
+  const project_name = wasm.state?.projects.get(props.uid)?.name || "error";
   return (
     <Tabs.Tab
       value={props.uid.toString()}
