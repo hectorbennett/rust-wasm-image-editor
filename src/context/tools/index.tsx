@@ -1,40 +1,21 @@
-import {
-  ComponentClass,
-  Dispatch,
-  JSXElementConstructor,
-  ReactComponentElement,
-  ReactElement,
-  SyntheticEvent,
-  useEffect,
-  useState,
-} from "react";
+import { ReactElement, useState } from "react";
+import { Api } from "wasm";
 import { createContainer } from "unstated-next";
-// import { CanvasContext } from "../canvas";
 
-import {
-  Cursor,
-  ArrowRight,
-  Crop,
-  BoundingBoxCircles,
-} from "react-bootstrap-icons";
+import { Cursor, Crop, Icon } from "react-bootstrap-icons";
 
-import { TbRectangle, TbOvalVertical } from "react-icons/tb";
+import { TbOvalVertical } from "react-icons/tb";
 
 import { paintbrush } from "./paintbrush";
 import { eye_dropper } from "./eye_dropper";
 import { bucket_fill } from "./bucket_fill";
+import { TablerIcon } from "@tabler/icons";
+import { rectangle_select } from "./rectangle_select";
 
 export interface ToolEventParams {
-  canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  canvasLeft: number;
-  canvasTop: number;
-  canvasWidth: number;
-  canvasHeight: number;
-  cursorX: number;
-  cursorY: number;
-  project: any;
-  event: MouseEvent;
+  event: React.MouseEvent;
+  api: Api;
 }
 
 export interface ToolEvents {
@@ -48,13 +29,12 @@ export interface ToolEvents {
 export interface Tool {
   name: string;
   label: string;
-  icon: Function;
+  icon: Icon | TablerIcon;
   events: ToolEvents;
   cursor?: ReactElement;
 }
 
 function useTools() {
-  // const canvas = CanvasContext.useContainer();
   const tools: Array<Tool> = [
     {
       name: "select",
@@ -62,12 +42,7 @@ function useTools() {
       icon: Cursor,
       events: {},
     },
-    {
-      name: "rectangle_select",
-      label: "Rectangle Select",
-      icon: TbRectangle,
-      events: {},
-    },
+    rectangle_select,
     {
       name: "oval_select",
       label: "Oval Select",
@@ -81,12 +56,6 @@ function useTools() {
       name: "crop",
       label: "Crop",
       icon: Crop,
-      events: {},
-    },
-    {
-      name: "rectangle_select",
-      label: "Rectangle select",
-      icon: BoundingBoxCircles,
       events: {},
     },
   ];

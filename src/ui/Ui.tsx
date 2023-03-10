@@ -14,7 +14,7 @@ const HEADER_HEIGHT = 36;
 const FOOTER_HEIGHT = 36;
 const TAB_BAR_HEIGHT = 36;
 
-const useStyles = createStyles((theme, _params, getRef) => ({
+const useStyles = createStyles((theme, _params, _getRef) => ({
   container: {
     position: "fixed",
     width: "100%",
@@ -62,7 +62,6 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 }));
 
 interface UiProps {
-  width: number;
   children: ReactNode;
 }
 
@@ -87,9 +86,7 @@ export default function Ui(props: UiProps) {
           className={classes.leftPane}
           handles={["right"]}
           width={leftPaneWidth}
-          onResize={({ width, height }: Size) =>
-            setLeftPaneWidth(width as number)
-          }
+          onResize={({ width }: Size) => setLeftPaneWidth(width as number)}
         >
           <LeftPane />
         </Resizable>
@@ -106,9 +103,7 @@ export default function Ui(props: UiProps) {
           className={classes.rightPane}
           handles={["left"]}
           width={rightPaneWidth}
-          onResize={({ width, height }: Size) =>
-            setRightPaneWidth(width as number)
-          }
+          onResize={({ width }: Size) => setRightPaneWidth(width as number)}
         >
           <RightPane />
         </Resizable>

@@ -1,10 +1,11 @@
-import { useHotkeys } from "@mantine/hooks";
+import { HotkeyItem, useHotkeys } from "@mantine/hooks";
 import Ui from "../ui/Ui";
 import { SettingsContext } from "../context/settings";
 import { Settings } from "../settings";
 import { CommandsContext } from "../context";
 import Workspace from "../workspace/Workspace";
 import { TabsContext } from "../context/tabs";
+import { ReactNode } from "react";
 
 function Tabs() {
   const tabs = TabsContext.useContainer();
@@ -19,13 +20,13 @@ function Tabs() {
   return null;
 }
 
-function HotkeyProvider(props) {
+function HotkeyProvider(props: { children: ReactNode }) {
   const settings = SettingsContext.useContainer();
   const commands = CommandsContext.useContainer();
-  const hotkeys = Object.entries(settings.keyboardShortcuts).map(
+  const hotkeys: HotkeyItem[] = Object.entries(settings.keyboardShortcuts).map(
     ([command, shortcut]) => {
       return [shortcut.join("+"), () => commands.executeCommand(command)];
-    }
+    },
   );
   useHotkeys(hotkeys);
   return <div>{props.children}</div>;

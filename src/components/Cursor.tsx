@@ -73,7 +73,7 @@ const Crosshair = () => {
   );
 };
 
-export const Cursor = forwardRef<HTMLDivElement, CursorProps>((props, ref) => {
+export const Cursor = forwardRef<HTMLDivElement, CursorProps>(function Cursor(props, ref) {
   const tools = ToolsContext.useContainer();
   const activeTool = tools.activeTool;
   return (

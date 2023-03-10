@@ -4,51 +4,54 @@ use std::{
 };
 
 use image::{ImageBuffer, RgbaImage};
-use rand::Rng;
 
-use super::layer::Layer;
-
-pub fn generate_uid() -> u64 {
-    let mut rng = rand::thread_rng();
-    return rng.gen();
-}
+use super::{layer::Layer, selection::Selection, utils::generate_uid};
 
 pub struct Project {
     pub uid: u64,
     pub name: String,
-    pub width: u16,
-    pub height: u16,
+    pub width: u32,
+    pub height: u32,
     pub layers: Vec<Layer>,
     pub active_layer_uid: Option<u64>,
+    pub selection: Selection,
+}
+
+impl Default for Project {
+    fn default() -> Self {
+        Self::new()
+    }
 }
 
 impl Project {
     pub fn new() -> Project {
-        return Project {
+        Project {
             uid: generate_uid(),
             name: "".into(),
             width: 20,
             height: 20,
             layers: vec![],
             active_layer_uid: None,
-        };
+            selection: Selection::new(20, 20),
+        }
     }
 
-    pub fn set_name(&mut self, name: &str) -> () {
+    pub fn set_name(&mut self, name: &str) {
         self.name = name.into();
     }
 
-    pub fn resize_canvas(&mut self, width: u16, height: u16) -> () {
+    pub fn resize_canvas(&mut self, width: u32, height: u32) {
         self.width = width;
         self.height = height;
+        self.selection = Selection::new(self.width, self.height);
     }
 
     pub fn new_layer(&mut self) -> &mut Layer {
-        let layer: Layer = Layer::new();
-        let uid: u64 = layer.uid.clone();
+        let layer: Layer = Layer::new(self.width, self.height);
+        let uid: u64 = layer.uid;
         self.layers.push(layer);
-        self.set_active_layer(Some(uid.clone()));
-        return self.get_layer(uid);
+        self.set_active_layer(Some(uid));
+        self.get_layer(uid)
     }
 
     pub fn get_layer(&mut self, uid: u64) -> &mut Layer {
@@ -56,33 +59,40 @@ impl Project {
     }
 
     pub fn set_active_layer(&mut self, uid: Option<u64>) {
-        self.active_layer_uid = uid.clone();
+        self.active_layer_uid = uid;
+    }
+
+    pub fn get_active_layer(&mut self) -> Option<&mut Layer> {
+        match self.active_layer_uid {
+            None => None,
+            Some(layer_uid) => return Some(self.get_layer(layer_uid)),
+        }
     }
 
     pub fn get_image(&self) -> RgbaImage {
-        return ImageBuffer::from_fn(self.width as u32, self.height as u32, |x, y| {
-            return image::Rgba(self.get_compiled_pixel(x as u16, y as u16));
-        });
+        ImageBuffer::from_fn(self.width as u32, self.height as u32, |x, y| {
+            image::Rgba(self.get_compiled_pixel(x, y))
+        })
     }
 
     pub fn get_image_hash(&self) -> u64 {
         let mut s = DefaultHasher::new();
         self.get_image().hash(&mut s);
-        return s.finish();
+        s.finish()
     }
 
-    fn render_image(&self) -> () {
-        let img = self.get_image();
-        img.save("test.png").unwrap();
-    }
+    pub fn get_compiled_pixel(&self, x: u32, y: u32) -> [u8; 4] {
+        // compile the selection layer and
+        if self.selection.pixel_is_on_border(x, y) {
+            return [0, 0, 0, 255];
+        }
 
-    fn get_compiled_pixel(&self, x: u16, y: u16) -> [u8; 4] {
         let mut output: [u8; 4] = [0, 0, 0, 0];
         for layer in self.layers.iter().filter(|l| l.visible) {
             let pixel = layer.get_pixel_from_canvas_coordinates(x, y);
             output = blend_pixels(output, pixel);
         }
-        return output;
+        output
     }
 }
 
@@ -114,10 +124,10 @@ pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
     let blue_final_a = blue_fg_a + blue_bg_a * (1.0 - alpha_fg);
     let blue_final = blue_final_a / alpha_final;
 
-    return [
+    [
         (red_final * 255.0) as u8,
         (green_final * 255.0) as u8,
         (blue_final * 255.0) as u8,
         (alpha_final * 255.0) as u8,
-    ];
+    ]
 }

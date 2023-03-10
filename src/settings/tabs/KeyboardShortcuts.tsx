@@ -1,5 +1,4 @@
-// import { useState } from "react";
-import { Box, Table, Input, UnstyledButton } from "@mantine/core";
+import { Box, Table, UnstyledButton } from "@mantine/core";
 import KeyboardShortcut from "../../components/KeyboardShortcut";
 
 import { CommandsContext } from "../../context";
@@ -32,9 +31,7 @@ function EditKeyboardShortcut(props: EditKeyboardShortcutProps) {
       <UnstyledButton
       // onFocus={() => setInEditMode(true)}
       >
-        <KeyboardShortcut
-          keys={settings.keyboardShortcuts[props.shortcutName]}
-        />
+        <KeyboardShortcut keys={settings.keyboardShortcuts[props.shortcutName]} />
       </UnstyledButton>
     );
   }
@@ -51,9 +48,7 @@ function Demo() {
       </td>
       <td style={{ width: "100%" }}>{command.label}</td>
       <td>
-        <EditKeyboardShortcut
-          shortcutName={command.id as KeyboardShortcutName}
-        />
+        <EditKeyboardShortcut shortcutName={command.id as KeyboardShortcutName} />
       </td>
     </tr>
   ));

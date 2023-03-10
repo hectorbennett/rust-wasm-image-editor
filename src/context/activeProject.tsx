@@ -15,7 +15,7 @@ export interface Project {
 
 function useActiveProject() {
   const wasm = WasmContext.useContainer();
-  let data: Project | null = wasm.state.active_project_uid
+  const data: Project | null = wasm.state.active_project_uid
     ? wasm.state.projects.get(wasm.state.active_project_uid) || null
     : null;
   return {

@@ -5,11 +5,7 @@ import { ContextModalProps } from "@mantine/modals";
 
 import { WasmContext } from "../../context/wasm";
 
-export default function ResizeCanvas({
-  context,
-  id,
-  innerProps,
-}: ContextModalProps) {
+export default function ResizeCanvas({ context, id }: ContextModalProps) {
   const wasm = WasmContext.useContainer();
   const [width, setWidth] = useState(0);
   const [height, setHeight] = useState(0);
@@ -33,7 +29,7 @@ export default function ResizeCanvas({
         fullWidth
         mt="md"
         onClick={() => {
-          wasm.api.resize_canvas(width, height);
+          wasm.api && wasm.api.resize_canvas(width, height);
           context.closeModal(id);
         }}
       >

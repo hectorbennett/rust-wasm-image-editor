@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect, forwardRef, createRef } from "react";
-import { setConstantValue } from "typescript";
+import { useState, useRef, useEffect, forwardRef } from "react";
 // import ProjectContainer from "../../active/Project";
-import { ProjectContext, CanvasContext, ToolsContext } from "../context";
+import { ProjectContext, ToolsContext } from "../context";
 import { LayersContext } from "../context";
 
 function useNoopTool() {
@@ -10,11 +9,7 @@ function useNoopTool() {
   };
 }
 
-function useBucketFillTool({
-  activeLayer,
-  selectionOutlineLayer,
-  selectionMaskLayer,
-}) {
+function useBucketFillTool({ activeLayer, selectionMaskLayer }) {
   const project = ProjectContext.useContainer();
   return {
     events: {
@@ -23,7 +18,7 @@ function useBucketFillTool({
           0,
           0,
           selectionMaskLayer.canvas.width,
-          selectionMaskLayer.canvas.height
+          selectionMaskLayer.canvas.height,
         );
 
         const newImage = new OffscreenCanvas(500, 500);
@@ -44,14 +39,14 @@ function useBucketFillTool({
           0,
           0,
           activeLayer.canvas.width,
-          activeLayer.canvas.height
+          activeLayer.canvas.height,
         );
       },
     },
   };
 }
 
-function usePaintbrushTool({ activeLayer, selectionOutlineLayer }) {
+function usePaintbrushTool({ activeLayer }) {
   const [drawing, setDrawing] = useState(false);
 
   const startDraw = ({ nativeEvent }) => {
@@ -82,11 +77,7 @@ function usePaintbrushTool({ activeLayer, selectionOutlineLayer }) {
   };
 }
 
-function useRectangleSelectTool({
-  activeLayer,
-  selectionOutlineLayer,
-  selectionMaskLayer,
-}) {
+function useRectangleSelectTool({ selectionOutlineLayer, selectionMaskLayer }) {
   const [drawing, setDrawing] = useState(false);
   const [start, setStart] = useState({ x: 0, y: 0 });
 
@@ -97,7 +88,7 @@ function useRectangleSelectTool({
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     setDrawing(true);
   };
@@ -113,7 +104,7 @@ function useRectangleSelectTool({
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     selectionMaskLayer.ctx.fillStyle = "black";
     selectionMaskLayer.ctx.fillRect(x, y, width, height);
@@ -131,7 +122,7 @@ function useRectangleSelectTool({
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     selectionOutlineLayer.ctx.lineWidth = 1;
     selectionOutlineLayer.ctx.strokeStyle = "white";
@@ -153,11 +144,7 @@ function useRectangleSelectTool({
   };
 }
 
-function useOvalSelectTool({
-  activeLayer,
-  selectionOutlineLayer,
-  selectionMaskLayer,
-}) {
+function useOvalSelectTool({ selectionOutlineLayer, selectionMaskLayer }) {
   const [drawing, setDrawing] = useState(false);
   const [start, setStart] = useState({ x: 0, y: 0 });
 
@@ -168,7 +155,7 @@ function useOvalSelectTool({
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     setDrawing(true);
   };
@@ -189,18 +176,10 @@ function useOvalSelectTool({
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     selectionMaskLayer.ctx.beginPath();
-    selectionMaskLayer.ctx.ellipse(
-      centerX,
-      centerY,
-      radiusX,
-      radiusY,
-      0,
-      0,
-      2 * Math.PI
-    );
+    selectionMaskLayer.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
     selectionMaskLayer.ctx.fill();
   };
 
@@ -222,36 +201,20 @@ function useOvalSelectTool({
       0,
       0,
       selectionOutlineLayer.canvas.width,
-      selectionOutlineLayer.canvas.height
+      selectionOutlineLayer.canvas.height,
     );
     selectionOutlineLayer.ctx.lineWidth = 1;
     selectionOutlineLayer.ctx.strokeStyle = "white";
     selectionOutlineLayer.ctx.setLineDash([4, 2]);
     selectionOutlineLayer.ctx.beginPath();
-    selectionOutlineLayer.ctx.ellipse(
-      centerX,
-      centerY,
-      radiusX,
-      radiusY,
-      0,
-      0,
-      2 * Math.PI
-    );
+    selectionOutlineLayer.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
     selectionOutlineLayer.ctx.stroke();
 
     selectionOutlineLayer.ctx.lineWidth = 1;
     selectionOutlineLayer.ctx.strokeStyle = "black";
     selectionOutlineLayer.ctx.setLineDash([4, 8]);
     selectionOutlineLayer.ctx.beginPath();
-    selectionOutlineLayer.ctx.ellipse(
-      centerX,
-      centerY,
-      radiusX,
-      radiusY,
-      0,
-      0,
-      2 * Math.PI
-    );
+    selectionOutlineLayer.ctx.ellipse(centerX, centerY, radiusX, radiusY, 0, 0, 2 * Math.PI);
     selectionOutlineLayer.ctx.stroke();
   };
 
@@ -293,7 +256,7 @@ function useTool({ activeLayer, selectionOutlineLayer, selectionMaskLayer }) {
   return tools[activeTool];
 }
 
-const Canvas = forwardRef(function (props, ref) {
+const Canvas = forwardRef(function Canvas(props, ref) {
   return (
     <canvas
       ref={ref}
@@ -315,8 +278,7 @@ function Background() {
         height: 500,
         position: "relative",
         zIndex: -1,
-        background:
-          "repeating-conic-gradient(#878787 0% 25%, #5a5a5a 0% 50%) 50% / 20px 20px",
+        background: "repeating-conic-gradient(#878787 0% 25%, #5a5a5a 0% 50%) 50% / 20px 20px",
       }}
     />
   );

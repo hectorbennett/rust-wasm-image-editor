@@ -4,7 +4,7 @@ See a very early example in action at
 
 https://seahorse-app-r8jlv.ondigitalocean.app/
 
-Contributors welcome! I've set up a discord channel: https://discord.com/channels/1052614104545771561/1052614105279778869
+Contributors welcome! Get in touch!
 
 ## DigitalOcean app spec:
 

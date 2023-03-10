@@ -4,7 +4,7 @@ import { SettingsContext } from "../context/settings";
 export function NavBar() {
   const settings = SettingsContext.useContainer();
 
-  const items = settings.tabs.map((item, index) => (
+  const items = settings.tabs.map((item, _index) => (
     <NavLink
       key={item.label}
       active={item.id === settings?.activeTab?.id}

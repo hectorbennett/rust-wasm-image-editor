@@ -1,25 +1,11 @@
-import {
-  createStyles,
-  UnstyledButton,
-  Group,
-  Text,
-  Image,
-  Center,
-  Badge,
-  Box,
-  Flex,
-} from "@mantine/core";
-import {
-  SpotlightProvider,
-  SpotlightAction,
-  SpotlightActionProps,
-} from "@mantine/spotlight";
-import { ReactEventHandler } from "react";
+import { createStyles, UnstyledButton, Text, Box } from "@mantine/core";
+import { SpotlightActionProps } from "@mantine/spotlight";
+import { MouseEvent } from "react";
 import { CommandCategory } from "../context/commands";
 import { CommandTypeBadge } from "./CommandTypeBadge";
 import KeyboardShortcut from "./KeyboardShortcut";
 
-const useStyles = createStyles((theme, _params, getRef) => ({
+const useStyles = createStyles((theme, _params, _getRef) => ({
   action: {
     position: "relative",
     display: "flex",
@@ -54,10 +40,7 @@ const useStyles = createStyles((theme, _params, getRef) => ({
   },
 
   actionHovered: {
-    backgroundColor:
-      theme.colorScheme === "dark"
-        ? theme.colors.dark[4]
-        : theme.colors.gray[1],
+    backgroundColor: theme.colorScheme === "dark" ? theme.colors.dark[4] : theme.colors.gray[1],
   },
 
   actionBody: {
@@ -67,20 +50,17 @@ const useStyles = createStyles((theme, _params, getRef) => ({
 
 export function CustomSpotlightAction({
   action,
-  styles,
-  classNames,
   hovered,
   onTrigger,
   ...others
 }: SpotlightActionProps) {
-  // const { classes, cx } = useStyles({ styles, classNames, name: 'Spotlight' });
   const { classes, cx } = useStyles();
 
   return (
     <UnstyledButton
       className={cx(classes.action, { [classes.actionHovered]: hovered })}
       tabIndex={-1}
-      onMouseDown={(event: any) => event.preventDefault()}
+      onMouseDown={(event: MouseEvent) => event.preventDefault()}
       onClick={onTrigger}
       {...others}
     >
@@ -98,15 +78,11 @@ export function CustomSpotlightAction({
         </Box>
 
         <Box className={classes.category} ml="xl">
-          {action.category && (
-            <CommandTypeBadge category={action.category as CommandCategory} />
-          )}
+          {action.category && <CommandTypeBadge category={action.category as CommandCategory} />}
         </Box>
 
         <Box className={classes.keyboardShortcuts}>
-          {action.keyboard_shortcut && (
-            <KeyboardShortcut keys={action.keyboard_shortcut} />
-          )}
+          {action.keyboard_shortcut && <KeyboardShortcut keys={action.keyboard_shortcut} />}
         </Box>
       </Box>
     </UnstyledButton>

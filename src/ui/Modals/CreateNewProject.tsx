@@ -4,11 +4,7 @@ import { Button, NumberInput } from "@mantine/core";
 import { ContextModalProps } from "@mantine/modals";
 import { AppContext } from "../../context/app";
 
-export default function CreateNewProject({
-  context,
-  id,
-  innerProps,
-}: ContextModalProps) {
+export default function CreateNewProject({ context, id }: ContextModalProps) {
   const app = AppContext.useContainer();
   const [width, setWidth] = useState(500);
   const [height, setHeight] = useState(500);

@@ -21,9 +21,7 @@ export default function Provider(props: { children: ReactNode }) {
           <ToolsContext.Provider>
             <LayersContext.Provider>
               <SettingsContext.Provider>
-                <CommandsContext.Provider>
-                  {props.children}
-                </CommandsContext.Provider>
+                <CommandsContext.Provider>{props.children}</CommandsContext.Provider>
               </SettingsContext.Provider>
             </LayersContext.Provider>
           </ToolsContext.Provider>

@@ -1,4 +1,4 @@
-import { FunctionComponent, useEffect, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { createContainer } from "unstated-next";
 import { IconGauge, IconKeyboard, TablerIconProps } from "@tabler/icons";
 
@@ -54,7 +54,7 @@ interface SettingsTab {
 }
 
 function useSettings() {
-  const [settings, setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  const [settings, _setSettings] = useState<Settings>(DEFAULT_SETTINGS);
   const tabs: Array<SettingsTab> = [
     {
       id: "user_interface",
@@ -68,12 +68,11 @@ function useSettings() {
     },
   ];
 
-//   useEffect(() => {}, [settings.keyboard_shortcuts]);
+  //   useEffect(() => {}, [settings.keyboard_shortcuts]);
 
   const [activeTabId, setActiveTabId] = useState<string>("user_interface");
 
-  const activeTab: SettingsTab =
-    tabs.find((tab) => tab.id === activeTabId) || tabs[0];
+  const activeTab: SettingsTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
 
   const openSettingsTab = (tabId: TabId) => {
     setActiveTabId(tabId);

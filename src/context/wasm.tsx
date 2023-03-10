@@ -1,4 +1,3 @@
-// @ts-ignore
 import initWasm, { Api } from "wasm";
 
 import { useEffect, useRef, useState } from "react";
@@ -16,7 +15,7 @@ const DEFAULT_APP_STATE: AppState = {
 };
 
 const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
-  const [api, setApi] = useState<any>(null);
+  const [api, setApi] = useState<Api>();
   const inited = useRef(false);
   useEffect(() => {
     if (inited.current) {
@@ -24,17 +23,14 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
     }
     inited.current = true;
     initWasm().then(() => {
-      const apiHandler: any = {
-        get(target: any, prop: any, receiver: any) {
+      const apiHandler: ProxyHandler<Api> = {
+        get(target: Api, prop: string, _receiver: unknown) {
           const p = Reflect.get(target, prop);
-          console.log(target);
           if (p instanceof Function) {
-            return function () {
-              // @ts-ignore
-              let that: any = this;
-              let thing = p.apply(that, arguments);
+            return (...args: Array<unknown>) => {
+              const result = p.apply(target, args);
               methodCallback();
-              return thing;
+              return result;
             };
           } else {
             return p;
@@ -49,7 +45,9 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
 
 function useWasm() {
   const [appState, setAppState] = useState<AppState>(DEFAULT_APP_STATE);
-  const methodCallback = useRef<() => void>(() => {});
+  const methodCallback = useRef<() => void>(() => {
+    /* noop */
+  });
   const api = useWasmApi({
     methodCallback: () => {
       methodCallback.current();
@@ -57,8 +55,7 @@ function useWasm() {
   });
 
   useEffect(() => {
-    const refreshAppState = () =>
-      setAppState(() => (api ? api.state : DEFAULT_APP_STATE));
+    const refreshAppState = () => setAppState(() => (api ? api.state : DEFAULT_APP_STATE));
     methodCallback.current = refreshAppState;
     refreshAppState();
   }, [api]);

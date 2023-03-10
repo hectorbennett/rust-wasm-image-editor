@@ -11,13 +11,13 @@ const useCanvas = () => {
   }, []);
 
   function centerWorkspace() {
-    let outer = outerRef.current as HTMLElement | null;
+    const outer = outerRef.current as HTMLElement | null;
     if (!outer) {
       return;
     }
     outer.scrollTo(
       (workspaceSize - outer.getBoundingClientRect().width) / 2,
-      (workspaceSize - outer.getBoundingClientRect().height) / 2
+      (workspaceSize - outer.getBoundingClientRect().height) / 2,
     );
   }
 
