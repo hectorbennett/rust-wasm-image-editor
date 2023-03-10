@@ -8,9 +8,9 @@ Contributors welcome! Get in touch!
 
 ## Requirements
 
- - node v19.7.0
- - wasm-pack (installed globally with `npm install -g wasm-pack`)
- - yarn
+- node v19.7.0
+- wasm-pack (installed globally with `npm install -g wasm-pack`)
+- yarn
 
 ## DigitalOcean app spec:
 
