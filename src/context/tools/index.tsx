@@ -44,7 +44,7 @@ function useTools() {
     },
     rectangle_select,
     {
-      name: "oval_select",
+      name: "ellipse_select",
       label: "Oval Select",
       icon: TbOvalVertical,
       events: {},

@@ -58,6 +58,12 @@ function Testing() {
     wasm.api.select_rect(50, 50, 400, 400);
     wasm.api.select_inverse();
     wasm.api.fill_selection();
+
+    // draw an ellipse
+    wasm.api.create_layer("Test layer 5", 500, 500);
+    wasm.api.set_primary_colour(207, 47, 116, 255);
+    wasm.api.select_ellipse(100, 250, 300, 200);
+    wasm.api.fill_selection();
   }
   return null;
 }
