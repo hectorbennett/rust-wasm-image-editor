@@ -2,15 +2,13 @@ import { ReactElement, useState } from "react";
 import { Api } from "wasm";
 import { createContainer } from "unstated-next";
 
+import { TablerIcon } from "@tabler/icons";
 import { Cursor, Crop, Icon } from "react-bootstrap-icons";
-
-import { TbOvalVertical } from "react-icons/tb";
-
 import { paintbrush } from "./paintbrush";
 import { eye_dropper } from "./eye_dropper";
 import { bucket_fill } from "./bucket_fill";
-import { TablerIcon } from "@tabler/icons";
 import { rectangle_select } from "./rectangle_select";
+import { ellipse_select } from "./ellipse_select";
 
 export interface ToolEventParams {
   ctx: CanvasRenderingContext2D;
@@ -43,12 +41,7 @@ function useTools() {
       events: {},
     },
     rectangle_select,
-    {
-      name: "ellipse_select",
-      label: "Oval Select",
-      icon: TbOvalVertical,
-      events: {},
-    },
+    ellipse_select,
     bucket_fill,
     eye_dropper,
     paintbrush,
