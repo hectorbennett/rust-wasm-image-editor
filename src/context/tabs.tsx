@@ -37,7 +37,7 @@ function useTabs() {
   }
 
   function closeTab(_uid: string) {
-    console.log("close tab");
+    // console.log("close tab");
   }
 
   function focusTab(uid: string) {
