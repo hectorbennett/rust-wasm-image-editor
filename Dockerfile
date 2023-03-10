@@ -1,4 +1,6 @@
-FROM node:18.12.1
+FROM node:19.7.0
+
+ENV NODE_ENV=production
 
 # Install rust
 # Get Rust; NOTE: using sh for better compatibility with other base images
@@ -13,7 +15,7 @@ RUN cargo --help
 WORKDIR /app
 COPY package*.json ./
 
-RUN npm install -g wasm-pack
+RUN npm install -g wasm-pack yarn
 RUN yarn run ci
 
 COPY . .
