@@ -14,11 +14,11 @@ WORKDIR /app
 COPY package*.json ./
 
 RUN npm install -g wasm-pack
-RUN npm ci
+RUN yarn run ci
 
 COPY . .
 
 ENV NODE_ENV=production
 EXPOSE 3000
-RUN npm run build
+RUN yarn run build
 CMD ["npm", "run", "serve"]
