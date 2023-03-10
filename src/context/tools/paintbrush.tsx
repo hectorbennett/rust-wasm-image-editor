@@ -1,6 +1,6 @@
 import { Box } from "@mantine/core";
 import { Brush } from "react-bootstrap-icons";
-import { Tool, ToolEventParams } from ".";
+import { Tool } from ".";
 
 // let prevX = 0;
 // let prevY = 0;
