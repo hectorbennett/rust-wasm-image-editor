@@ -61,6 +61,7 @@ export const paintbrush: Tool = {
   name: "paintbrush",
   label: "Paintbrush",
   icon: Brush,
+  events: {},
   // events: {
   //   onMouseMove: function (params: ToolEventParams) {
   //     processDrawEvent(params);
