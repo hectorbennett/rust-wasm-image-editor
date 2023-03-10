@@ -2,9 +2,6 @@ import { MantineProvider } from "@mantine/core";
 import { ModalsProvider } from "@mantine/modals";
 import { SpotlightProvider } from "@mantine/spotlight";
 
-// import { DndProvider } from "react-dnd";
-// import { HTML5Backend } from "react-dnd-html5-backend";
-
 import modals from "./ui/Modals";
 import Provider from "./context";
 import { WasmContext } from "./context/wasm";
@@ -13,6 +10,8 @@ import Main from "./main/Main";
 import { CustomSpotlightAction } from "./components/CustomSpotlightAction";
 import { useEffect, useRef } from "react";
 
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+
 function Testing() {
   const wasm = WasmContext.useContainer();
   const testCalled = useRef(false);
@@ -20,7 +19,7 @@ function Testing() {
     test();
   }, []);
 
-  function test() {
+  async function test() {
     if (testCalled.current) {
       return;
     }
@@ -29,21 +28,36 @@ function Testing() {
       return;
     }
     wasm.api.create_project("Test project", 500, 500);
+    wasm.api.create_layer("Test layer 1", 500, 500);
+
+    await sleep(2000);
 
     // red square layer
-    const layer_1_uid = wasm.api.create_layer("Test layer 1", 500, 500);
-    const red = new Uint8Array([255, 0, 0, 100]);
-    wasm.api.fill_rect(layer_1_uid, red, 100, 100, 150, 150);
+    wasm.api.set_primary_colour(255, 0, 0, 100);
+    wasm.api.select_rect(100, 100, 150, 150);
+    wasm.api.fill_selection();
+    wasm.api.set_primary_colour(1, 2, 3, 255);
+    wasm.api.select_rect(400, 400, 100, 100);
+    wasm.api.fill_selection();
 
     // green square layer
-    const layer_2_uid = wasm.api.create_layer("Test layer 2", 500, 500);
-    const green = new Uint8Array([0, 255, 0, 100]);
-    wasm.api.fill_rect(layer_2_uid, green, 220, 50, 180, 150);
+    wasm.api.create_layer("Test layer 2", 500, 500);
+    wasm.api.set_primary_colour(0, 255, 0, 100);
+    wasm.api.select_rect(220, 50, 180, 150);
+    wasm.api.fill_selection();
 
     // blue square layer
-    const layer_3_uid = wasm.api.create_layer("Test layer 3", 500, 500);
-    const blue = new Uint8Array([0, 0, 255, 100]);
-    wasm.api.fill_rect(layer_3_uid, blue, 180, 150, 200, 200);
+    wasm.api.create_layer("Test layer 3", 500, 500);
+    wasm.api.set_primary_colour(0, 0, 255, 100);
+    wasm.api.select_rect(180, 150, 200, 200);
+    wasm.api.fill_selection();
+
+    // invert selection
+    wasm.api.create_layer("Test layer 4", 500, 500);
+    wasm.api.set_primary_colour(100, 0, 255, 100);
+    wasm.api.select_rect(50, 50, 400, 400);
+    wasm.api.invert_selection();
+    wasm.api.fill_selection();
   }
   return null;
 }

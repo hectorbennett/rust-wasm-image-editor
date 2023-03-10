@@ -4,3 +4,4 @@ export { CommandsContext } from "./commands";
 // export { LayersContext } from "./layers";
 // export { ProjectContext } from "./project";
 export { ToolsContext } from "./tools";
+export { ActiveProjectContext } from "./activeProject";

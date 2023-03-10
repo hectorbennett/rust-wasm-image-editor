@@ -1,14 +1,15 @@
 #[derive(Clone, Copy)]
 pub struct Colour {
-    red: u8,
-    green: u8,
-    blue: u8,
-    alpha: u8,
+    pub red: u8,
+    pub green: u8,
+    pub blue: u8,
+    pub alpha: u8,
 }
 
 impl Colour {
     pub const ALPHA: Colour = Colour::from_rgba(255, 255, 255, 0);
     pub const WHITE: Colour = Colour::from_rgb(255, 255, 255);
+    pub const BLACK: Colour = Colour::from_rgb(0, 0, 0);
 
     pub const fn from_rgb(red: u8, green: u8, blue: u8) -> Colour {
         Colour {

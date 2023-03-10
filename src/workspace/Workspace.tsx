@@ -1,11 +1,9 @@
-import { useEffect, useRef, useState } from "react";
-import { Cursor } from "../components/Cursor";
-import { ActiveProjectContext } from "../context/activeProject";
-import { WasmContext } from "../context/wasm";
+import React, { forwardRef, useEffect, useRef, useState } from "react";
+// import { Cursor } from "../components/Cursor";
+import { ToolsContext, ActiveProjectContext } from "../context";
+import { ToolEventParams, ToolEvents } from "../context/tools";
 
-// interface WorkspaceProps {
-//   id: string;
-// }
+import { WasmContext } from "../context/wasm";
 
 interface CanvasProps {
   width: number;
@@ -13,26 +11,10 @@ interface CanvasProps {
   image_hash: string;
 }
 
-const Canvas = function (props: CanvasProps) {
-  const ref = useRef<HTMLCanvasElement>(null);
-  const wasm = WasmContext.useContainer();
-
-  useEffect(() => {
-    const canvas = ref.current;
-    if (!canvas) {
-      return;
-    }
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      return;
-    }
-    const newData = ctx.createImageData(props.width, props.height);
-    wasm.api && newData.data.set(wasm.api.image_data);
-    ctx.putImageData(newData, 0, 0);
-  }, [props.image_hash]);
-
+const Canvas = forwardRef<HTMLCanvasElement, CanvasProps>(function Canvas(props, ref) {
   return (
     <canvas
+      id="wasm-canvas"
       ref={ref}
       width={props.width}
       height={props.height}
@@ -42,7 +24,7 @@ const Canvas = function (props: CanvasProps) {
       }}
     />
   );
-};
+});
 
 function Background(props: { width: number; height: number }) {
   return (
@@ -60,24 +42,62 @@ function Background(props: { width: number; height: number }) {
 
 export default function Workspace() {
   const activeProject = ActiveProjectContext.useContainer();
-  const [cursorVisible, setCursorVisible] = useState(false);
-  const cursorRef = useRef<HTMLDivElement>(null);
-  const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+  const tools = ToolsContext.useContainer();
+  // const [cursorVisible, setCursorVisible] = useState(false);
+  // const cursorRef = useRef<HTMLDivElement>(null);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  // const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
   if (!activeProject.activeProject) {
     return null;
   }
 
+  const wasm = WasmContext.useContainer();
+  const [apiInited, setApiInted] = useState(false);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) {
+      return;
+    }
+    const ctx = canvas.getContext("2d");
+    if (!ctx) {
+      return;
+    }
+    if (!wasm.api) {
+      return;
+    }
+    if (apiInited) {
+      return;
+    }
+    wasm.api.init_canvas("wasm-canvas");
+    setApiInted(true);
+  }, [canvasRef.current, wasm.api, apiInited]);
+
+  const events = Object.fromEntries(
+    Object.keys(tools.activeTool.events).map((eventName) => [
+      eventName,
+      (event: React.MouseEvent) => {
+        const ctx = canvasRef.current?.getContext("2d");
+        if (!ctx || !wasm.api) {
+          return;
+        }
+        const func = tools.activeTool.events[eventName as keyof ToolEvents] as (
+          params: ToolEventParams,
+        ) => void;
+        func({ ctx, event, api: wasm.api });
+      },
+    ]),
+  );
+
   return (
     <div
-      onMouseEnter={() => setCursorVisible(true)}
-      onMouseLeave={() => setCursorVisible(false)}
-      onMouseMove={(e) => {
-        setCursorPosition({ x: e.clientX, y: e.clientY });
-      }}
-      style={{ cursor: "none" }}
+      // onMouseEnter={() => setCursorVisible(true)}
+      // onMouseLeave={() => setCursorVisible(false)}
+      {...events}
     >
       <Canvas
+        ref={canvasRef}
         width={activeProject.activeProject.width}
         height={activeProject.activeProject.height}
         image_hash={activeProject.activeProject.image_hash}
@@ -86,7 +106,7 @@ export default function Workspace() {
         width={activeProject.activeProject.width}
         height={activeProject.activeProject.height}
       />
-      {cursorVisible ? <Cursor ref={cursorRef} position={cursorPosition} /> : null}
+      {/* {cursorVisible ? <Cursor ref={cursorRef} position={cursorPosition} /> : null} */}
     </div>
   );
 }
