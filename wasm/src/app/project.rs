@@ -1,8 +1,3 @@
-use std::{
-    collections::hash_map::DefaultHasher,
-    hash::{Hash, Hasher},
-};
-
 use image::{ImageBuffer, RgbaImage};
 
 use super::{layer::Layer, selection::Selection, utils::generate_uid};
@@ -73,12 +68,6 @@ impl Project {
         ImageBuffer::from_fn(self.width as u32, self.height as u32, |x, y| {
             image::Rgba(self.get_compiled_pixel(x, y))
         })
-    }
-
-    pub fn get_image_hash(&self) -> u64 {
-        let mut s = DefaultHasher::new();
-        self.get_image().hash(&mut s);
-        s.finish()
     }
 
     pub fn get_compiled_pixel(&self, x: u32, y: u32) -> [u8; 4] {
