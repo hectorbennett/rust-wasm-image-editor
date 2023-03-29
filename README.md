@@ -14,6 +14,11 @@ Contributors welcome! Get in touch!
 - wasm-pack (installed globally with `npm install -g wasm-pack`)
 - yarn
 
+## Development
+
+- Install packages with `yarn`. This should also automatically set up husky and install cargo watch.
+- Run the development environment with `yarn run dev`. This runs `yarn run dev:wasm` and `yarn run dev:js` simultaneously and watches for changes to both.
+
 ## DigitalOcean app spec:
 
 ```
