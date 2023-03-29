@@ -1,6 +1,6 @@
 use image::{ImageBuffer, RgbaImage};
 
-use super::{layer::Layer, selection::Selection, utils::generate_uid};
+use super::{layer::Layer, selection::Selection, utils::{generate_uid, blend_pixels}};
 
 pub struct Project {
     pub uid: u64,
@@ -83,40 +83,4 @@ impl Project {
         }
         output
     }
-}
-
-pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
-    let red_bg: f32 = pixel_bg[0] as f32 / 255.0;
-    let green_bg: f32 = pixel_bg[1] as f32 / 255.0;
-    let blue_bg: f32 = pixel_bg[2] as f32 / 255.0;
-    let alpha_bg: f32 = pixel_bg[3] as f32 / 255.0;
-
-    let red_fg: f32 = pixel_fg[0] as f32 / 255.0;
-    let green_fg: f32 = pixel_fg[1] as f32 / 255.0;
-    let blue_fg: f32 = pixel_fg[2] as f32 / 255.0;
-    let alpha_fg: f32 = pixel_fg[3] as f32 / 255.0;
-
-    let alpha_final = alpha_bg + alpha_fg - alpha_bg * alpha_fg;
-
-    let red_bg_a = red_bg * alpha_bg;
-    let red_fg_a: f32 = red_fg * alpha_fg;
-    let red_final_a = red_fg_a + red_bg_a * (1.0 - alpha_fg);
-    let red_final = red_final_a / alpha_final;
-
-    let green_bg_a = green_bg * alpha_bg;
-    let green_fg_a: f32 = green_fg * alpha_fg;
-    let green_final_a = green_fg_a + green_bg_a * (1.0 - alpha_fg);
-    let green_final = green_final_a / alpha_final;
-
-    let blue_bg_a = blue_bg * alpha_bg;
-    let blue_fg_a: f32 = blue_fg * alpha_fg;
-    let blue_final_a = blue_fg_a + blue_bg_a * (1.0 - alpha_fg);
-    let blue_final = blue_final_a / alpha_final;
-
-    [
-        (red_final * 255.0) as u8,
-        (green_final * 255.0) as u8,
-        (blue_final * 255.0) as u8,
-        (alpha_final * 255.0) as u8,
-    ]
 }

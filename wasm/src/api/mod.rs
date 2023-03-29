@@ -1,6 +1,7 @@
 use crate::app::{colour::Colour, layer::Layer, timer::Timer};
 
 use super::app::App;
+use image::{ImageBuffer, Rgba};
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
 use web_sys::ImageData;
 extern crate console_error_panic_hook;
@@ -239,10 +240,21 @@ impl Api {
         serialize::ApiSerializer::to_json(&self.app)
     }
 
+    fn get_image(&mut self) -> Option<ImageBuffer<Rgba<u8>, Vec<u8>>> {
+        if !self.canvas_inited {
+            return None;
+        }
+        let _timer = Timer::new("Api::get_image");
+
+        Some(self.app.get_active_project().unwrap().get_image())
+    }
+
     pub fn render_to_canvas(&mut self) {
         if !self.canvas_inited {
             return;
         }
+        let image = self.get_image().unwrap();
+
         let _timer = Timer::new("Api::render_to_canvas");
         let document = web_sys::window().unwrap().document().unwrap();
         let canvas = document.get_element_by_id("wasm-canvas").unwrap();
@@ -258,8 +270,6 @@ impl Api {
             .unwrap()
             .dyn_into::<web_sys::CanvasRenderingContext2d>()
             .unwrap();
-
-        let image = self.app.get_active_project().unwrap().get_image();
 
         let data = ImageData::new_with_u8_clamped_array_and_sh(
             Clamped(image.as_raw()),
