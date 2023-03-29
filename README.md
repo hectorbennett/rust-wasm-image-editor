@@ -23,7 +23,7 @@ Contributors welcome! Get in touch or check out the [good first issues](https://
 
 ## Deployment
 
- - You can test the Dockerfile with `docker build .`
+- You can test the Dockerfile with `docker build .`
 
 ## DigitalOcean app spec:
 
