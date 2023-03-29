@@ -57,7 +57,8 @@
   },
   "scripts": {
     "ci": "rm -rf node_modules && yarn install --frozen-lockfile",
-    "prepare": "husky install && cargo install cargo-watch",
+    "install-wasm-pack": "curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh",
+    "prepare": "yarn run install-wasm-pack && husky install && cargo install cargo-watch",
     "dev:wasm": "cd ./wasm && cargo watch -s 'wasm-pack build . --target web'",
     "dev:js": "vite --host",
     "dev": "npm-run-all --parallel dev:wasm dev:js",
