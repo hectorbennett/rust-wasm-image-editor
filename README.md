@@ -8,7 +8,7 @@ https://seahorse-app-r8jlv.ondigitalocean.app/
 
 ## Contributing
 
-Contributors welcome! Get in touch or check out the [good first issues](https://github.com/hectorbennett/rust-wasm-image-editor/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22)
+Contributors welcome! Get in touch or check out the [good first issues](https://github.com/hectorbennett/rust-wasm-image-editor/issues?q=is%3Aopen+is%3Aissue+label%3A%22good+first+issue%22).
 
 ## Requirements
 
