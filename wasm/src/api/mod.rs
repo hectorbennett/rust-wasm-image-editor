@@ -1,3 +1,5 @@
+use std::vec;
+
 use crate::app::{colour::Colour, layer::Layer};
 
 use super::app::App;
@@ -204,7 +206,8 @@ impl Api {
 
     pub fn get_layer_thumbnail(&mut self, layer_uid: u64) -> Clamped<Vec<u8>> {
         let img = self.get_layer(layer_uid).unwrap().get_thumbnail();
-        Clamped(img.into_vec())
+        // Clamped(img.into_vec())
+        Clamped(vec![])
     }
 
     #[wasm_bindgen(getter)]

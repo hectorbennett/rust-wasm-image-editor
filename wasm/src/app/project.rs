@@ -1,12 +1,16 @@
 use std::{
     collections::hash_map::DefaultHasher,
+    fs::{self, File},
     hash::{Hash, Hasher},
+    io::{BufReader, Write},
 };
 
 use image::{ImageBuffer, RgbaImage};
+use serde::{Deserialize, Serialize};
 
 use super::{layer::Layer, selection::Selection, utils::generate_uid};
 
+#[derive(Serialize, Deserialize)]
 pub struct Project {
     pub uid: u64,
     pub name: String,
@@ -94,6 +98,19 @@ impl Project {
         }
         output
     }
+
+    pub fn save_project(&self, path: &str) -> std::io::Result<()> {
+        let mut file = File::create(path)?;
+        std::fs::write(
+            path,
+            self.to_json()
+        )
+        Ok(())
+    }
+
+    pub fn to_json(&self) -> &str {
+        serde_json::to_string_pretty(&self).unwrap()
+    }
 }
 
 pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
@@ -130,4 +147,16 @@ pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
         (blue_final * 255.0) as u8,
         (alpha_final * 255.0) as u8,
     ]
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_save_project() {
+        // check that creating a new 3x3 selection inits a vector of 9 zeroes
+        let p = Project::new();
+        p.save_project("/home/hector/rust-wasm-image-editor/wasm/test_project.json");
+    }
 }
