@@ -48,7 +48,7 @@ impl Layer {
 
     pub fn get_thumbnail(&self) -> Vec<u8> {
         // imageops::resize(&self.img, 20, 20, Nearest)
-        return vec![];
+        vec![]
     }
 
     pub fn get_thumbnail_hash(&self) -> u64 {
@@ -77,7 +77,7 @@ impl Layer {
             (0..=self.height).for_each(|j| {
                 let value = selection.from_coords(i, j);
                 if value != 0 {
-                    let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
+                    let _alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
                     // let pixel = image::Rgba([colour.red, colour.green, colour.blue, alpha]);
                     // self.img.put_pixel(i, j, pixel);
                 }
@@ -85,7 +85,7 @@ impl Layer {
         });
     }
 
-    pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> [u8; 4] {
+    pub fn get_pixel_from_canvas_coordinates(&self, _x: u32, _y: u32) -> [u8; 4] {
         // let pixel = *self.img.get_pixel(x, y);
         // let rgba = pixel.to_rgba();
         // rgba.0

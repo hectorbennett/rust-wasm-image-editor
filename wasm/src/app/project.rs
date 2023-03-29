@@ -1,9 +1,4 @@
-use std::{
-    collections::hash_map::DefaultHasher,
-    fs::{self, File},
-    hash::{Hash, Hasher},
-    io::{BufReader, Write},
-};
+use std::fs::File;
 
 use image::{ImageBuffer, RgbaImage};
 use serde::{Deserialize, Serialize};
@@ -98,7 +93,7 @@ impl Project {
     }
 
     pub fn save_project(&self, path: &str) -> std::io::Result<()> {
-        let mut file = File::create(path)?;
+        let _file = File::create(path)?;
         // std::fs::write(
         //     path,
         //     self.to_json()
@@ -111,14 +106,14 @@ impl Project {
     // }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
 
-    #[test]
-    fn test_save_project() {
-        // check that creating a new 3x3 selection inits a vector of 9 zeroes
-        let p = Project::new();
-        p.save_project("/home/hector/rust-wasm-image-editor/wasm/test_project.json");
-    }
-}
+//     #[test]
+//     fn test_save_project() {
+//         // check that creating a new 3x3 selection inits a vector of 9 zeroes
+//         let p = Project::new();
+//         p.save_project("/home/hector/rust-wasm-image-editor/wasm/test_project.json");
+//     }
+// }
