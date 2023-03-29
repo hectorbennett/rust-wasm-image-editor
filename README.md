@@ -37,7 +37,6 @@ Deployments are triggered whenever a pull request to the 'prod' branch is merged
 
 You can test the Dockerfile with `docker build .`. The test site lives is hosted in a digital ocean app under the following config
 
-
 ## DigitalOcean app spec:
 
 ```
