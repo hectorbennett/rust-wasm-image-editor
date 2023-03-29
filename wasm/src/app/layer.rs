@@ -9,7 +9,11 @@ use std::{
 // };
 use serde::{Deserialize, Serialize};
 
-use super::{colour::Colour, selection::Selection, utils::generate_uid};
+use super::{
+    colour::Colour,
+    selection::Selection,
+    utils::{generate_uid, get_1d_index_from_2d_coord},
+};
 
 #[derive(Serialize, Deserialize)]
 pub struct Layer {
@@ -77,19 +81,25 @@ impl Layer {
             (0..=self.height).for_each(|j| {
                 let value = selection.from_coords(i, j);
                 if value != 0 {
-                    let _alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
-                    // let pixel = image::Rgba([colour.red, colour.green, colour.blue, alpha]);
-                    // self.img.put_pixel(i, j, pixel);
+                    let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
+                    let i: usize = get_1d_index_from_2d_coord(self.width, i, j) * 4;
+                    self.buffer[i] = colour.red;
+                    self.buffer[i + 1] = colour.green;
+                    self.buffer[i + 2] = colour.blue;
+                    self.buffer[i + 3] = alpha;
                 }
             });
         });
     }
 
-    pub fn get_pixel_from_canvas_coordinates(&self, _x: u32, _y: u32) -> [u8; 4] {
-        // let pixel = *self.img.get_pixel(x, y);
-        // let rgba = pixel.to_rgba();
-        // rgba.0
-        [0, 0, 0, 0]
+    pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> [u8; 4] {
+        let i: usize = get_1d_index_from_2d_coord(self.width, x, y) * 4;
+        [
+            self.buffer[i],
+            self.buffer[i + 1],
+            self.buffer[i + 2],
+            self.buffer[i + 3],
+        ]
     }
 }
 
