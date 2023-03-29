@@ -1,6 +1,7 @@
-use crate::app::{colour::Colour, layer::Layer};
+use crate::app::{colour::Colour, layer::Layer, timer::Timer};
 
 use super::app::App;
+use image::{ImageBuffer, Rgba};
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
 use web_sys::ImageData;
 extern crate console_error_panic_hook;
@@ -39,19 +40,23 @@ impl Api {
     }
 
     pub fn init_canvas(&mut self, canvas_id: String) {
+        let _timer = Timer::new("Api::init_canvas");
         self.canvas_id = canvas_id;
         self.canvas_inited = true;
     }
 
     pub fn set_active_project(&mut self, project_uid: u64) {
+        let _timer = Timer::new("Api::set_active_project");
         self.app.set_active_project(Some(project_uid));
     }
 
     pub fn clear_active_project(&mut self) {
+        let _timer = Timer::new("Api::clear_active_project");
         self.app.set_active_project(None);
     }
 
     pub fn create_project(&mut self, name: &str, width: u32, height: u32) -> u64 {
+        let _timer = Timer::new("Api::create_project");
         let project = self.app.new_project();
         project.set_name(name);
         project.resize_canvas(width, height);
@@ -62,14 +67,20 @@ impl Api {
     }
 
     pub fn resize_canvas(&mut self, width: u32, height: u32) {
+        web_sys::console::time_with_label("Api::resize_canvas");
+
         self.app
             .get_active_project()
             .unwrap()
             .resize_canvas(width, height);
+
+        web_sys::console::time_end_with_label("Api::resize_canvas");
+
         self.render_to_canvas();
     }
 
     pub fn create_layer(&mut self, name: &str, width: u32, height: u32) -> u64 {
+        let _timer = Timer::new("Api::create_layer");
         let _project = self.app.get_active_project();
         match _project {
             None => 0,
@@ -83,6 +94,8 @@ impl Api {
     }
 
     pub fn fill_selection(&mut self) {
+        // let _timer = Timer::new("Api::fill_selection");
+        web_sys::console::time_with_label("Api::fill_selection");
         let selection = self.app.get_active_project().unwrap().selection.clone();
         let colour = self.app.primary_colour;
 
@@ -94,15 +107,18 @@ impl Api {
             .unwrap();
 
         layer.fill_selection(&selection, &colour);
+
+        web_sys::console::time_end_with_label("Api::fill_selection");
         self.render_to_canvas();
     }
 
     pub fn set_primary_colour(&mut self, red: u8, green: u8, blue: u8, alpha: u8) {
+        let _timer = Timer::new("Api::set_primary_colour");
         self.app.primary_colour = Colour::from_rgba(red, green, blue, alpha);
-        self.render_to_canvas();
     }
 
     pub fn select_rect(&mut self, x: u32, y: u32, width: u32, height: u32) {
+        let _timer = Timer::new("Api::select_rect");
         self.app
             .get_active_project()
             .unwrap()
@@ -112,6 +128,7 @@ impl Api {
     }
 
     pub fn select_ellipse(&mut self, x: u32, y: u32, width: u32, height: u32) {
+        let _timer = Timer::new("Api::select_ellipse");
         self.app
             .get_active_project()
             .unwrap()
@@ -121,6 +138,7 @@ impl Api {
     }
 
     pub fn select_all(&mut self) {
+        let _timer = Timer::new("Api::select_all");
         self.app
             .get_active_project()
             .unwrap()
@@ -130,6 +148,7 @@ impl Api {
     }
 
     pub fn select_none(&mut self) {
+        let _timer = Timer::new("Api::select_none");
         self.app
             .get_active_project()
             .unwrap()
@@ -139,6 +158,7 @@ impl Api {
     }
 
     pub fn select_inverse(&mut self) {
+        let _timer = Timer::new("Api::select_inverse");
         self.app
             .get_active_project()
             .unwrap()
@@ -148,6 +168,7 @@ impl Api {
     }
 
     pub fn set_active_layer(&mut self, layer_uid: u64) {
+        let _timer = Timer::new("Api::set_active_layer");
         self.app
             .get_active_project()
             .unwrap()
@@ -155,6 +176,7 @@ impl Api {
     }
 
     pub fn set_layer_visibile(&mut self, layer_uid: u64, visible: bool) {
+        let _timer = Timer::new("Api::set_layer_visibile");
         let _layer = self.get_layer(layer_uid);
         match _layer {
             None => (),
@@ -164,6 +186,7 @@ impl Api {
     }
 
     pub fn set_layer_locked(&mut self, layer_uid: u64, locked: bool) {
+        let _timer = Timer::new("Api::set_layer_locked");
         let _layer = self.get_layer(layer_uid);
         match _layer {
             None => (),
@@ -171,19 +194,21 @@ impl Api {
         }
     }
 
-    #[wasm_bindgen(getter)]
-    pub fn image_data(&mut self) -> Clamped<Vec<u8>> {
-        let _project = self.app.get_active_project();
-        match _project {
-            None => Clamped(vec![]),
-            Some(project) => {
-                let image = project.get_image();
-                Clamped(image.into_vec())
-            }
-        }
-    }
+    // #[wasm_bindgen(getter)]
+    // pub fn image_data(&mut self) -> Clamped<Vec<u8>> {
+    //     let _timer = Timer::new("Api::image_data");
+    //     let _project = self.app.get_active_project();
+    //     match _project {
+    //         None => Clamped(vec![]),
+    //         Some(project) => {
+    //             let image = project.get_image();
+    //             Clamped(image.into_vec())
+    //         }
+    //     }
+    // }
 
     pub fn pick_colour(&mut self, x: u32, y: u32) -> Vec<u8> {
+        let _timer = Timer::new("Api::pick_colour");
         self.app
             .get_active_project()
             .unwrap()
@@ -192,6 +217,7 @@ impl Api {
     }
 
     pub fn eye_dropper(&mut self, x: u32, y: u32) {
+        let _timer = Timer::new("Api::eye_dropper");
         let colour = self
             .app
             .get_active_project()
@@ -203,19 +229,33 @@ impl Api {
     }
 
     pub fn get_layer_thumbnail(&mut self, layer_uid: u64) -> Clamped<Vec<u8>> {
+        let _timer = Timer::new("Api::get_layer_thumbnail");
         let img = self.get_layer(layer_uid).unwrap().get_thumbnail();
         Clamped(img.into_vec())
     }
 
     #[wasm_bindgen(getter)]
     pub fn state(&self) -> JsValue {
+        let _timer = Timer::new("Api::state");
         serialize::ApiSerializer::to_json(&self.app)
+    }
+
+    fn get_image(&mut self) -> Option<ImageBuffer<Rgba<u8>, Vec<u8>>> {
+        if !self.canvas_inited {
+            return None;
+        }
+        let _timer = Timer::new("Api::get_image");
+
+        Some(self.app.get_active_project().unwrap().get_image())
     }
 
     pub fn render_to_canvas(&mut self) {
         if !self.canvas_inited {
             return;
         }
+        let image = self.get_image().unwrap();
+
+        let _timer = Timer::new("Api::render_to_canvas");
         let document = web_sys::window().unwrap().document().unwrap();
         let canvas = document.get_element_by_id("wasm-canvas").unwrap();
 
@@ -230,8 +270,6 @@ impl Api {
             .unwrap()
             .dyn_into::<web_sys::CanvasRenderingContext2d>()
             .unwrap();
-
-        let image = self.app.get_active_project().unwrap().get_image();
 
         let data = ImageData::new_with_u8_clamped_array_and_sh(
             Clamped(image.as_raw()),

@@ -2,6 +2,7 @@ pub mod colour;
 pub mod layer;
 pub mod project;
 pub mod selection;
+pub mod timer;
 pub mod utils;
 
 use std::collections::HashMap;
