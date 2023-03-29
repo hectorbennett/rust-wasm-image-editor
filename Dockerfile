@@ -13,7 +13,6 @@ RUN cargo --help
 WORKDIR /app
 COPY package*.json ./
 
-RUN npm install -g wasm-pack
 RUN yarn run ci
 
 COPY . .

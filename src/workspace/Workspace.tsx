@@ -8,7 +8,6 @@ import { WasmContext } from "../context/wasm";
 interface CanvasProps {
   width: number;
   height: number;
-  image_hash: string;
 }
 
 const Canvas = forwardRef<HTMLCanvasElement, CanvasProps>(function Canvas(props, ref) {
@@ -100,7 +99,6 @@ export default function Workspace() {
         ref={canvasRef}
         width={activeProject.activeProject.width}
         height={activeProject.activeProject.height}
-        image_hash={activeProject.activeProject.image_hash}
       />
       <Background
         width={activeProject.activeProject.width}

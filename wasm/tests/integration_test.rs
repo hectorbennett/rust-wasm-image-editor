@@ -1,11 +1,12 @@
 use wasm::api::Api;
+use wasm_bindgen_test::*;
 
 #[test]
 fn it_adds_two() {
     assert_eq!(4, 2 + 2);
 }
 
-#[test]
+#[wasm_bindgen_test]
 fn test_fill_rectangle() {
     let mut api: Api = Api::init();
     let project_uid = api.create_project("test_project", 500, 500);

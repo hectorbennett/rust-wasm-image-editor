@@ -67,3 +67,40 @@ mod get_1d_index_from_2d_coord_tests {
         assert_eq!(get_1d_index_from_2d_coord(2, 1, 2), 5);
     }
 }
+
+fn blend_alpha(alpha_fg: f32, alpha_bg: f32) -> f32 {
+    alpha_bg + alpha_fg - alpha_bg * alpha_fg
+}
+
+fn blend_colour_channel(colour_fg: f32, colour_bg: f32, alpha_fg: f32, alpha_bg: f32) -> f32 {
+    (colour_fg * alpha_fg)
+        + (colour_bg * alpha_bg) * (1.0 - alpha_fg) / blend_alpha(alpha_fg, alpha_bg)
+}
+
+pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
+    if pixel_fg[3] == 255 || pixel_bg[3] == 0 {
+        return pixel_fg;
+    }
+    let alpha_fg: f32 = pixel_fg[3] as f32 / 255.0;
+
+    let red_fg: f32 = pixel_fg[0] as f32 / 255.0;
+    let green_fg: f32 = pixel_fg[1] as f32 / 255.0;
+    let blue_fg: f32 = pixel_fg[2] as f32 / 255.0;
+
+    let red_bg: f32 = pixel_bg[0] as f32 / 255.0;
+    let green_bg: f32 = pixel_bg[1] as f32 / 255.0;
+    let blue_bg: f32 = pixel_bg[2] as f32 / 255.0;
+    let alpha_bg: f32 = pixel_bg[3] as f32 / 255.0;
+
+    let alpha_final = blend_alpha(alpha_fg, alpha_bg);
+    let red_final: f32 = blend_colour_channel(red_fg, red_bg, alpha_fg, alpha_bg);
+    let green_final: f32 = blend_colour_channel(green_fg, green_bg, alpha_fg, alpha_bg);
+    let blue_final: f32 = blend_colour_channel(blue_fg, blue_bg, alpha_fg, alpha_bg);
+
+    [
+        (red_final * 255.0) as u8,
+        (green_final * 255.0) as u8,
+        (blue_final * 255.0) as u8,
+        (alpha_final * 255.0) as u8,
+    ]
+}
