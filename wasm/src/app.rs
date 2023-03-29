@@ -38,6 +38,19 @@ impl App {
         return self.projects.get_mut(&uid).unwrap();
     }
 
+    pub fn open_project(&mut self, path: &str) -> &mut Project {
+        let json = std::fs::read_to_string(path).unwrap();
+        let project = Project::from_json(&json);
+        let uid = project.uid;
+        self.projects.insert(uid, project);
+        self.set_active_project(Some(uid));
+        return self.projects.get_mut(&uid).unwrap();
+    }
+
+    pub fn close_project(&mut self, &uid: &u64) {
+        self.projects.remove(&uid);
+    }
+
     pub fn set_active_project(&mut self, uid: Option<u64>) {
         self.active_project_uid = uid;
     }

@@ -38,7 +38,7 @@ impl Layer {
             height,
             visible: true,
             locked: false,
-            buffer: vec![], // img: ImageBuffer::from_fn(width, height, |_x, _y| image::Rgba([255, 255, 255, 0])),
+            buffer: vec![0; (width * height * 4) as usize],
         }
     }
 
