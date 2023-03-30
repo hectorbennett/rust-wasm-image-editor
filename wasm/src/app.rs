@@ -40,11 +40,11 @@ impl App {
 
     pub fn open_project(&mut self, path: &str) -> &mut Project {
         let json = std::fs::read_to_string(path).unwrap();
-        self.open_project_from_json(&json.to_owned())
+        self.open_project_from_json(&json)
     }
 
     pub fn open_project_from_json(&mut self, json: &str) -> &mut Project {
-        let project = Project::from_json(&json);
+        let project = Project::from_json(json);
         let uid = project.uid;
         self.projects.insert(uid, project);
         self.set_active_project(Some(uid));

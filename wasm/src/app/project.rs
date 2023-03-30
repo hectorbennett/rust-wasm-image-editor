@@ -96,7 +96,7 @@ impl Project {
     }
 
     pub fn to_json(&self) -> String {
-        serde_json::to_string(&self).unwrap().to_owned()
+        serde_json::to_string(&self).unwrap()
     }
 
     pub fn from_json(json: &str) -> Project {
@@ -124,7 +124,7 @@ mod tests {
         l1.set_name("layer 1");
         p.save_project(test_path.to_str().unwrap()).unwrap();
 
-        let p_uid = p.uid.clone();
+        let p_uid = p.uid;
         app.close_project(&p_uid);
 
         let p2 = app.open_project(test_path.to_str().unwrap());
