@@ -84,14 +84,14 @@ function useCommands() {
       category: "file",
       id: "file.open",
       label: "Open",
-      action: () => app.file.open(),
+      action: app.file.open,
     },
     {
       category: "file",
       id: "file.save",
       label: "Save",
       icon: IconDeviceFloppy,
-      action: () => app.file.save(),
+      action: app.file.save,
     },
     {
       category: "file",

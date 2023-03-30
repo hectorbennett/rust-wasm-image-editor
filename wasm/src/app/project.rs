@@ -91,8 +91,12 @@ impl Project {
     }
 
     pub fn save_project(&self, path: &str) -> std::io::Result<()> {
-        let j = serde_json::to_string_pretty(&self).unwrap();
+        let j = self.to_json();
         std::fs::write(path, j)
+    }
+
+    pub fn to_json(&self) -> String {
+        serde_json::to_string(&self).unwrap().to_owned()
     }
 
     pub fn from_json(json: &str) -> Project {

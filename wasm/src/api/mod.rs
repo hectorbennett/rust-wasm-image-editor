@@ -243,6 +243,14 @@ impl Api {
         serialize::ApiSerializer::to_json(&self.app)
     }
 
+    pub fn from_json(&mut self, json: &str) {
+        self.app.open_project_from_json(json);
+    }
+
+    pub fn to_json(&mut self) -> String {
+        self.app.get_active_project().unwrap().to_json()
+    }
+
     fn get_image(&mut self) -> Option<ImageBuffer<Rgba<u8>, Vec<u8>>> {
         if !self.canvas_inited {
             return None;
