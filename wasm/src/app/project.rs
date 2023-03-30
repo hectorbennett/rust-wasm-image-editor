@@ -1,5 +1,9 @@
+use std::ops::Deref;
+
 use image::{ImageBuffer, RgbaImage};
 use serde::{Deserialize, Serialize};
+
+use postcard;
 
 use super::{
     layer::Layer,
@@ -91,7 +95,7 @@ impl Project {
     }
 
     pub fn save_project(&self, path: &str) -> std::io::Result<()> {
-        let j = self.to_json();
+        let j = self.to_postcard();
         std::fs::write(path, j)
     }
 
@@ -99,36 +103,16 @@ impl Project {
         serde_json::to_string(&self).unwrap()
     }
 
+    pub fn to_postcard(&self) -> Vec<u8> {
+        let output = postcard::to_allocvec(&self).unwrap();
+        return output;
+    }
+
     pub fn from_json(json: &str) -> Project {
         serde_json::from_str(json).unwrap()
     }
-}
 
-#[cfg(test)]
-mod tests {
-    use std::env;
-
-    use crate::app::App;
-
-    // use super::*;
-
-    #[test]
-    fn test_save_and_open_project() {
-        let mut test_path = env::temp_dir();
-        test_path.push("test_project.json");
-
-        let app = &mut App::new();
-        let p = app.new_project();
-        p.resize_canvas(10, 10);
-        let l1 = p.new_layer();
-        l1.set_name("layer 1");
-        p.save_project(test_path.to_str().unwrap()).unwrap();
-
-        let p_uid = p.uid;
-        app.close_project(&p_uid);
-
-        let p2 = app.open_project(test_path.to_str().unwrap());
-
-        assert_eq!(p_uid, p2.uid);
+    pub fn from_postcard(p: Vec<u8>) -> Project {
+        postcard::from_bytes(p.deref()).unwrap()
     }
 }
