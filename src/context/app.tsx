@@ -2,6 +2,25 @@ import { createContainer } from "unstated-next";
 import { TabsContext } from "./tabs";
 import { WasmContext } from "./wasm";
 
+function readFile(file: File): Promise<ArrayBuffer> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.addEventListener("loadend", (e) => {
+      if (e.target?.result) {
+        resolve(e.target.result as ArrayBuffer);
+      } else {
+        resolve(new ArrayBuffer(0));
+      }
+    });
+    reader.addEventListener("error", () => resolve(new ArrayBuffer(0)));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function getAsByteArray(file: File) {
+  return readFile(file).then((result) => new Uint8Array(result));
+}
+
 function useFile() {
   const wasm = WasmContext.useContainer();
   return {
@@ -17,14 +36,9 @@ function useFile() {
           return;
         }
         const file = target.files[0];
-        if (!file) return;
-        const reader = new FileReader();
-        reader.onload = function (e) {
-          if (e.target?.result && wasm.api) {
-            wasm.api.from_json(e.target.result as string);
-          }
-        };
-        reader.readAsText(file);
+        getAsByteArray(file).then((result) => {
+          wasm.api?.from_postcard(result);
+        });
       };
       inp.click();
     },
@@ -33,7 +47,7 @@ function useFile() {
         return;
       }
       const link = document.createElement("a");
-      const file = new Blob([wasm.api.to_json()], { type: "text/plain" });
+      const file = new Blob([wasm.api.to_postcard()]);
       link.href = URL.createObjectURL(file);
       link.download = `${"Untitled"}.thing`;
       link.click();

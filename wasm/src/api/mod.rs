@@ -251,6 +251,14 @@ impl Api {
         self.app.get_active_project().unwrap().to_json()
     }
 
+    pub fn from_postcard(&mut self, p: Vec<u8>) {
+        self.app.open_project_from_postcard(p);
+    }
+
+    pub fn to_postcard(&mut self) -> Vec<u8> {
+        self.app.get_active_project().unwrap().to_postcard()
+    }
+
     fn get_image(&mut self) -> Option<ImageBuffer<Rgba<u8>, Vec<u8>>> {
         if !self.canvas_inited {
             return None;
