@@ -104,8 +104,8 @@ impl Project {
     }
 
     pub fn to_postcard(&self) -> Vec<u8> {
-        let output = postcard::to_allocvec(&self).unwrap();
-        return output;
+        
+        postcard::to_allocvec(&self).unwrap()
     }
 
     pub fn from_json(json: &str) -> Project {
