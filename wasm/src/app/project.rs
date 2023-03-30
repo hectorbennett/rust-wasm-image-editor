@@ -104,7 +104,6 @@ impl Project {
     }
 
     pub fn to_postcard(&self) -> Vec<u8> {
-        
         postcard::to_allocvec(&self).unwrap()
     }
 
