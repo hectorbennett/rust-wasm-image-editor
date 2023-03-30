@@ -1,3 +1,5 @@
+use std::vec;
+
 use crate::app::{colour::Colour, layer::Layer, timer::Timer};
 
 use super::app::App;
@@ -230,14 +232,31 @@ impl Api {
 
     pub fn get_layer_thumbnail(&mut self, layer_uid: u64) -> Clamped<Vec<u8>> {
         let _timer = Timer::new("Api::get_layer_thumbnail");
-        let img = self.get_layer(layer_uid).unwrap().get_thumbnail();
-        Clamped(img.into_vec())
+        let _img = self.get_layer(layer_uid).unwrap().get_thumbnail();
+        // Clamped(img.into_vec())
+        Clamped(vec![])
     }
 
     #[wasm_bindgen(getter)]
     pub fn state(&self) -> JsValue {
         let _timer = Timer::new("Api::state");
         serialize::ApiSerializer::to_json(&self.app)
+    }
+
+    pub fn from_json(&mut self, json: &str) {
+        self.app.open_project_from_json(json);
+    }
+
+    pub fn to_json(&mut self) -> String {
+        self.app.get_active_project().unwrap().to_json()
+    }
+
+    pub fn from_postcard(&mut self, p: Vec<u8>) {
+        self.app.open_project_from_postcard(p);
+    }
+
+    pub fn to_postcard(&mut self) -> Vec<u8> {
+        self.app.get_active_project().unwrap().to_postcard()
     }
 
     fn get_image(&mut self) -> Option<ImageBuffer<Rgba<u8>, Vec<u8>>> {

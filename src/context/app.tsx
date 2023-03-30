@@ -2,18 +2,56 @@ import { createContainer } from "unstated-next";
 import { TabsContext } from "./tabs";
 import { WasmContext } from "./wasm";
 
+function readFile(file: File): Promise<ArrayBuffer> {
+  return new Promise((resolve) => {
+    const reader = new FileReader();
+    reader.addEventListener("loadend", (e) => {
+      if (e.target?.result) {
+        resolve(e.target.result as ArrayBuffer);
+      } else {
+        resolve(new ArrayBuffer(0));
+      }
+    });
+    reader.addEventListener("error", () => resolve(new ArrayBuffer(0)));
+    reader.readAsArrayBuffer(file);
+  });
+}
+
+async function getAsByteArray(file: File) {
+  return readFile(file).then((result) => new Uint8Array(result));
+}
+
 function useFile() {
   const wasm = WasmContext.useContainer();
-  // const tabs = TabsContext.useContainer();
   return {
     new: function _new(width: number, height: number) {
       wasm.api && wasm.api.create_project("Untitled", width, height);
     },
     open: function open() {
-      console.log("open");
+      const inp = document.createElement("input");
+      inp.type = "file";
+      inp.onchange = (e) => {
+        const target: HTMLInputElement = e.target as HTMLInputElement;
+        if (!target.files) {
+          return;
+        }
+        const file = target.files[0];
+        getAsByteArray(file).then((result) => {
+          wasm.api?.from_postcard(result);
+        });
+      };
+      inp.click();
     },
     save: function save() {
-      console.log("save");
+      if (!wasm.api) {
+        return;
+      }
+      const link = document.createElement("a");
+      const file = new Blob([wasm.api.to_postcard()]);
+      link.href = URL.createObjectURL(file);
+      link.download = `${"Untitled"}.thing`;
+      link.click();
+      URL.revokeObjectURL(link.href);
     },
     export: function _export() {
       console.log("export");

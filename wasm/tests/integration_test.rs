@@ -1,4 +1,6 @@
-use wasm::api::Api;
+use std::env;
+
+use wasm::{api::Api, app::App};
 use wasm_bindgen_test::*;
 
 #[test]
@@ -32,4 +34,24 @@ fn test_fill_rectangle() {
 
     // the pixel in the bottom right corner is the second colour
     assert_eq!(api.pick_colour(450, 450), [1, 2, 3, 4]);
+}
+
+#[test]
+fn test_save_and_open_project() {
+    let mut test_path = env::temp_dir();
+    test_path.push("test_project.json");
+
+    let app = &mut App::new();
+    let p = app.new_project();
+    p.resize_canvas(10, 10);
+    let l1 = p.new_layer();
+    l1.set_name("layer 1");
+    p.save_project(test_path.to_str().unwrap()).unwrap();
+
+    let p_uid = p.uid;
+    app.close_project(&p_uid);
+
+    let p2 = app.open_project(test_path.to_str().unwrap());
+
+    assert_eq!(p_uid, p2.uid);
 }

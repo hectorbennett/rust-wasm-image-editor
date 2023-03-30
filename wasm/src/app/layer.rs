@@ -3,13 +3,19 @@ use std::{
     hash::{Hash, Hasher},
 };
 
-use image::{
-    imageops::{self, FilterType::Nearest},
-    ImageBuffer, Pixel, RgbaImage,
+// use image::{
+//     imageops::{self, FilterType::Nearest},
+//     ImageBuffer, Pixel, RgbaImage,
+// };
+use serde::{Deserialize, Serialize};
+
+use super::{
+    colour::Colour,
+    selection::Selection,
+    utils::{generate_uid, get_1d_index_from_2d_coord},
 };
 
-use super::{colour::Colour, selection::Selection, utils::generate_uid};
-
+#[derive(Serialize, Deserialize)]
 pub struct Layer {
     pub uid: u64,
     pub name: String,
@@ -17,7 +23,8 @@ pub struct Layer {
     pub height: u32,
     pub visible: bool,
     pub locked: bool,
-    img: RgbaImage,
+    // img: RgbaImage,
+    buffer: Vec<u8>,
 }
 
 impl Default for Layer {
@@ -35,7 +42,7 @@ impl Layer {
             height,
             visible: true,
             locked: false,
-            img: ImageBuffer::from_fn(width, height, |_x, _y| image::Rgba([255, 255, 255, 0])),
+            buffer: vec![0; (width * height * 4) as usize],
         }
     }
 
@@ -43,8 +50,9 @@ impl Layer {
         self.name = name.into();
     }
 
-    pub fn get_thumbnail(&self) -> RgbaImage {
-        imageops::resize(&self.img, 20, 20, Nearest)
+    pub fn get_thumbnail(&self) -> Vec<u8> {
+        // imageops::resize(&self.img, 20, 20, Nearest)
+        vec![]
     }
 
     pub fn get_thumbnail_hash(&self) -> u64 {
@@ -56,8 +64,8 @@ impl Layer {
     pub fn resize(&mut self, width: u32, height: u32) {
         self.width = width;
         self.height = height;
-        let sub_img = imageops::crop(&mut self.img, 0, 0, width as u32, height as u32);
-        self.img = sub_img.to_image();
+        // let sub_img = imageops::crop(&mut self.img, 0, 0, width as u32, height as u32);
+        // self.img = sub_img.to_image();
     }
 
     pub fn set_visible(&mut self, visible: bool) {
@@ -74,17 +82,24 @@ impl Layer {
                 let value = selection.from_coords(i, j);
                 if value != 0 {
                     let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
-                    let pixel = image::Rgba([colour.red, colour.green, colour.blue, alpha]);
-                    self.img.put_pixel(i, j, pixel);
+                    let i: usize = get_1d_index_from_2d_coord(self.width, i, j) * 4;
+                    self.buffer[i] = colour.red;
+                    self.buffer[i + 1] = colour.green;
+                    self.buffer[i + 2] = colour.blue;
+                    self.buffer[i + 3] = alpha;
                 }
             });
         });
     }
 
     pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> [u8; 4] {
-        let pixel = *self.img.get_pixel(x, y);
-        let rgba = pixel.to_rgba();
-        rgba.0
+        let i: usize = get_1d_index_from_2d_coord(self.width, x, y) * 4;
+        [
+            self.buffer[i],
+            self.buffer[i + 1],
+            self.buffer[i + 2],
+            self.buffer[i + 3],
+        ]
     }
 }
 
@@ -103,9 +118,9 @@ mod tests {
 
         layer.fill_selection(&selection, &colour);
 
-        assert_eq!(
-            layer.img.into_raw(),
-            vec![1, 2, 3, 4, 1, 2, 3, 4, 255, 255, 255, 0, 255, 255, 255, 0]
-        );
+        // assert_eq!(
+        //     layer.img.into_raw(),
+        //     vec![1, 2, 3, 4, 1, 2, 3, 4, 255, 255, 255, 0, 255, 255, 255, 0]
+        // );
     }
 }

@@ -1,7 +1,17 @@
+use std::ops::Deref;
+
 use image::{ImageBuffer, RgbaImage};
+use serde::{Deserialize, Serialize};
 
-use super::{layer::Layer, selection::Selection, utils::{generate_uid, blend_pixels}};
+use postcard;
 
+use super::{
+    layer::Layer,
+    selection::Selection,
+    utils::{blend_pixels, generate_uid},
+};
+
+#[derive(Serialize, Deserialize)]
 pub struct Project {
     pub uid: u64,
     pub name: String,
@@ -82,5 +92,26 @@ impl Project {
             output = blend_pixels(output, pixel);
         }
         output
+    }
+
+    pub fn save_project(&self, path: &str) -> std::io::Result<()> {
+        let j = self.to_postcard();
+        std::fs::write(path, j)
+    }
+
+    pub fn to_json(&self) -> String {
+        serde_json::to_string(&self).unwrap()
+    }
+
+    pub fn to_postcard(&self) -> Vec<u8> {
+        postcard::to_allocvec(&self).unwrap()
+    }
+
+    pub fn from_json(json: &str) -> Project {
+        serde_json::from_str(json).unwrap()
+    }
+
+    pub fn from_postcard(p: Vec<u8>) -> Project {
+        postcard::from_bytes(p.deref()).unwrap()
     }
 }

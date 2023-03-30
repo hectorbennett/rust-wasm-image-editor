@@ -38,6 +38,31 @@ impl App {
         return self.projects.get_mut(&uid).unwrap();
     }
 
+    pub fn open_project(&mut self, path: &str) -> &mut Project {
+        let p = std::fs::read(path).unwrap();
+        self.open_project_from_postcard(p)
+    }
+
+    pub fn open_project_from_postcard(&mut self, p: Vec<u8>) -> &mut Project {
+        let project = Project::from_postcard(p);
+        let uid = project.uid;
+        self.projects.insert(uid, project);
+        self.set_active_project(Some(uid));
+        return self.projects.get_mut(&uid).unwrap();
+    }
+
+    pub fn open_project_from_json(&mut self, json: &str) -> &mut Project {
+        let project = Project::from_json(json);
+        let uid = project.uid;
+        self.projects.insert(uid, project);
+        self.set_active_project(Some(uid));
+        return self.projects.get_mut(&uid).unwrap();
+    }
+
+    pub fn close_project(&mut self, &uid: &u64) {
+        self.projects.remove(&uid);
+    }
+
     pub fn set_active_project(&mut self, uid: Option<u64>) {
         self.active_project_uid = uid;
     }
