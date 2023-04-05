@@ -24,8 +24,8 @@ async function getAsByteArray(file: File) {
 function useFile() {
   const wasm = WasmContext.useContainer();
   return {
-    new: function _new(width: number, height: number) {
-      wasm.api && wasm.api.create_project("Untitled", width, height);
+    new: function _new() {
+      wasm.api && wasm.api.create_project();
     },
     open: function open() {
       const inp = document.createElement("input");
