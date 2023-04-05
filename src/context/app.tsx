@@ -63,12 +63,13 @@ function useFile() {
 }
 
 function useEdit() {
+  const wasm = WasmContext.useContainer();
   return {
     undo: function undo() {
-      console.log("undo");
+      wasm.api?.undo();
     },
     redo: function redo() {
-      console.log("redo");
+      wasm.api?.redo();
     },
     cut: function redo() {
       console.log("cut");

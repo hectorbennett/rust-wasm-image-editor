@@ -149,6 +149,7 @@ impl Api {
             .unwrap()
             .set_layer_visibile(layer_uid, visible);
         web_sys::console::time_end_with_label("Api::set_layer_visibile");
+        self.render_to_canvas();
     }
 
     pub fn set_layer_locked(&mut self, layer_uid: u64, locked: bool) {
@@ -158,6 +159,20 @@ impl Api {
             .unwrap()
             .set_layer_locked(layer_uid, locked);
         web_sys::console::time_end_with_label("Api::set_layer_locked");
+    }
+
+    pub fn undo(&mut self) {
+        web_sys::console::time_with_label("Api::undo");
+        self.app.get_active_project_controller().unwrap().undo();
+        web_sys::console::time_end_with_label("Api::undo");
+        self.render_to_canvas();
+    }
+
+    pub fn redo(&mut self) {
+        web_sys::console::time_with_label("Api::undo");
+        self.app.get_active_project_controller().unwrap().redo();
+        web_sys::console::time_end_with_label("Api::undo");
+        self.render_to_canvas();
     }
 
     // #[wasm_bindgen(getter)]

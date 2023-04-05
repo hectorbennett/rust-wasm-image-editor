@@ -107,6 +107,14 @@ impl ProjectController {
         }
     }
 
+    pub fn undo(&mut self) {
+        self.history.undo();
+    }
+
+    pub fn redo(&mut self) {
+        self.history.redo();
+    }
+
     pub fn resize_canvas(&mut self, width: u32, height: u32) {
         self.history.append(Box::new(ResizeCanvas::new(
             self.project.clone(),
