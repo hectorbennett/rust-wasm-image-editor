@@ -18,8 +18,8 @@ pub struct ResizeCanvas {
 
 impl ResizeCanvas {
     pub fn new(project: Rc<RefCell<Project>>, width: u32, height: u32) -> ResizeCanvas {
-        let old_width = project.borrow().width.clone();
-        let old_height = project.borrow().height.clone();
+        let old_width = project.borrow().width;
+        let old_height = project.borrow().height;
         let old_selection = project.borrow().selection.clone();
         ResizeCanvas {
             project,

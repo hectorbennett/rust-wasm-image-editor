@@ -198,7 +198,7 @@ impl Api {
         self.render_to_canvas();
     }
 
-    pub fn get_layer_thumbnail(&mut self, layer_uid: u64) -> Clamped<Vec<u8>> {
+    pub fn get_layer_thumbnail(&mut self, _layer_uid: u64) -> Clamped<Vec<u8>> {
         // let _timer = Timer::new("Api::get_layer_thumbnail");
         // let _img = self.get_layer(layer_uid).unwrap().get_thumbnail();
         // Clamped(img.into_vec())
@@ -287,10 +287,5 @@ impl Api {
 }
 
 pub fn get_colour(colour: &[u8]) -> Colour {
-    Colour::from_rgba(
-        colour[0] as u8,
-        colour[1] as u8,
-        colour[2] as u8,
-        colour[3] as u8,
-    )
+    Colour::from_rgba(colour[0], colour[1], colour[2], colour[3])
 }

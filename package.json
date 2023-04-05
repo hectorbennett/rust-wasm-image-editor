@@ -81,6 +81,6 @@
     "format": "prettier --write . --config ./.prettierrc.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "check": "yarn run type:check && yarn run lint:js:check && yarn run format:check"
+    "check": "yarn run type:check && yarn run lint:js:check && yarn run format:check && yarn run lint:wasm:check"
   }
 }

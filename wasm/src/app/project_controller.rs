@@ -117,10 +117,8 @@ impl ProjectController {
     }
 
     pub fn fill_selection(&mut self, colour: &Colour) {
-        self.history.append(Box::new(FillSelection::new(
-            self.project.clone(),
-            colour.clone(),
-        )));
+        self.history
+            .append(Box::new(FillSelection::new(self.project.clone(), *colour)));
         self.history.execute();
     }
 }
