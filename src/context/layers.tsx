@@ -9,7 +9,7 @@ function useLayers() {
     active_layer_uid: wasm.state?.projects.get(wasm.state?.active_project_uid || "")
       ?.active_layer_uid,
     createNewLayer: function createNewLayer() {
-      wasm.api && wasm.api.create_layer(`layer ${(this.layers?.length || 0) + 1}`, 500, 500);
+      wasm.api && wasm.api.create_layer();
     },
     setLayerLocked: function setLayerLocked(layer_uid: string, locked: boolean) {
       wasm.api && wasm.api.set_layer_locked(BigInt(layer_uid), locked);

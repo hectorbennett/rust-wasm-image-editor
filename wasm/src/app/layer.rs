@@ -15,6 +15,8 @@ use super::{
     utils::{generate_uid, get_1d_index_from_2d_coord},
 };
 
+pub type LayerBuffer = Vec<u8>;
+
 #[derive(Serialize, Deserialize)]
 pub struct Layer {
     pub uid: u64,
@@ -24,7 +26,7 @@ pub struct Layer {
     pub visible: bool,
     pub locked: bool,
     // img: RgbaImage,
-    buffer: Vec<u8>,
+    buffer: LayerBuffer,
 }
 
 impl Default for Layer {
@@ -44,6 +46,14 @@ impl Layer {
             locked: false,
             buffer: vec![0; (width * height * 4) as usize],
         }
+    }
+
+    pub fn get_buffer(&self) -> &LayerBuffer {
+        &self.buffer
+    }
+
+    pub fn set_buffer(&mut self, buffer: LayerBuffer) {
+        self.buffer = buffer
     }
 
     pub fn set_name(&mut self, name: &str) {

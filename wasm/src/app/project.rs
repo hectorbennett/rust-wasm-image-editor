@@ -41,22 +41,22 @@ impl Project {
         }
     }
 
-    pub fn set_name(&mut self, name: &str) {
-        self.name = name.into();
-    }
-
-    pub fn resize_canvas(&mut self, width: u32, height: u32) {
-        self.width = width;
-        self.height = height;
-        self.selection = Selection::new(self.width, self.height);
-    }
-
-    pub fn new_layer(&mut self) -> &mut Layer {
-        let layer: Layer = Layer::new(self.width, self.height);
+    pub fn create_layer(&mut self) -> &mut Layer {
+        let mut layer: Layer = Layer::new(self.width, self.height);
+        let layer_name = format!("Layer {}", self.layers.len() + 1);
+        layer.set_name(&layer_name);
         let uid: u64 = layer.uid;
         self.layers.push(layer);
         self.set_active_layer(Some(uid));
         self.get_layer(uid)
+    }
+
+    pub fn delete_layer(&mut self, uid: u64) {
+        self.layers.retain(|l| l.uid == uid);
+        match self.layers.last() {
+            None => self.set_active_layer(None),
+            Some(layer) => self.set_active_layer(Some(layer.uid)),
+        }
     }
 
     pub fn get_layer(&mut self, uid: u64) -> &mut Layer {
@@ -75,7 +75,7 @@ impl Project {
     }
 
     pub fn get_image(&self) -> RgbaImage {
-        ImageBuffer::from_fn(self.width as u32, self.height as u32, |x, y| {
+        ImageBuffer::from_fn(self.width, self.height, |x, y| {
             image::Rgba(self.get_compiled_pixel(x, y))
         })
     }

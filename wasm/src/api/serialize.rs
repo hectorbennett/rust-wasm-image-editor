@@ -26,7 +26,7 @@ impl ApiSerializerSchema {
     pub fn from_app(app: &App) -> ApiSerializerSchema {
         let mut projects: HashMap<String, ProjectSerializer> = HashMap::new();
         app.projects.iter().for_each(|(uid, p)| {
-            let s = ProjectSerializer::from_project(p);
+            let s = ProjectSerializer::from_project(&p.project.borrow());
             projects.insert(uid.to_string(), s);
         });
 

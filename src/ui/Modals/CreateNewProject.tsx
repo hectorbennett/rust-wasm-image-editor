@@ -28,7 +28,7 @@ export default function CreateNewProject({ context, id }: ContextModalProps) {
         mt="md"
         onClick={() => {
           context.closeModal(id);
-          app.file.new(width, height);
+          app.file.new();
         }}
       >
         New project
