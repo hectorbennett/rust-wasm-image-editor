@@ -17,11 +17,10 @@ interface RootMenuItem {
   width?: number;
 }
 
-const MENUS = ["app", "file", "edit", "view", "select", "tools", "filters", "image", "layer"];
-
 export function MenuBarItems() {
   const commands = CommandsContext.useContainer();
-  const menu_items: Array<RootMenuItem> = MENUS.map((m) => ({
+  const categories = [...new Set(commands.commands.map((command) => command.category))];
+  const menu_items: Array<RootMenuItem> = categories.map((m) => ({
     label: m,
     items: commands.commands
       .filter((c) => c.category === m)

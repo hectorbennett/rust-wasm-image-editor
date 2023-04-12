@@ -9,12 +9,17 @@ interface MenuBarItemProps {
   items: Array<MenuItem>;
 }
 
+function capitalizeFirstLetter(string: string) {
+  /* TODO: Move to some general utils folder */
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
+
 export function MenuBarItem(props: MenuBarItemProps) {
   return (
     <Menu shadow="md" styles={{ dropdown: { minWidth: 150 } }} position="bottom-start">
       <Menu.Target>
         <Button size="xs" variant="subtle" compact>
-          {props.label}
+          {capitalizeFirstLetter(props.label)}
         </Button>
       </Menu.Target>
 
@@ -26,7 +31,7 @@ export function MenuBarItem(props: MenuBarItemProps) {
             icon={item.icon ? <item.icon size={14} /> : null}
             rightSection={item.kbd_shortcut ? <KeyboardShortcut keys={item.kbd_shortcut} /> : null}
           >
-            {item.label}
+            {capitalizeFirstLetter(item.label)}
           </Menu.Item>
         ))}
       </Menu.Dropdown>
