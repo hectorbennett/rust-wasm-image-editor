@@ -35,7 +35,16 @@ impl App {
     }
 
     pub fn new_project(&mut self) -> &ProjectController {
-        let project: Project = Project::new();
+        /* Get a new project name 'Untitled n' */
+        let mut n: u8 = 1;
+        for project_controller in self.projects.values() {
+            let project_name = project_controller.project.borrow().name.clone();
+            if project_name.starts_with("Untitled") {
+                n += 1;
+            }
+        }
+        let name: String = format!("Untitled {}", n);
+        let project: Project = Project::new(&name, 512, 512);
         self.init_project(project)
     }
 
