@@ -16,8 +16,10 @@ function Testing() {
   const wasm = WasmContext.useContainer();
   const testCalled = useRef(false);
   useEffect(() => {
-    test();
-  }, []);
+    if (wasm.api) {
+      test();
+    }
+  }, [Boolean(wasm.api)]);
 
   async function test() {
     if (testCalled.current) {
