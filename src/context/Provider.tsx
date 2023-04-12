@@ -7,13 +7,8 @@ import { LayersContext } from "./layers";
 import { SettingsContext } from "./settings";
 import { TabsContext } from "./tabs";
 import { ToolsContext } from "./tools";
-import { WasmContext } from "./wasm";
 
 export default function Provider(props: { children: ReactNode }) {
-  const wasm = WasmContext.useContainer();
-  if (wasm.isLoading) {
-    return <div>Loading...</div>;
-  }
   return (
     <TabsContext.Provider>
       <AppContext.Provider>
