@@ -10,10 +10,11 @@ let drawing = false;
 
 const events = {
   onMouseDown: function ({ event }: ToolEventParams) {
-    const target = event.target as HTMLCanvasElement;
+    const target = event.target as HTMLDivElement;
+    const rect = target.getBoundingClientRect();
     drawing = true;
-    startX = event.nativeEvent.clientX - target.offsetLeft;
-    startY = event.nativeEvent.clientY - target.offsetTop;
+    startX = event.clientX - rect.left;
+    startY = event.clientY - rect.top;
     currX = startX;
     currY = startY;
   },
@@ -21,9 +22,10 @@ const events = {
     if (!drawing) {
       return;
     }
-    const target = event.target as HTMLCanvasElement;
-    currX = event.nativeEvent.clientX - target.offsetLeft;
-    currY = event.nativeEvent.clientY - target.offsetTop;
+    const target = event.target as HTMLDivElement;
+    const rect = target.getBoundingClientRect();
+    startX = event.clientX - rect.left;
+    startY = event.clientY - rect.top;
     select_rect(api);
   },
   onMouseUp: function ({ api }: ToolEventParams) {
