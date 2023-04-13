@@ -5,6 +5,7 @@ use super::{
     commands::{
         create_layer::CreateLayer,
         fill_selection::FillSelection,
+        rename_layer::RenameLayer,
         resize_canvas::ResizeCanvas,
         select_layer::SelectLayer,
         selection::{
@@ -34,6 +35,12 @@ impl ProjectController {
     pub fn select_layer(&mut self, uid: u64) {
         self.history
             .append(Box::new(SelectLayer::new(self.project.clone(), uid)));
+        self.history.execute();
+    }
+
+    pub fn rename_layer(&mut self, uid: u64, name: &str) {
+        self.history
+            .append(Box::new(RenameLayer::new(self.project.clone(), uid, name)));
         self.history.execute();
     }
 

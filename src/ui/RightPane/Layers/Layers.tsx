@@ -81,20 +81,24 @@ function LayerLabel(props: LayerLabelProps) {
     layers.renameLayer(props.layer.uid, value);
     setEditMode(false);
   }
+
+  function handleDoubleClick() {
+    setEditMode(true);
+  }
+
+  // const form = useForm();
+
   return (
-    <Box
-      mx={5}
-      sx={{ flex: 1, textAlign: "left" }}
-      // onDoubleClick={handleDoubleClick}
-    >
+    <Box mx={5} sx={{ flex: 1, textAlign: "left" }} onDoubleClick={handleDoubleClick}>
       {editMode ? (
-        <TextInput
-          size="xs"
-          // value={value}
-          autoFocus
-          onChange={(event) => setValue(event.currentTarget.value)}
-          onBlur={handleBlur}
-        />
+        <form onSubmit={handleBlur}>
+          <TextInput
+            size="xs"
+            autoFocus
+            onChange={(event) => setValue(event.currentTarget.value)}
+            onBlur={handleBlur}
+          />
+        </form>
       ) : (
         props.layer.name
       )}

@@ -142,6 +142,15 @@ impl Api {
         web_sys::console::time_end_with_label("Api::set_active_layer");
     }
 
+    pub fn rename_layer(&mut self, layer_uid: u64, name: &str) {
+        web_sys::console::time_with_label("Api::rename_layer");
+        self.app
+            .get_active_project_controller()
+            .unwrap()
+            .rename_layer(layer_uid, name);
+        web_sys::console::time_end_with_label("Api::rename_layer");
+    }
+
     pub fn set_layer_visibile(&mut self, layer_uid: u64, visible: bool) {
         web_sys::console::time_with_label("Api::set_layer_visibile");
         self.app
