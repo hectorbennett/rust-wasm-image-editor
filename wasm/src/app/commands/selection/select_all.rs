@@ -18,6 +18,10 @@ impl SelectAll {
 }
 
 impl Command for SelectAll {
+    fn name(&self) -> String {
+        "Select all".to_string()
+    }
+
     fn execute(&self) {
         self.project.borrow_mut().selection.select_all();
     }

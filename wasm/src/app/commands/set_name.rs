@@ -22,6 +22,10 @@ impl SetName {
 }
 
 impl Command for SetName {
+    fn name(&self) -> String {
+        "Set project name".to_string()
+    }
+
     fn execute(&self) {
         self.project.borrow_mut().name = self.new_name.clone();
     }

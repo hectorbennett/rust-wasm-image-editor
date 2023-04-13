@@ -15,6 +15,10 @@ impl CreateLayer {
 }
 
 impl Command for CreateLayer {
+    fn name(&self) -> String {
+        "Create layer".to_string()
+    }
+
     fn execute(&self) {
         self.project.borrow_mut().create_layer();
     }

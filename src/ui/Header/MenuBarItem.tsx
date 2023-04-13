@@ -30,6 +30,7 @@ export function MenuBarItem(props: MenuBarItemProps) {
             key={item.label}
             icon={item.icon ? <item.icon size={14} /> : null}
             rightSection={item.kbd_shortcut ? <KeyboardShortcut keys={item.kbd_shortcut} /> : null}
+            disabled={item.disabled}
           >
             {capitalizeFirstLetter(item.label)}
           </Menu.Item>

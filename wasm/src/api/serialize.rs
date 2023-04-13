@@ -1,6 +1,9 @@
 use std::collections::HashMap;
 
-use crate::app::{layer::Layer, project::Project, App};
+use crate::app::{
+    commands::command::Command, history::History, layer::Layer,
+    project_controller::ProjectController, App,
+};
 use serde::Serialize;
 use tsify::Tsify;
 use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
@@ -26,7 +29,7 @@ impl ApiSerializerSchema {
     pub fn from_app(app: &App) -> ApiSerializerSchema {
         let mut projects: HashMap<String, ProjectSerializer> = HashMap::new();
         app.projects.iter().for_each(|(uid, p)| {
-            let s = ProjectSerializer::from_project(&p.project.borrow());
+            let s = ProjectSerializer::from_project_controller(&p);
             projects.insert(uid.to_string(), s);
         });
 
@@ -49,10 +52,13 @@ struct ProjectSerializer {
     height: u32,
     layers: Vec<LayerSerializer>,
     active_layer_uid: Option<String>,
+    history: HistorySerializer,
 }
 
 impl ProjectSerializer {
-    pub fn from_project(project: &Project) -> ProjectSerializer {
+    pub fn from_project_controller(project_controller: &ProjectController) -> ProjectSerializer {
+        let project = project_controller.project.borrow();
+
         let mut layers: Vec<LayerSerializer> = vec![];
         project.layers.iter().for_each(|l| {
             let s = LayerSerializer::from_layer(l);
@@ -61,6 +67,8 @@ impl ProjectSerializer {
 
         let active_layer_uid: Option<String> = project.active_layer_uid.map(|uid| uid.to_string());
 
+        let history = HistorySerializer::from_history(&project_controller.history);
+
         ProjectSerializer {
             uid: project.uid.to_string(),
             name: project.name.clone(),
@@ -68,6 +76,7 @@ impl ProjectSerializer {
             height: project.height,
             layers,
             active_layer_uid,
+            history,
         }
     }
 }
@@ -93,6 +102,39 @@ impl LayerSerializer {
             visible: layer.visible,
             locked: layer.locked,
             thumbnail_hash: layer.get_thumbnail_hash().to_string(),
+        }
+    }
+}
+
+#[derive(Serialize, Debug, Tsify)]
+struct HistorySerializer {
+    revision: u32,
+    history: Vec<CommandSerializer>,
+}
+
+impl HistorySerializer {
+    pub fn from_history(history: &History) -> HistorySerializer {
+        let mut commands: Vec<CommandSerializer> = vec![];
+        history.history.iter().for_each(|c| {
+            commands.push(CommandSerializer::from_command(c));
+        });
+
+        HistorySerializer {
+            revision: history.revision as u32,
+            history: commands,
+        }
+    }
+}
+
+#[derive(Serialize, Debug, Tsify)]
+struct CommandSerializer {
+    name: String,
+}
+
+impl CommandSerializer {
+    pub fn from_command(command: &Box<dyn Command>) -> CommandSerializer {
+        CommandSerializer {
+            name: command.name(),
         }
     }
 }

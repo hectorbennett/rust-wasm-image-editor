@@ -32,6 +32,10 @@ impl SelectEllipse {
 }
 
 impl Command for SelectEllipse {
+    fn name(&self) -> String {
+        "Select ellipse".to_string()
+    }
+
     fn execute(&self) {
         self.project
             .borrow_mut()

@@ -23,6 +23,10 @@ impl SetLayerVisible {
 }
 
 impl Command for SetLayerVisible {
+    fn name(&self) -> String {
+        "Set layer visible".to_string()
+    }
+
     fn execute(&self) {
         self.project
             .borrow_mut()

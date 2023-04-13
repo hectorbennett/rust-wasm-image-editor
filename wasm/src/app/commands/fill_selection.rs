@@ -27,6 +27,10 @@ impl FillSelection {
 }
 
 impl Command for FillSelection {
+    fn name(&self) -> String {
+        "Fill selection".to_string()
+    }
+
     fn execute(&self) {
         let selection = self.project.borrow().selection.clone();
         self.project
