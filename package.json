@@ -70,6 +70,8 @@
     "test": "yarn run test:cypress && yarn run test:wasm",
     "test:wasm": "cd wasm && cargo test",
     "test:cypress": "yarn cypress run",
+    "prebench:wasm": "rustup install nightly && cargo install samply",
+    "bench:wasm": "cd ./wasm && samply record cargo +nightly bench",
     "type:check": "tsc",
     "lint:js:check": "eslint . --config ./.eslintrc.json",
     "lint:js": "eslint --fix . --config ./.eslintrc.json",
@@ -79,6 +81,6 @@
     "format": "prettier --write . --config ./.prettierrc.json",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "check": "yarn run type:check && yarn run lint:js:check && yarn run format:check"
+    "check": "yarn run type:check && yarn run lint:js:check && yarn run format:check && yarn run lint:wasm:check"
   }
 }

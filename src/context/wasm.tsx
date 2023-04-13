@@ -16,6 +16,9 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
     initWasm().then(() => {
       const apiHandler: ProxyHandler<Api> = {
         get(target: Api, prop: string, _receiver: unknown) {
+          if (!target) {
+            return null;
+          }
           const p = Reflect.get(target, prop);
           if (p instanceof Function) {
             return (...args: Array<unknown>) => {

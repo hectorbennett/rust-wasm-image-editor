@@ -26,7 +26,7 @@ impl ApiSerializerSchema {
     pub fn from_app(app: &App) -> ApiSerializerSchema {
         let mut projects: HashMap<String, ProjectSerializer> = HashMap::new();
         app.projects.iter().for_each(|(uid, p)| {
-            let s = ProjectSerializer::from_project(p);
+            let s = ProjectSerializer::from_project(&p.project.borrow());
             projects.insert(uid.to_string(), s);
         });
 
@@ -47,7 +47,6 @@ struct ProjectSerializer {
     name: String,
     width: u32,
     height: u32,
-    image_hash: String,
     layers: Vec<LayerSerializer>,
     active_layer_uid: Option<String>,
 }
@@ -67,7 +66,6 @@ impl ProjectSerializer {
             name: project.name.clone(),
             width: project.width,
             height: project.height,
-            image_hash: project.get_image_hash().to_string(),
             layers,
             active_layer_uid,
         }

@@ -21,9 +21,21 @@ Contributors welcome! Get in touch or check out the [good first issues](https://
 - Install packages with `yarn`. This should also automatically set up husky and install cargo watch and wasm-pack globally.
 - Run the development environment with `yarn run dev`. This runs `yarn run dev:wasm` and `yarn run dev:js` simultaneously and watches for changes to both.
 
+## Testing
+
+Run all tests with `yarn run test`. This calls both `yarn run test:wasm` and `yarn run test:cypress`. We may add unit tests to the TypeScript at a later date.
+
+## Benchmarking
+
+It is important to benchmark some functions to make sure we can render updates at 60fps. To make this happen each api call that updates the canvas must take < 16ms.
+
+To run benchmarks run `yarn run bench`
+
 ## Deployment
 
-- You can test the Dockerfile with `docker build .`
+Deployments are triggered whenever a pull request to the 'prod' branch is merged.
+
+You can test the Dockerfile with `docker build .`. The test site lives is hosted in a digital ocean app under the following config
 
 ## DigitalOcean app spec:
 

@@ -53,7 +53,7 @@ function useCommands() {
       id: "app.settings",
       label: "Settings",
       icon: IconSettings,
-      action: app.openSettings,
+      action: () => settings.open(),
     },
     {
       category: "app",
@@ -74,24 +74,20 @@ function useCommands() {
       id: "file.new",
       label: "New",
       icon: IconFile,
-      action: () =>
-        openContextModal({
-          modal: "file.new",
-          innerProps: {},
-        }),
+      action: () => wasm.api?.create_project(),
     },
     {
       category: "file",
       id: "file.open",
       label: "Open",
-      action: () => app.file.open(),
+      action: app.file.open,
     },
     {
       category: "file",
       id: "file.save",
       label: "Save",
       icon: IconDeviceFloppy,
-      action: () => app.file.save(),
+      action: app.file.save,
     },
     {
       category: "file",

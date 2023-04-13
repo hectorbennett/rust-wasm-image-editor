@@ -1,6 +1,9 @@
+use serde::{Deserialize, Serialize};
+
 use super::utils;
 
-#[derive(Clone)]
+#[derive(Clone, Serialize, Deserialize)]
+
 pub struct Selection {
     width: u32,
     height: u32,

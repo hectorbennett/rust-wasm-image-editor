@@ -55,6 +55,7 @@ interface SettingsTab {
 
 function useSettings() {
   const [settings, _setSettings] = useState<Settings>(DEFAULT_SETTINGS);
+  const [isOpen, setIsOpen] = useState<boolean>(false);
   const tabs: Array<SettingsTab> = [
     {
       id: "user_interface",
@@ -68,8 +69,6 @@ function useSettings() {
     },
   ];
 
-  //   useEffect(() => {}, [settings.keyboard_shortcuts]);
-
   const [activeTabId, setActiveTabId] = useState<string>("user_interface");
 
   const activeTab: SettingsTab = tabs.find((tab) => tab.id === activeTabId) || tabs[0];
@@ -81,6 +80,9 @@ function useSettings() {
   return {
     tabs,
     activeTab,
+    isOpen,
+    open: () => setIsOpen(true),
+    close: () => setIsOpen(false),
     openSettingsTab,
     keyboardShortcuts: settings.keyboard_shortcuts,
   };
