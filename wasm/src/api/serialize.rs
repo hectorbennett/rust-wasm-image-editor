@@ -1,9 +1,6 @@
 use std::collections::HashMap;
 
-use crate::app::{
-    commands::command::Command, history::History, layer::Layer,
-    project_controller::ProjectController, App,
-};
+use crate::app::{history::History, layer::Layer, project_controller::ProjectController, App};
 use serde::Serialize;
 use tsify::Tsify;
 use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
@@ -29,7 +26,7 @@ impl ApiSerializerSchema {
     pub fn from_app(app: &App) -> ApiSerializerSchema {
         let mut projects: HashMap<String, ProjectSerializer> = HashMap::new();
         app.projects.iter().for_each(|(uid, p)| {
-            let s = ProjectSerializer::from_project_controller(&p);
+            let s = ProjectSerializer::from_project_controller(p);
             projects.insert(uid.to_string(), s);
         });
 
@@ -116,7 +113,7 @@ impl HistorySerializer {
     pub fn from_history(history: &History) -> HistorySerializer {
         let mut commands: Vec<CommandSerializer> = vec![];
         history.history.iter().for_each(|c| {
-            commands.push(CommandSerializer::from_command(c));
+            commands.push(CommandSerializer { name: c.name() });
         });
 
         HistorySerializer {
@@ -129,12 +126,4 @@ impl HistorySerializer {
 #[derive(Serialize, Debug, Tsify)]
 struct CommandSerializer {
     name: String,
-}
-
-impl CommandSerializer {
-    pub fn from_command(command: &Box<dyn Command>) -> CommandSerializer {
-        CommandSerializer {
-            name: command.name(),
-        }
-    }
 }
