@@ -24,20 +24,20 @@ pub struct Project {
 
 impl Default for Project {
     fn default() -> Self {
-        Self::new()
+        Self::new("Untitled", 512, 512)
     }
 }
 
 impl Project {
-    pub fn new() -> Project {
+    pub fn new(name: &str, width: u32, height: u32) -> Project {
         Project {
             uid: generate_uid(),
-            name: "".into(),
-            width: 20,
-            height: 20,
+            name: name.into(),
+            width,
+            height,
             layers: vec![],
             active_layer_uid: None,
-            selection: Selection::new(20, 20),
+            selection: Selection::new(width, height),
         }
     }
 

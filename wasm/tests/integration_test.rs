@@ -64,7 +64,7 @@ fn test_save_and_open_project() {
 fn test_history() {
     // let mut history = history::History::new();
     // let mut layer = Layer::new(1, 1);
-    let project = Rc::new(RefCell::new(Project::new()));
+    let project = Rc::new(RefCell::new(Project::new("Untitled", 20, 20)));
     let mut history = History::new();
 
     history.append(Box::new(SetName::new(project.clone(), "A new name")));

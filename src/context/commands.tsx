@@ -74,11 +74,7 @@ function useCommands() {
       id: "file.new",
       label: "New",
       icon: IconFile,
-      action: () =>
-        openContextModal({
-          modal: "file.new",
-          innerProps: {},
-        }),
+      action: () => wasm.api?.create_project(),
     },
     {
       category: "file",
