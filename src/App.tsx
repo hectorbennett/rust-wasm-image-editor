@@ -10,7 +10,7 @@ import Main from "./main/Main";
 import { CustomSpotlightAction } from "./components/CustomSpotlightAction";
 import { useEffect, useRef } from "react";
 
-const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+// const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 function Testing() {
   const wasm = WasmContext.useContainer();
@@ -31,42 +31,26 @@ function Testing() {
     }
     wasm.api.create_project();
     wasm.api.resize_canvas(500, 500);
-    wasm.api.create_layer();
-
-    await sleep(2000);
 
     // red square layer
     wasm.api.set_primary_colour(255, 0, 0, 100);
-    wasm.api.select_rect(100, 100, 150, 150);
-    wasm.api.fill_selection();
-    wasm.api.set_primary_colour(1, 2, 3, 255);
-    wasm.api.select_rect(400, 400, 100, 100);
+    wasm.api.select_rect(100, 150, 150, 150);
     wasm.api.fill_selection();
 
     // green square layer
     wasm.api.create_layer();
     wasm.api.set_primary_colour(0, 255, 0, 100);
-    wasm.api.select_rect(220, 50, 180, 150);
+    wasm.api.select_rect(220, 100, 180, 150);
     wasm.api.fill_selection();
 
-    // blue square layer
+    // blue circle layer
     wasm.api.create_layer();
     wasm.api.set_primary_colour(0, 0, 255, 100);
-    wasm.api.select_rect(180, 150, 200, 200);
+    wasm.api.select_ellipse(180, 200, 200, 200);
     wasm.api.fill_selection();
 
-    // invert selection
-    wasm.api.create_layer();
-    wasm.api.set_primary_colour(100, 0, 255, 100);
-    wasm.api.select_rect(50, 50, 400, 400);
-    wasm.api.select_inverse();
-    wasm.api.fill_selection();
-
-    // draw an ellipse
-    wasm.api.create_layer();
-    wasm.api.set_primary_colour(207, 47, 116, 255);
-    wasm.api.select_ellipse(100, 250, 300, 200);
-    wasm.api.fill_selection();
+    // clear selection
+    wasm.api.select_none();
   }
   return null;
 }

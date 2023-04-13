@@ -18,6 +18,10 @@ impl SelectInverse {
 }
 
 impl Command for SelectInverse {
+    fn name(&self) -> String {
+        "Select inverse".to_string()
+    }
+
     fn execute(&self) {
         self.project.borrow_mut().selection.select_inverse();
     }

@@ -18,6 +18,10 @@ impl SelectNone {
 }
 
 impl Command for SelectNone {
+    fn name(&self) -> String {
+        "Select none".to_string()
+    }
+
     fn execute(&self) {
         self.project.borrow_mut().selection.select_none();
     }

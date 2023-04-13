@@ -20,6 +20,10 @@ impl SelectLayer {
 }
 
 impl Command for SelectLayer {
+    fn name(&self) -> String {
+        "Select layer".to_string()
+    }
+
     fn execute(&self) {
         self.project
             .borrow_mut()

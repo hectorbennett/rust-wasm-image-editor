@@ -19,6 +19,7 @@ import { KeyboardShortcutName, SettingsContext } from "./settings";
 import { AppContext } from "./app";
 import { LayersContext } from "./layers";
 import { WasmContext } from "./wasm";
+import { ActiveProjectContext } from "./activeProject";
 
 export type CommandCategory =
   | "app"
@@ -37,6 +38,7 @@ interface Command {
   label: string;
   action: () => void; // todo: make manditory
   icon?: FunctionComponent<TablerIconProps>;
+  disabled?: boolean;
 }
 
 function useCommands() {
@@ -44,7 +46,10 @@ function useCommands() {
   const wasm = WasmContext.useContainer();
   const app = AppContext.useContainer();
   const layers = LayersContext.useContainer();
+  const active_project = ActiveProjectContext.useContainer();
   const spotlight = useSpotlight();
+
+  console.log(active_project);
 
   const commands: Array<Command> = [
     /* app */
@@ -110,16 +115,60 @@ function useCommands() {
     {
       category: "edit",
       id: "edit.undo",
-      label: "Undo",
       icon: IconArrowBackUp,
       action: () => app.edit.undo(),
+      label: (() => {
+        /* get undo label */
+        if (!active_project.activeProject) {
+          return "Undo";
+        }
+        const revision = active_project.activeProject.history.revision - 1;
+        if (revision < 0) {
+          return "Undo";
+        }
+        const command_name = active_project.activeProject?.history.history[revision].name;
+        return `Undo ${command_name}`;
+      })(),
+      disabled: (() => {
+        /* get undo label */
+        if (!active_project.activeProject) {
+          return true;
+        }
+        const revision = active_project.activeProject.history.revision - 1;
+        if (revision < 0) {
+          return true;
+        }
+        return false;
+      })(),
     },
     {
       category: "edit",
       id: "edit.redo",
-      label: "Redo",
       icon: IconArrowForwardUp,
       action: () => app.edit.redo(),
+      label: (() => {
+        /* get redo label */
+        if (!active_project.activeProject) {
+          return "Redo";
+        }
+        const revision = active_project.activeProject.history.revision + 1;
+        if (revision > active_project.activeProject?.history.history.length) {
+          return "Redo";
+        }
+        const command_name = active_project.activeProject?.history.history[revision - 1].name;
+        return `Redo ${command_name}`;
+      })(),
+      disabled: (() => {
+        /* disable the redo button if there's no available commands to redo */
+        if (!active_project.activeProject) {
+          return true;
+        }
+        const revision = active_project.activeProject.history.revision + 1;
+        if (revision > active_project.activeProject?.history.history.length) {
+          return true;
+        }
+        return false;
+      })(),
     },
     {
       category: "edit",
