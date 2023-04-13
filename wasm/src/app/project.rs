@@ -33,8 +33,8 @@ impl Project {
         Project {
             uid: generate_uid(),
             name: name.into(),
-            width: width,
-            height: height,
+            width,
+            height,
             layers: vec![],
             active_layer_uid: None,
             selection: Selection::new(width, height),
