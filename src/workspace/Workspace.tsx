@@ -89,6 +89,11 @@ export default function Workspace() {
     ]),
   );
 
+  useEffect(() => {
+    /* re-render canvas when the active project changes */
+    wasm.api?.render_to_canvas();
+  }, [activeProject.activeProject.uid]);
+
   return (
     <div
       // onMouseEnter={() => setCursorVisible(true)}

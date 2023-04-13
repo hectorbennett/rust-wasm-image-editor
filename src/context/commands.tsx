@@ -53,7 +53,7 @@ function useCommands() {
       id: "app.settings",
       label: "Settings",
       icon: IconSettings,
-      action: app.openSettings,
+      action: () => settings.open(),
     },
     {
       category: "app",

@@ -1,5 +1,4 @@
 import { createContainer } from "unstated-next";
-import { TabsContext } from "./tabs";
 import { WasmContext } from "./wasm";
 
 function readFile(file: File): Promise<ArrayBuffer> {
@@ -98,12 +97,7 @@ function useImage() {
 }
 
 function useApp() {
-  const tabs = TabsContext.useContainer();
-
   return {
-    openSettings: function openSettings() {
-      tabs.newTab("settings", "settings");
-    },
     exit: function exit() {
       console.log("exit");
     },

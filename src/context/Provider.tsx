@@ -10,18 +10,18 @@ import { ToolsContext } from "./tools";
 
 export default function Provider(props: { children: ReactNode }) {
   return (
-    <TabsContext.Provider>
-      <AppContext.Provider>
-        <ActiveProjectContext.Provider>
-          <ToolsContext.Provider>
-            <LayersContext.Provider>
-              <SettingsContext.Provider>
+    <AppContext.Provider>
+      <ActiveProjectContext.Provider>
+        <ToolsContext.Provider>
+          <LayersContext.Provider>
+            <SettingsContext.Provider>
+              <TabsContext.Provider>
                 <CommandsContext.Provider>{props.children}</CommandsContext.Provider>
-              </SettingsContext.Provider>
-            </LayersContext.Provider>
-          </ToolsContext.Provider>
-        </ActiveProjectContext.Provider>
-      </AppContext.Provider>
-    </TabsContext.Provider>
+              </TabsContext.Provider>
+            </SettingsContext.Provider>
+          </LayersContext.Provider>
+        </ToolsContext.Provider>
+      </ActiveProjectContext.Provider>
+    </AppContext.Provider>
   );
 }
