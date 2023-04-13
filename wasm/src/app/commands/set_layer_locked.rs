@@ -19,6 +19,10 @@ impl SetLayerLocked {
 }
 
 impl Command for SetLayerLocked {
+    fn name(&self) -> String {
+        "Set layer locked".to_string()
+    }
+
     fn execute(&self) {
         self.project
             .borrow_mut()

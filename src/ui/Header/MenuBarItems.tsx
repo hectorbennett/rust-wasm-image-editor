@@ -9,6 +9,7 @@ export interface MenuItem {
   kbd_shortcut?: Array<string>;
   onClick: MouseEventHandler;
   icon?: FunctionComponent<TablerIconProps>;
+  disabled?: boolean;
 }
 
 interface RootMenuItem {
@@ -28,6 +29,7 @@ export function MenuBarItems() {
         label: c.label,
         icon: c.icon,
         onClick: () => c.action(),
+        disabled: c.disabled,
       })),
   }));
 

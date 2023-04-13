@@ -36,6 +36,10 @@ impl ResizeCanvas {
 }
 
 impl Command for ResizeCanvas {
+    fn name(&self) -> String {
+        "Resize canvas".to_string()
+    }
+
     fn execute(&self) {
         self.project.borrow_mut().width = self.new_width;
         self.project.borrow_mut().height = self.new_height;

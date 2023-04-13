@@ -22,6 +22,10 @@ impl RenameLayer {
 }
 
 impl Command for RenameLayer {
+    fn name(&self) -> String {
+        "Rename layer".to_string()
+    }
+
     fn execute(&self) {
         self.project
             .borrow_mut()

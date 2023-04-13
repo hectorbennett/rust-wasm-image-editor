@@ -32,6 +32,10 @@ impl SelectRect {
 }
 
 impl Command for SelectRect {
+    fn name(&self) -> String {
+        "Select rectangle".to_string()
+    }
+
     fn execute(&self) {
         self.project
             .borrow_mut()
