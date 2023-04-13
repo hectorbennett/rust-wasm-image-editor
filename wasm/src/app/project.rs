@@ -30,7 +30,7 @@ impl Default for Project {
 
 impl Project {
     pub fn new(name: &str, width: u32, height: u32) -> Project {
-        Project {
+        let mut project = Project {
             uid: generate_uid(),
             name: name.into(),
             width,
@@ -38,7 +38,9 @@ impl Project {
             layers: vec![],
             active_layer_uid: None,
             selection: Selection::new(width, height),
-        }
+        };
+        project.create_layer();
+        project
     }
 
     pub fn create_layer(&mut self) -> &mut Layer {
