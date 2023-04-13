@@ -1,5 +1,4 @@
 import { createContainer } from "unstated-next";
-import { TabsContext } from "./tabs";
 import { WasmContext } from "./wasm";
 
 function readFile(file: File): Promise<ArrayBuffer> {
