@@ -1,5 +1,6 @@
 import { createContainer } from "unstated-next";
 import { WasmContext } from "./wasm";
+import { useState } from "react";
 
 function readFile(file: File): Promise<ArrayBuffer> {
   return new Promise((resolve) => {
@@ -97,6 +98,7 @@ function useImage() {
 }
 
 function useApp() {
+  const [zoom, setZoom] = useState<number>(100);
   return {
     exit: function exit() {
       console.log("exit");
@@ -105,6 +107,8 @@ function useApp() {
     edit: useEdit(),
     filters: useFilters(),
     image: useImage(),
+    zoom,
+    setZoom,
   };
 }
 

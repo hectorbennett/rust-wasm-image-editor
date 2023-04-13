@@ -1,6 +1,7 @@
 import { BoundingBox } from "react-bootstrap-icons";
 import { Api } from "wasm";
 import { Tool, ToolEventParams } from ".";
+import { getRelativeMouseCoords } from "./utils";
 
 let startX = 0;
 let startY = 0;
@@ -9,28 +10,23 @@ let currY = 0;
 let drawing = false;
 
 const events = {
-  onMouseDown: function ({ event }: ToolEventParams) {
-    const target = event.target as HTMLDivElement;
-    const rect = target.getBoundingClientRect();
+  onMouseDown: function ({ event, zoom }: ToolEventParams) {
+    const [x, y] = getRelativeMouseCoords(event, zoom);
     drawing = true;
-    startX = event.clientX - rect.left;
-    startY = event.clientY - rect.top;
-    currX = startX;
-    currY = startY;
+    startX = x;
+    startY = y;
+    currX = x;
+    currY = y;
   },
-  onMouseMove: function ({ event, api }: ToolEventParams) {
+  onMouseMove: function ({ event, api, zoom }: ToolEventParams) {
     if (!drawing) {
       return;
     }
-    const target = event.target as HTMLDivElement;
-    const rect = target.getBoundingClientRect();
-    startX = event.clientX - rect.left;
-    startY = event.clientY - rect.top;
+    [startX, startY] = getRelativeMouseCoords(event, zoom);
     select_rect(api);
   },
   onMouseUp: function ({ api }: ToolEventParams) {
     drawing = false;
-
     select_rect(api);
   },
   onMouseOut: function () {

@@ -1,9 +1,9 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react";
-// import { Cursor } from "../components/Cursor";
 import { ToolsContext, ActiveProjectContext } from "../context";
 import { ToolEventParams, ToolEvents } from "../context/tools";
 
 import { WasmContext } from "../context/wasm";
+import { AppContext } from "../context/app";
 
 interface CanvasProps {
   width: number;
@@ -40,6 +40,7 @@ function Background(props: { width: number; height: number }) {
 }
 
 export default function Workspace() {
+  const app = AppContext.useContainer();
   const activeProject = ActiveProjectContext.useContainer();
   const tools = ToolsContext.useContainer();
   // const [cursorVisible, setCursorVisible] = useState(false);
@@ -85,7 +86,7 @@ export default function Workspace() {
         const func = tools.activeTool.events[eventName as keyof ToolEvents] as (
           params: ToolEventParams,
         ) => void;
-        func({ ctx, event, api: wasm.api });
+        func({ ctx, event, api: wasm.api, zoom: app.zoom });
       },
     ]),
   );
@@ -98,6 +99,7 @@ export default function Workspace() {
   useEffect(() => {
     wasm.api?.render_to_canvas();
     centerCanvas();
+    app.setZoom(100);
   }, [
     activeProject.activeProject.uid,
     activeProject.activeProject.width,
@@ -119,6 +121,7 @@ export default function Workspace() {
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
+          transform: `scale(${app.zoom / 100})`,
         }}
       >
         <div
