@@ -8,6 +8,7 @@ import Header from "./Header";
 import { TabBar } from "./TabBar";
 import RightPane from "./RightPane";
 import LeftPane from "./LeftPane";
+import Footer from "./Footer";
 
 // const PANE_WIDTH = 200;
 const HEADER_HEIGHT = 36;
@@ -32,7 +33,7 @@ const useStyles = createStyles((theme, _params, _getRef) => ({
     background: theme.colors.dark[6],
   },
   leftPane: {
-    height: `calc(100vh - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)`,
+    height: `calc(100vh - ${HEADER_HEIGHT}px)`,
     display: "flex",
     background: theme.colors.dark[7],
   },
@@ -51,7 +52,7 @@ const useStyles = createStyles((theme, _params, _getRef) => ({
     background: theme.colors.dark[5],
   },
   rightPane: {
-    height: `calc(100vh - ${HEADER_HEIGHT + FOOTER_HEIGHT}px)`,
+    height: `calc(100vh - ${HEADER_HEIGHT}px)`,
     display: "flex",
     background: theme.colors.dark[7],
   },
@@ -98,6 +99,9 @@ export default function Ui(props: UiProps) {
             <TabBar />
           </div>
           <div className={classes.canvasInner}>{props.children}</div>
+          <div className={classes.footer}>
+            <Footer />
+          </div>
         </div>
         <Resizable
           className={classes.rightPane}
@@ -108,7 +112,6 @@ export default function Ui(props: UiProps) {
           <RightPane />
         </Resizable>
       </div>
-      <div className={classes.footer}>Footer</div>
     </Box>
   );
 }

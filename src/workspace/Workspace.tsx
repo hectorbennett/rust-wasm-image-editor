@@ -1,9 +1,9 @@
 import React, { forwardRef, useEffect, useRef, useState } from "react";
-// import { Cursor } from "../components/Cursor";
 import { ToolsContext, ActiveProjectContext } from "../context";
 import { ToolEventParams, ToolEvents } from "../context/tools";
 
 import { WasmContext } from "../context/wasm";
+import { AppContext } from "../context/app";
 
 interface CanvasProps {
   width: number;
@@ -40,11 +40,13 @@ function Background(props: { width: number; height: number }) {
 }
 
 export default function Workspace() {
+  const app = AppContext.useContainer();
   const activeProject = ActiveProjectContext.useContainer();
   const tools = ToolsContext.useContainer();
   // const [cursorVisible, setCursorVisible] = useState(false);
   // const cursorRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   // const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
 
   if (!activeProject.activeProject) {
@@ -84,32 +86,65 @@ export default function Workspace() {
         const func = tools.activeTool.events[eventName as keyof ToolEvents] as (
           params: ToolEventParams,
         ) => void;
-        func({ ctx, event, api: wasm.api });
+        func({ ctx, event, api: wasm.api, zoom: app.zoom });
       },
     ]),
   );
 
+  const centerCanvas = () => {
+    containerRef.current?.scrollIntoView({ behavior: "auto", block: "center", inline: "center" });
+  };
+
+  /* re-render canvas on project change */
   useEffect(() => {
-    /* re-render canvas when the active project changes */
     wasm.api?.render_to_canvas();
-  }, [activeProject.activeProject.uid]);
+    centerCanvas();
+    app.setZoom(100);
+  }, [
+    activeProject.activeProject.uid,
+    activeProject.activeProject.width,
+    activeProject.activeProject.height,
+  ]);
 
   return (
     <div
-      // onMouseEnter={() => setCursorVisible(true)}
-      // onMouseLeave={() => setCursorVisible(false)}
-      {...events}
+      style={{
+        overflow: "auto",
+        width: "100%",
+        height: "100%",
+      }}
     >
-      <Canvas
-        ref={canvasRef}
-        width={activeProject.activeProject.width}
-        height={activeProject.activeProject.height}
-      />
-      <Background
-        width={activeProject.activeProject.width}
-        height={activeProject.activeProject.height}
-      />
-      {/* {cursorVisible ? <Cursor ref={cursorRef} position={cursorPosition} /> : null} */}
+      <div
+        style={{
+          width: activeProject.activeProject.width + 2000,
+          height: activeProject.activeProject.height + 2000,
+          display: "flex",
+          justifyContent: "center",
+          alignItems: "center",
+          transform: `scale(${app.zoom / 100})`,
+        }}
+      >
+        <div
+          ref={containerRef}
+          style={{
+            width: activeProject.activeProject.width,
+            height: activeProject.activeProject.height,
+            position: "relative",
+          }}
+          {...events}
+        >
+          <Canvas
+            ref={canvasRef}
+            width={activeProject.activeProject.width}
+            height={activeProject.activeProject.height}
+          />
+          <Background
+            width={activeProject.activeProject.width}
+            height={activeProject.activeProject.height}
+          />
+        </div>
+        {/* {cursorVisible ? <Cursor ref={cursorRef} position={cursorPosition} /> : null} */}
+      </div>
     </div>
   );
 }
