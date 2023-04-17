@@ -120,27 +120,16 @@ impl Layer {
         let is_in_x: bool = x as i32 > self.left && (x as i32) < self.left + (self.width as i32);
         let is_in_y: bool = y as i32 > self.top && (y as i32) < self.top + (self.height as i32);
 
-        if is_on_x && is_in_y {
-            return true;
-        } else if is_on_y && is_in_x {
-            return true;
-        } else {
-            return false;
-        }
+        is_on_x && is_in_y || is_on_y && is_in_x
     }
 
     pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> [u8; 4] {
-        if x < cmp::max(self.left, 0).try_into().unwrap() {
-            // too left
-            return [0, 0, 0, 0];
-        } else if y < cmp::max(self.top, 0).try_into().unwrap() {
-            // too high
-            return [0, 0, 0, 0];
-        } else if x >= (self.left + self.width as i32).try_into().unwrap() {
-            // too right
-            return [0, 0, 0, 0];
-        } else if y >= (self.top + self.height as i32).try_into().unwrap() {
-            // too low
+        if x < cmp::max(self.left, 0).try_into().unwrap()
+            || y < cmp::max(self.top, 0).try_into().unwrap()
+            || x >= (self.left + self.width as i32).try_into().unwrap()
+            || y >= (self.top + self.height as i32).try_into().unwrap()
+        {
+            // out of bounds
             return [0, 0, 0, 0];
         }
 
