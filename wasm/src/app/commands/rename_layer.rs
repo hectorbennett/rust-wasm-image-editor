@@ -29,14 +29,14 @@ impl Command for RenameLayer {
     fn execute(&self) {
         self.project
             .borrow_mut()
-            .get_layer(self.layer_uid)
+            .get_layer_mut(self.layer_uid)
             .set_name(&self.new_name);
     }
 
     fn rollback(&self) {
         self.project
             .borrow_mut()
-            .get_layer(self.layer_uid)
+            .get_layer_mut(self.layer_uid)
             .set_name(&self.old_name);
     }
 }

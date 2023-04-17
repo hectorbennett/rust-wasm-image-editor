@@ -26,14 +26,14 @@ impl Command for SetLayerLocked {
     fn execute(&self) {
         self.project
             .borrow_mut()
-            .get_layer(self.layer_uid)
+            .get_layer_mut(self.layer_uid)
             .set_locked(self.set_locked);
     }
 
     fn rollback(&self) {
         self.project
             .borrow_mut()
-            .get_layer(self.layer_uid)
+            .get_layer_mut(self.layer_uid)
             .set_locked(!self.set_locked);
     }
 }

@@ -1,4 +1,5 @@
 use std::{
+    cmp,
     collections::hash_map::DefaultHasher,
     hash::{Hash, Hasher},
 };
@@ -23,6 +24,8 @@ pub struct Layer {
     pub name: String,
     pub width: u32,
     pub height: u32,
+    pub left: i32,
+    pub top: i32,
     pub visible: bool,
     pub locked: bool,
     // img: RgbaImage,
@@ -42,6 +45,8 @@ impl Layer {
             name: "".into(),
             width,
             height,
+            left: 0,
+            top: 0,
             visible: true,
             locked: false,
             buffer: vec![0; (width * height * 4) as usize],
@@ -78,6 +83,11 @@ impl Layer {
         // self.img = sub_img.to_image();
     }
 
+    pub fn set_position(&mut self, left: i32, top: i32) {
+        self.left = left;
+        self.top = top;
+    }
+
     pub fn set_visible(&mut self, visible: bool) {
         self.visible = visible;
     }
@@ -102,8 +112,31 @@ impl Layer {
         });
     }
 
+    pub fn pixel_is_on_border(&self, x: u32, y: u32) -> bool {
+        let is_on_x: bool =
+            x as i32 == self.left || x as i32 == self.left + (self.width as i32) - 1;
+        let is_on_y: bool = y as i32 == self.top || y as i32 == self.top + (self.height as i32) - 1;
+
+        let is_in_x: bool = x as i32 > self.left && (x as i32) < self.left + (self.width as i32);
+        let is_in_y: bool = y as i32 > self.top && (y as i32) < self.top + (self.height as i32);
+
+        is_on_x && is_in_y || is_on_y && is_in_x
+    }
+
     pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> [u8; 4] {
-        let i: usize = get_1d_index_from_2d_coord(self.width, x, y) * 4;
+        if x < cmp::max(self.left, 0).try_into().unwrap()
+            || y < cmp::max(self.top, 0).try_into().unwrap()
+            || x >= (self.left + self.width as i32).try_into().unwrap()
+            || y >= (self.top + self.height as i32).try_into().unwrap()
+        {
+            // out of bounds
+            return [0, 0, 0, 0];
+        }
+
+        let translated_x: u32 = (x as i32 - self.left).try_into().unwrap();
+        let translated_y: u32 = (y as i32 - self.top).try_into().unwrap();
+
+        let i: usize = get_1d_index_from_2d_coord(self.width, translated_x, translated_y) * 4;
         [
             self.buffer[i],
             self.buffer[i + 1],

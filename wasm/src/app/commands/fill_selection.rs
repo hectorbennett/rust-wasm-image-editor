@@ -14,7 +14,7 @@ impl FillSelection {
     pub fn new(project: Rc<RefCell<Project>>, colour: Colour) -> FillSelection {
         let old_layer_buffer = project
             .borrow_mut()
-            .get_active_layer()
+            .get_active_layer_mut()
             .unwrap()
             .get_buffer()
             .clone();
@@ -35,7 +35,7 @@ impl Command for FillSelection {
         let selection = self.project.borrow().selection.clone();
         self.project
             .borrow_mut()
-            .get_active_layer()
+            .get_active_layer_mut()
             .unwrap()
             .fill_selection(&selection, &self.colour);
     }
@@ -44,7 +44,7 @@ impl Command for FillSelection {
         /* TODO: Maybe in future instead of copying the buffer for the whole layer, we could copy the buffer for just the selection */
         self.project
             .borrow_mut()
-            .get_active_layer()
+            .get_active_layer_mut()
             .unwrap()
             .set_buffer(self.old_layer_buffer.clone())
     }
