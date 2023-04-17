@@ -99,14 +99,17 @@ impl Layer {
     pub fn fill_selection(&mut self, selection: &Selection, colour: &Colour) {
         (0..self.width).for_each(|i| {
             (0..=self.height).for_each(|j| {
-                let value = selection.from_coords(i, j);
-                if value != 0 {
-                    let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
-                    let i: usize = get_1d_index_from_2d_coord(self.width, i, j) * 4;
-                    self.buffer[i] = colour.red;
-                    self.buffer[i + 1] = colour.green;
-                    self.buffer[i + 2] = colour.blue;
-                    self.buffer[i + 3] = alpha;
+                let coords = self.layer_to_canvas_coords(i, j);
+                if coords[0] >= 0 && coords[1] >= 0 {
+                    let value = selection.from_coords(coords[0] as u32, coords[1] as u32);
+                    if value != 0 {
+                        let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
+                        let i: usize = get_1d_index_from_2d_coord(self.width, i, j) * 4;
+                        self.buffer[i] = colour.red;
+                        self.buffer[i + 1] = colour.green;
+                        self.buffer[i + 2] = colour.blue;
+                        self.buffer[i + 3] = alpha;
+                    }
                 }
             });
         });
@@ -143,6 +146,10 @@ impl Layer {
             self.buffer[i + 2],
             self.buffer[i + 3],
         ]
+    }
+
+    pub fn layer_to_canvas_coords(&self, i: u32, j: u32) -> [i32; 2] {
+        [i as i32 + self.left, j as i32 + self.top]
     }
 }
 
