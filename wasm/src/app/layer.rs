@@ -17,7 +17,7 @@ use super::{
 
 pub type LayerBuffer = Vec<u8>;
 
-#[derive(Serialize, Deserialize)]
+#[derive(Serialize, Deserialize, Clone)]
 pub struct Layer {
     pub uid: u64,
     pub name: String,

@@ -53,14 +53,6 @@ impl Project {
         self.get_layer(uid)
     }
 
-    pub fn delete_layer(&mut self, uid: u64) {
-        self.layers.retain(|l| l.uid == uid);
-        match self.layers.last() {
-            None => self.set_active_layer(None),
-            Some(layer) => self.set_active_layer(Some(layer.uid)),
-        }
-    }
-
     pub fn get_layer(&mut self, uid: u64) -> &mut Layer {
         return self.layers.iter_mut().find(|l| l.uid == uid).unwrap();
     }

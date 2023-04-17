@@ -1,6 +1,6 @@
 import { useState, MouseEventHandler, useRef, useEffect } from "react";
-import { SegmentedControl, Box, ActionIcon, TextInput } from "@mantine/core";
-import { EyeFill, EyeSlash, LockFill, Lock, Plus } from "react-bootstrap-icons";
+import { SegmentedControl, Box, ActionIcon, TextInput, Menu } from "@mantine/core";
+import { EyeFill, EyeSlash, LockFill, Lock, Plus, Trash } from "react-bootstrap-icons";
 import { useRightClick } from "../../../hooks";
 import { LayersContext } from "../../../context/layers";
 import { WasmContext } from "../../../context/wasm";
@@ -112,35 +112,57 @@ interface LayerProps {
 
 function LayerRow(props: LayerProps) {
   const layers = LayersContext.useContainer();
-  const rightClickRef = useRightClick(function (_event: Event) {
-    // console.log("right click");
-    // console.log(event);
+  const [menuIsOpen, setMenuIsOpen] = useState(false);
+  const rightClickRef = useRightClick<HTMLDivElement>(function (_event: Event) {
+    setMenuIsOpen(true);
   });
-  //   const ref = useRef<HTMLDivElement>(null);
   return (
-    <Box sx={{ display: "flex" }} ref={rightClickRef}>
-      <VisibleCheckbox
-        checked={props.layer.visible}
-        onClick={(e) => {
-          e.preventDefault();
-          layers.setLayerVisibility(props.layer.uid, !props.layer.visible);
+    <>
+      <Menu
+        withArrow
+        position="bottom-end"
+        arrowPosition="center"
+        withinPortal={true}
+        opened={menuIsOpen}
+        onChange={(val) => {
+          if (!val) {
+            setMenuIsOpen(false);
+          }
         }}
-      />
-      <LockedCheckbox
-        checked={props.layer.locked}
-        onClick={(e) => {
-          e.preventDefault();
-          layers.setLayerLocked(props.layer.uid, !props.layer.locked);
-        }}
-      />
-      <Box
-        sx={{ display: "flex", alignItems: "center" }}
-        // onClick={() => layers.setActiveLayerId(props.layer.id)}
       >
-        <LayerThumbnail layer={props.layer} />
-        <LayerLabel layer={props.layer} />
-      </Box>
-    </Box>
+        <Menu.Target>
+          <Box sx={{ display: "flex" }} ref={rightClickRef}>
+            <VisibleCheckbox
+              checked={props.layer.visible}
+              onClick={(e) => {
+                e.preventDefault();
+                layers.setLayerVisibility(props.layer.uid, !props.layer.visible);
+              }}
+            />
+            <LockedCheckbox
+              checked={props.layer.locked}
+              onClick={(e) => {
+                e.preventDefault();
+                layers.setLayerLocked(props.layer.uid, !props.layer.locked);
+              }}
+            />
+            <Box
+              sx={{ display: "flex", alignItems: "center" }}
+              // onClick={() => layers.setActiveLayerId(props.layer.id)}
+            >
+              <LayerThumbnail layer={props.layer} />
+              <LayerLabel layer={props.layer} />
+            </Box>
+          </Box>
+        </Menu.Target>
+
+        <Menu.Dropdown>
+          <Menu.Item icon={<Trash size={14} />} onClick={() => layers.deleteLayer(props.layer.uid)}>
+            Delete layer
+          </Menu.Item>
+        </Menu.Dropdown>
+      </Menu>
+    </>
   );
 }
 

@@ -4,6 +4,7 @@ use super::{
     colour::Colour,
     commands::{
         create_layer::CreateLayer,
+        delete_layer::DeleteLayer,
         fill_selection::FillSelection,
         rename_layer::RenameLayer,
         resize_canvas::ResizeCanvas,
@@ -29,6 +30,12 @@ impl ProjectController {
     pub fn create_layer(&mut self) {
         self.history
             .append(Box::new(CreateLayer::new(self.project.clone())));
+        self.history.execute();
+    }
+
+    pub fn delete_layer(&mut self, uid: u64) {
+        self.history
+            .append(Box::new(DeleteLayer::new(self.project.clone(), uid)));
         self.history.execute();
     }
 

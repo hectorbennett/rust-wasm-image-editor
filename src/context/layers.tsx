@@ -23,6 +23,9 @@ function useLayers() {
     setActiveLayer: function (layer_uid: string) {
       wasm.api?.set_active_layer(BigInt(layer_uid));
     },
+    deleteLayer: function (layer_uid: string) {
+      wasm.api?.delete_layer(BigInt(layer_uid));
+    },
   };
 }
 export const LayersContext = createContainer(useLayers);
