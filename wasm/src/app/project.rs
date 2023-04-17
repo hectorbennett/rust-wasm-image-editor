@@ -87,13 +87,10 @@ impl Project {
 
     pub fn get_compiled_pixel(&self, x: u32, y: u32) -> [u8; 4] {
         // layer border
-        match self.get_active_layer() {
-            Some(layer) => {
-                if layer.pixel_is_on_border(x, y) {
-                    return [255, 255, 0, 255];
-                }
+        if let Some(layer) = self.get_active_layer() {
+            if layer.pixel_is_on_border(x, y) {
+                return [255, 255, 0, 255];
             }
-            None => (),
         }
 
         // selection border
