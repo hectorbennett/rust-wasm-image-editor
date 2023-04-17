@@ -1,8 +1,9 @@
-import { useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef } from "react";
+import { ContextMenuContext } from "../components/ContextMenu";
 
-export function useRightClick(callback: (event: Event) => unknown) {
-  const ref = useRef<HTMLDivElement>(null);
-  function handleContextMenu(event: Event) {
+export function useRightClick<T extends HTMLElement>(callback: (event: MouseEvent) => unknown) {
+  const ref = useRef<T>(null);
+  function handleContextMenu(event: MouseEvent) {
     event.preventDefault();
     callback(event);
   }
@@ -19,4 +20,14 @@ export function useRightClick(callback: (event: Event) => unknown) {
     };
   }, [ref]);
   return ref;
+}
+
+export function useRightClickMenu(menuContent: ReactNode) {
+  const context = ContextMenuContext.useContainer();
+
+  const rightClickRef = useRightClick((event) => {
+    context.setMenuContent(menuContent);
+    context.setCoords({ x: event.pageX, y: event.pageY });
+  });
+  return rightClickRef;
 }

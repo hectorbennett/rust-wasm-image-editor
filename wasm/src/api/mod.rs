@@ -67,6 +67,12 @@ impl Api {
         project.project.borrow().layers.last().unwrap().uid
     }
 
+    pub fn delete_layer(&mut self, layer_uid: u64) {
+        let _timer = Timer::new("Api::delete_layer");
+        let project = self.app.get_active_project_controller().unwrap();
+        project.delete_layer(layer_uid);
+    }
+
     pub fn fill_selection(&mut self) {
         web_sys::console::time_with_label("Api::fill_selection");
         let colour = self.app.primary_colour;
