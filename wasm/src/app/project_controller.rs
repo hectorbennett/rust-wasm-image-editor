@@ -14,6 +14,7 @@ use super::{
             select_none::SelectNone, select_rect::SelectRect,
         },
         set_layer_locked::SetLayerLocked,
+        set_layer_position::SetLayerPosition,
         set_layer_visible::SetLayerVisible,
     },
     history::History,
@@ -66,6 +67,18 @@ impl ProjectController {
             uid,
             locked,
         )));
+        self.history.execute();
+    }
+
+    pub fn move_active_layer(&mut self, move_x: i32, move_y: i32) {
+        let pos_x: i32 = move_x + self.project.borrow_mut().get_active_layer_mut().unwrap().left;
+        let pos_y: i32 = move_y + self.project.borrow_mut().get_active_layer_mut().unwrap().top;
+        self.set_active_layer_position(pos_x, pos_y);
+    }
+
+    pub fn set_active_layer_position(&mut self, x: i32, y: i32) {
+        self.history
+            .append(Box::new(SetLayerPosition::new(self.project.clone(), x, y)));
         self.history.execute();
     }
 }

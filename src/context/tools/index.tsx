@@ -9,6 +9,7 @@ import { eye_dropper } from "./eye_dropper";
 import { bucket_fill } from "./bucket_fill";
 import { rectangle_select } from "./rectangle_select";
 import { ellipse_select } from "./ellipse_select";
+import { move_layer } from "./move_layer";
 
 export interface ToolEventParams {
   ctx: CanvasRenderingContext2D;
@@ -41,6 +42,7 @@ function useTools() {
       icon: Cursor,
       events: {},
     },
+    move_layer,
     rectangle_select,
     ellipse_select,
     bucket_fill,

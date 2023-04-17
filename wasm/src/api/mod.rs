@@ -89,6 +89,16 @@ impl Api {
         self.app.primary_colour = Colour::from_rgba(red, green, blue, alpha);
     }
 
+    pub fn move_active_layer(&mut self, move_x: i32, move_y: i32) {
+        web_sys::console::time_with_label("Api::move_layer");
+        self.app
+            .get_active_project_controller()
+            .unwrap()
+            .move_active_layer(move_x, move_y);
+        web_sys::console::time_end_with_label("Api::move_layer");
+        self.render_to_canvas();
+    }
+
     pub fn select_rect(&mut self, x: u32, y: u32, width: u32, height: u32) {
         web_sys::console::time_with_label("Api::select_rect");
         self.app
@@ -146,6 +156,7 @@ impl Api {
             .unwrap()
             .select_layer(layer_uid);
         web_sys::console::time_end_with_label("Api::set_active_layer");
+        self.render_to_canvas();
     }
 
     pub fn rename_layer(&mut self, layer_uid: u64, name: &str) {

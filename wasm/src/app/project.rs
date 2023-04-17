@@ -50,18 +50,29 @@ impl Project {
         let uid: u64 = layer.uid;
         self.layers.push(layer);
         self.set_active_layer(Some(uid));
-        self.get_layer(uid)
+        self.get_layer_mut(uid)
     }
 
-    pub fn get_layer(&mut self, uid: u64) -> &mut Layer {
+    pub fn get_layer_mut(&mut self, uid: u64) -> &mut Layer {
         return self.layers.iter_mut().find(|l| l.uid == uid).unwrap();
+    }
+
+    pub fn get_layer(&self, uid: u64) -> &Layer {
+        return self.layers.iter().find(|l| l.uid == uid).unwrap();
     }
 
     pub fn set_active_layer(&mut self, uid: Option<u64>) {
         self.active_layer_uid = uid;
     }
 
-    pub fn get_active_layer(&mut self) -> Option<&mut Layer> {
+    pub fn get_active_layer_mut(&mut self) -> Option<&mut Layer> {
+        match self.active_layer_uid {
+            None => None,
+            Some(layer_uid) => return Some(self.get_layer_mut(layer_uid)),
+        }
+    }
+
+    pub fn get_active_layer(&self) -> Option<&Layer> {
         match self.active_layer_uid {
             None => None,
             Some(layer_uid) => return Some(self.get_layer(layer_uid)),
@@ -75,7 +86,17 @@ impl Project {
     }
 
     pub fn get_compiled_pixel(&self, x: u32, y: u32) -> [u8; 4] {
-        // compile the selection layer and
+        // layer border
+        match self.get_active_layer() {
+            Some(layer) => {
+                if layer.pixel_is_on_border(x, y) {
+                    return [255, 255, 0, 255];
+                }
+            }
+            None => (),
+        }
+
+        // selection border
         if self.selection.pixel_is_on_border(x, y) {
             return [0, 0, 0, 255];
         }

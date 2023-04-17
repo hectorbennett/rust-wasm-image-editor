@@ -30,14 +30,14 @@ impl Command for SetLayerVisible {
     fn execute(&self) {
         self.project
             .borrow_mut()
-            .get_layer(self.layer_uid)
+            .get_layer_mut(self.layer_uid)
             .set_visible(self.set_visible);
     }
 
     fn rollback(&self) {
         self.project
             .borrow_mut()
-            .get_layer(self.layer_uid)
+            .get_layer_mut(self.layer_uid)
             .set_visible(!self.set_visible);
     }
 }
