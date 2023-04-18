@@ -102,6 +102,7 @@ fn get_background_pixel(x: u32, y: u32) -> Pixel {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::app::Colour;
 
     #[test]
     fn center_canvas() {
@@ -152,7 +153,7 @@ mod tests {
         let mut p = Project::new("Untitled", 2, 2);
         p.selection.select_all();
         let selection = p.selection.clone();
-        let colour: Colour = Colour::White;
+        let colour: Colour = Colour::WHITE;
         p.get_active_layer_mut()
             .unwrap()
             .fill_selection(&selection, &colour);
