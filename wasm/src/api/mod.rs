@@ -279,22 +279,6 @@ impl Api {
             .to_postcard()
     }
 
-    fn get_image(&mut self) -> Option<ImageBuffer<Rgba<u8>, Vec<u8>>> {
-        if !self.canvas_inited {
-            return None;
-        }
-        let _timer = Timer::new("Api::get_image");
-
-        Some(
-            self.app
-                .get_active_project_controller()
-                .unwrap()
-                .project
-                .borrow()
-                .get_image(),
-        )
-    }
-
     pub fn render_to_canvas(&mut self) {
         if !self.canvas_inited {
             return;
@@ -334,8 +318,4 @@ impl Api {
 
         let _result = context.put_image_data(&data, 0.0, 0.0);
     }
-}
-
-pub fn get_colour(colour: &[u8]) -> Colour {
-    Colour::from_rgba(colour[0], colour[1], colour[2], colour[3])
 }

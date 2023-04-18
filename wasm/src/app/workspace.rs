@@ -1,6 +1,5 @@
 use std::{cell::RefCell, rc::Rc};
 
-use super::colour::Colour;
 use super::pixel_buffer::Pixel;
 use super::project::Project;
 use super::utils::blend_pixels;
