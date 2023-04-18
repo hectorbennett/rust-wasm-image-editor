@@ -153,9 +153,10 @@ mod tests {
         let mut p = Project::new("Untitled", 2, 2);
         p.selection.select_all();
         let selection = p.selection.clone();
+        let colour: Colour = Colour::White;
         p.get_active_layer_mut()
             .unwrap()
-            .fill_selection(&selection, &Colour::WHITE);
+            .fill_selection(&selection, &colour);
         let project = Rc::new(RefCell::new(p));
 
         // put it in a 6x6 workspace and center it
