@@ -8,6 +8,7 @@ pub mod project_controller;
 pub mod selection;
 pub mod timer;
 pub mod utils;
+pub mod workspace;
 
 use std::collections::HashMap;
 

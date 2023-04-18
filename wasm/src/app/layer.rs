@@ -108,13 +108,12 @@ impl Layer {
         });
     }
 
-    pub fn pixel_is_on_border(&self, x: u32, y: u32) -> bool {
-        let is_on_x: bool =
-            x as i32 == self.left || x as i32 == self.left + (self.width as i32) - 1;
-        let is_on_y: bool = y as i32 == self.top || y as i32 == self.top + (self.height as i32) - 1;
+    pub fn coord_is_on_border(&self, x: i32, y: i32) -> bool {
+        let is_on_x: bool = x == self.left - 1 || x == self.left + (self.width as i32);
+        let is_on_y: bool = y == self.top - 1 || y == self.top + (self.height as i32);
 
-        let is_in_x: bool = x as i32 > self.left && (x as i32) < self.left + (self.width as i32);
-        let is_in_y: bool = y as i32 > self.top && (y as i32) < self.top + (self.height as i32);
+        let is_in_x: bool = x >= self.left && x <= self.left + (self.width as i32);
+        let is_in_y: bool = y >= self.top && y <= self.top + (self.height as i32);
 
         is_on_x && is_in_y || is_on_y && is_in_x
     }

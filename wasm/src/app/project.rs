@@ -7,6 +7,7 @@ use postcard;
 
 use super::{
     layer::Layer,
+    pixel_buffer::Pixel,
     selection::Selection,
     utils::{blend_pixels, generate_uid},
 };
@@ -85,13 +86,13 @@ impl Project {
         })
     }
 
-    pub fn get_compiled_pixel(&self, x: u32, y: u32) -> [u8; 4] {
+    pub fn get_compiled_pixel(&self, x: u32, y: u32) -> Pixel {
         // layer border
-        if let Some(layer) = self.get_active_layer() {
-            if layer.pixel_is_on_border(x, y) {
-                return [255, 255, 0, 255];
-            }
-        }
+        // if let Some(layer) = self.get_active_layer() {
+        //     if layer.pixel_is_on_border(x, y) {
+        //         return [255, 255, 0, 255];
+        //     }
+        // }
 
         // selection border
         if self.selection.pixel_is_on_border(x, y) {
@@ -104,6 +105,18 @@ impl Project {
             output = blend_pixels(output, pixel);
         }
         output
+    }
+
+    pub fn get_pixel(&self, x: u32, y: u32) -> Option<Pixel> {
+        if x > self.width || y > self.height {
+            return None;
+        }
+        let mut output: [u8; 4] = [0, 0, 0, 0];
+        for layer in self.layers.iter().filter(|l| l.visible) {
+            let pixel = layer.get_pixel_from_canvas_coordinates(x, y);
+            output = blend_pixels(output, pixel);
+        }
+        Some(output)
     }
 
     pub fn save_project(&self, path: &str) -> std::io::Result<()> {

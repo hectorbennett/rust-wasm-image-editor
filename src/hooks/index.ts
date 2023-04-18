@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef } from "react";
+import { ReactNode, useEffect, useRef, useMemo, RefObject } from "react";
 import { ContextMenuContext } from "../components/ContextMenu";
 
 export function useRightClick<T extends HTMLElement>(callback: (event: MouseEvent) => unknown) {
@@ -30,4 +30,37 @@ export function useRightClickMenu(menuContent: ReactNode) {
     context.setCoords({ x: event.pageX, y: event.pageY });
   });
   return rightClickRef;
+}
+
+export default function useResizeObserver<T extends HTMLElement>(
+  ref: RefObject<T>,
+  callback: (entry: ResizeObserverEntry) => void,
+) {
+  // const observer = useMemo(
+  //   () =>
+
+  //   [callback],
+  // );
+
+  const observer = new ResizeObserver((entries) => {
+    callback(entries[0]);
+    // for (const entry of entries) {
+    //   callback(entry);
+    // }
+  });
+
+  const element = ref.current;
+
+  useEffect(() => {
+    if (!element) {
+      return;
+    }
+    observer.observe(element);
+
+    return () => {
+      if (element) {
+        observer.unobserve(element);
+      }
+    };
+  }, [element, observer]);
 }

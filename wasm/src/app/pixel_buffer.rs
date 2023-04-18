@@ -2,7 +2,7 @@ pub type Pixel = [u8; 4];
 
 use super::utils::get_1d_index_from_2d_coord;
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct PixelBuffer {
     buffer: Vec<u8>,
     width: u32,
@@ -25,10 +25,10 @@ impl PixelBuffer {
     }
 
     pub fn get(&self, x: u32, y: u32) -> Option<Pixel> {
-        let i: usize = get_1d_index_from_2d_coord(self.width, x, y) * 4;
-        if x * y * 4 > self.buffer.len().try_into().unwrap() {
+        if x > self.width || y > self.height {
             return None;
         }
+        let i: usize = get_1d_index_from_2d_coord(self.width, x, y) * 4;
         Some([
             self.buffer[i],
             self.buffer[i + 1],
@@ -56,13 +56,13 @@ mod tests {
 
     #[test]
     fn get_pixel() {
-        let mut pixel_buffer = PixelBuffer::new(10, 10);
+        let pixel_buffer = PixelBuffer::new(10, 10);
         assert_eq!(pixel_buffer.get(1, 1).unwrap(), [0, 0, 0, 0]);
     }
 
     #[test]
     fn get_pixel_out_of_bounds() {
-        let mut pixel_buffer = PixelBuffer::new(10, 10);
+        let pixel_buffer = PixelBuffer::new(10, 10);
         assert_eq!(pixel_buffer.get(11, 11), None);
     }
 
@@ -75,7 +75,7 @@ mod tests {
 
     #[test]
     fn as_vec() {
-        let mut pixel_buffer = PixelBuffer::new(2, 2);
+        let pixel_buffer = PixelBuffer::new(2, 2);
         assert_eq!(pixel_buffer.as_vec(), vec![0; 16]);
     }
 }

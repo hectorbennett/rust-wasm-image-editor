@@ -1,6 +1,6 @@
+use crate::app::{colour::Colour, timer::Timer, workspace::Workspace};
+use std::rc::Rc;
 use std::vec;
-
-use crate::app::{colour::Colour, timer::Timer};
 
 use super::app::App;
 use image::{ImageBuffer, Rgba};
@@ -13,6 +13,8 @@ pub mod serialize;
 #[wasm_bindgen]
 pub struct Api {
     app: App,
+    workspace_width: u32,
+    workspace_height: u32,
     canvas_id: String,
     canvas_inited: bool,
 }
@@ -25,6 +27,8 @@ impl Api {
         Api {
             app: App::new(),
             canvas_inited: false,
+            workspace_width: 0,
+            workspace_height: 0,
             canvas_id: "".to_string(),
         }
     }
@@ -294,11 +298,25 @@ impl Api {
         )
     }
 
+    pub fn set_workspace_size(&mut self, width: u32, height: u32) {
+        self.workspace_width = width;
+        self.workspace_height = height;
+        self.render_to_canvas();
+    }
+
     pub fn render_to_canvas(&mut self) {
         if !self.canvas_inited {
             return;
         }
-        let image = self.get_image().unwrap();
+        if self.workspace_width == 0 || self.workspace_height == 0 {
+            return;
+        }
+        let mut workspace = Workspace::new(Rc::clone(
+            &self.app.get_active_project_controller().unwrap().project,
+        ));
+        workspace.resize(self.workspace_width, self.workspace_height);
+        workspace.center_canvas();
+        // let image = self.get_image().unwrap();
 
         let _timer = Timer::new("Api::render_to_canvas");
         let document = web_sys::window().unwrap().document().unwrap();
@@ -316,10 +334,15 @@ impl Api {
             .dyn_into::<web_sys::CanvasRenderingContext2d>()
             .unwrap();
 
+        let v = &workspace.to_vec();
+        if v.len() == 0 {
+            return;
+        }
+
         let data = ImageData::new_with_u8_clamped_array_and_sh(
-            Clamped(image.as_raw()),
-            image.width(),
-            image.height(),
+            Clamped(&workspace.to_vec()),
+            workspace.width,
+            workspace.height,
         )
         .unwrap();
 
