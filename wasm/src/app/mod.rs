@@ -2,6 +2,7 @@ pub mod colour;
 pub mod commands;
 pub mod history;
 pub mod layer;
+pub mod pixel_buffer;
 pub mod project;
 pub mod project_controller;
 pub mod selection;
