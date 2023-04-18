@@ -1,6 +1,5 @@
 use std::{cell::RefCell, rc::Rc};
 
-use super::colour::Colour;
 use super::pixel_buffer::Pixel;
 use super::project::Project;
 use super::utils::blend_pixels;
@@ -93,11 +92,10 @@ fn get_background_pixel(x: u32, y: u32) -> Pixel {
     const square_size: u32 = 10;
     const grey_1: Pixel = [135, 135, 135, 255];
     const grey_2: Pixel = [90, 90, 90, 255];
-    // (x / dimSq) + (y / dimSq) % 2 == 0;
     if ((x / square_size) + (y / square_size)).rem_euclid(2) == 0 {
-        return grey_1;
+        grey_1
     } else {
-        return grey_2;
+        grey_2
     }
 }
 

@@ -5,7 +5,7 @@ use std::vec;
 use super::app::App;
 use image::{ImageBuffer, Rgba};
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
-use web_sys::console;
+
 use web_sys::ImageData;
 extern crate console_error_panic_hook;
 use wasm_bindgen::JsCast;
@@ -326,7 +326,7 @@ impl Api {
             .unwrap();
 
         let v = &workspace.to_vec();
-        if v.len() == 0 {
+        if v.is_empty() {
             return;
         }
 
