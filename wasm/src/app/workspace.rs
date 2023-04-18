@@ -3,7 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use super::colour::Colour;
 use super::pixel_buffer::Pixel;
 use super::project::Project;
-// use super::utils::get_1d_index_from_2d_coord;
+use super::utils::blend_pixels;
 
 pub struct Workspace {
     project: Rc<RefCell<Project>>,
@@ -61,21 +61,43 @@ impl Workspace {
             return Some([0, 0, 0, 0]);
         }
 
-        match self.project.borrow().get_pixel(rel_x as u32, rel_y as u32) {
-            None => Some([0, 0, 0, 0]),
-            pixel => pixel,
+        let p = self
+            .project
+            .borrow()
+            .get_pixel(rel_x as u32, rel_y as u32)
+            .unwrap();
+
+        /* if it's opaque, return the pixel */
+        if p[3] == 255 {
+            return Some(p);
         }
+
+        /* if not, blend with the background checkerboard */
+        let c = get_background_pixel(rel_x as u32, rel_y as u32);
+        Some(blend_pixels(c, p))
     }
 
     pub fn to_vec(&self) -> Vec<u8> {
         let mut v: Vec<u8> = vec![];
-        (0..self.width).for_each(|i| {
-            (0..self.height).for_each(|j| {
+        (0..self.height).for_each(|j| {
+            (0..self.width).for_each(|i| {
                 let slice = self.get_pixel(i, j).unwrap();
                 v.extend_from_slice(&slice);
             })
         });
         v
+    }
+}
+
+fn get_background_pixel(x: u32, y: u32) -> Pixel {
+    const square_size: u32 = 10;
+    const grey_1: Pixel = [135, 135, 135, 255];
+    const grey_2: Pixel = [90, 90, 90, 255];
+    // (x / dimSq) + (y / dimSq) % 2 == 0;
+    if ((x / square_size) + (y / square_size)).rem_euclid(2) == 0 {
+        return grey_1;
+    } else {
+        return grey_2;
     }
 }
 

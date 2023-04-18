@@ -12,20 +12,7 @@ interface CanvasProps {
 }
 
 const Canvas = forwardRef<HTMLCanvasElement, CanvasProps>(function Canvas({ width, height }, ref) {
-  return (
-    <canvas
-      id="wasm-canvas"
-      ref={ref}
-      width={width}
-      height={height}
-      //   style={
-      //     {
-      //       // position: "absolute",
-      //       // zIndex: 1,
-      //     }
-      //   }
-    />
-  );
+  return <canvas id="wasm-canvas" ref={ref} width={width} height={height} />;
 });
 
 export default function Workspace() {
@@ -104,10 +91,6 @@ export default function Workspace() {
       setWorkspaceSize({ width: w, height: h });
     }
   });
-
-  useEffect(() => {
-    wasm.api?.set_workspace_size(workspaceSize.width, workspaceSize.height);
-  }, [workspaceSize.width, workspaceSize.height]);
 
   return (
     <div
