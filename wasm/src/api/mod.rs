@@ -3,7 +3,6 @@ use std::rc::Rc;
 use std::vec;
 
 use super::app::App;
-use image::{ImageBuffer, Rgba};
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
 
 use web_sys::ImageData;
