@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useRef, useMemo, RefObject } from "react";
+import { ReactNode, useEffect, useRef, RefObject } from "react";
 import { ContextMenuContext } from "../components/ContextMenu";
 
 export function useRightClick<T extends HTMLElement>(callback: (event: MouseEvent) => unknown) {
