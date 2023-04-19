@@ -10,6 +10,7 @@ const YELLOW: Pixel = [255, 255, 0, 255];
 const GREY_1: Pixel = [135, 135, 135, 255];
 const GREY_2: Pixel = [90, 90, 90, 255];
 const BLACK: Pixel = [0, 0, 0, 255];
+const WHITE: Pixel = [255, 255, 255, 255];
 
 pub struct Workspace {
     project: Rc<RefCell<Project>>,
@@ -87,6 +88,16 @@ impl Workspace {
             return Some(ALPHA);
         }
 
+        // Selection
+        if self
+            .project
+            .borrow()
+            .selection
+            .pixel_is_on_border(rel_x as u32, rel_y as u32)
+        {
+            return Some(get_selection_pixel(rel_x as u32, rel_y as u32));
+        }
+
         let p = self
             .project
             .borrow()
@@ -121,6 +132,15 @@ fn get_background_pixel(x: u32, y: u32) -> Pixel {
         GREY_1
     } else {
         GREY_2
+    }
+}
+
+fn get_selection_pixel(x: u32, y: u32) -> Pixel {
+    const SQUARE_SIZE: u32 = 5;
+    if ((x / SQUARE_SIZE) + (y / SQUARE_SIZE)).rem_euclid(2) == 0 {
+        [255, 255, 255, 210]
+    } else {
+        [0, 0, 0, 210]
     }
 }
 
