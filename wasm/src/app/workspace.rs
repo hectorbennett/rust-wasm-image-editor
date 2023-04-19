@@ -64,7 +64,7 @@ impl Workspace {
         if rel_x < 0 || rel_y < 0 {
             return Some([0, 0, 0, 0]);
         }
-        if rel_x > project_width || rel_y > project_height as i32 {
+        if rel_x > project_width || rel_y > project_height {
             return Some([0, 0, 0, 0]);
         }
 

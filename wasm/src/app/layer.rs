@@ -111,8 +111,8 @@ impl Layer {
 
     pub fn coord_is_on_outline(&self, x: i32, y: i32) -> bool {
         let rect = [
-            self.left as i32,
-            self.top as i32,
+            self.left,
+            self.top,
             self.width as i32,
             self.height as i32,
         ];
