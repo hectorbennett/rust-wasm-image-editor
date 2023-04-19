@@ -2,6 +2,7 @@
 import { IconColorPicker } from "@tabler/icons";
 
 import { Tool, ToolEventParams } from ".";
+import { getRelativeMouseCoords } from "./utils";
 
 export const eye_dropper: Tool = {
   name: "eye_dropper",
@@ -9,9 +10,12 @@ export const eye_dropper: Tool = {
   icon: IconColorPicker,
   events: {
     onClick: function ({ event, api }: ToolEventParams) {
-      const target = event.target as HTMLCanvasElement;
-      const x = event.nativeEvent.clientX - target.offsetLeft;
-      const y = event.nativeEvent.clientY - target.offsetTop;
+      const [x, y] = getRelativeMouseCoords(
+        event,
+        api.state.workspace.zoom,
+        api.state.workspace.x,
+        api.state.workspace.y,
+      );
       api.eye_dropper(x, y);
     },
   },
