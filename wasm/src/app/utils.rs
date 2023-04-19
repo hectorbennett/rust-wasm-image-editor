@@ -17,8 +17,34 @@ mod generate_uid_tests {
 }
 
 pub fn get_1d_index_from_2d_coord(width: u32, x: u32, y: u32) -> usize {
-    // todo: shall we rename this function?
+    // todo: shall we rename this function? Shall we allow negative coords
     ((y * width) + x) as usize
+}
+
+pub fn coord_is_on_border_of_rect(rect: [i32; 4], coord: [i32; 2]) -> bool {
+    // check if the coord lies on the edge of the rect.
+    let left = rect[0];
+    let top = rect[1];
+    let width = rect[2];
+    let height = rect[3];
+    let right = left + width;
+    let bottom = top + height;
+    let x = coord[0];
+    let y = coord[1];
+
+    let is_on_x: bool = x == left || x == right;
+    let is_on_y: bool = y == top || y == bottom;
+
+    let is_in_x: bool = x >= left && x <= right;
+    let is_in_y: bool = y >= top && y <= bottom;
+
+    is_on_x && is_in_y || is_on_y && is_in_x
+}
+
+pub fn coord_is_on_outline_of_rect(rect: [i32; 4], coord: [i32; 2]) -> bool {
+    // check if the coord lies one pixel outside of the rect
+    let expanded_rect = [rect[0] - 1, rect[1] - 1, rect[2] + 1, rect[3] + 1];
+    coord_is_on_border_of_rect(expanded_rect, coord)
 }
 
 #[cfg(test)]
@@ -78,6 +104,7 @@ fn blend_colour_channel(colour_fg: f32, colour_bg: f32, alpha_fg: f32, alpha_bg:
 }
 
 pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
+    /* rgba blend 2 pixels */
     if pixel_fg[3] == 255 || pixel_bg[3] == 0 {
         return pixel_fg;
     }

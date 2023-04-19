@@ -19,11 +19,13 @@ use super::{
     },
     history::History,
     project::Project,
+    workspace::Workspace,
 };
 
 pub struct ProjectController {
     pub project: Rc<RefCell<Project>>,
     pub history: History,
+    pub workspace: Workspace,
 }
 
 // Layers
@@ -70,9 +72,21 @@ impl ProjectController {
         self.history.execute();
     }
 
-    pub fn move_active_layer(&mut self, move_x: i32, move_y: i32) {
-        let pos_x: i32 = move_x + self.project.borrow_mut().get_active_layer_mut().unwrap().left;
-        let pos_y: i32 = move_y + self.project.borrow_mut().get_active_layer_mut().unwrap().top;
+    pub fn move_active_layer(&mut self, delta_x: i32, delta_y: i32) {
+        let pos_x: i32 = delta_x
+            + self
+                .project
+                .borrow_mut()
+                .get_active_layer_mut()
+                .unwrap()
+                .left;
+        let pos_y: i32 = delta_y
+            + self
+                .project
+                .borrow_mut()
+                .get_active_layer_mut()
+                .unwrap()
+                .top;
         self.set_active_layer_position(pos_x, pos_y);
     }
 
@@ -128,9 +142,12 @@ impl ProjectController {
 
 impl ProjectController {
     pub fn new(project: Project, history: History) -> ProjectController {
+        let p = Rc::new(RefCell::new(project));
+        let workspace = Workspace::new(Rc::clone(&p));
         ProjectController {
-            project: Rc::new(RefCell::new(project)),
+            project: p,
             history,
+            workspace,
         }
     }
 
