@@ -15,7 +15,6 @@ export interface ToolEventParams {
   ctx: CanvasRenderingContext2D;
   event: React.MouseEvent;
   api: Api;
-  zoom: number;
 }
 
 export interface ToolEvents {

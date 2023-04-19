@@ -64,7 +64,7 @@ export default function Workspace() {
         const func = tools.activeTool.events[eventName as keyof ToolEvents] as (
           params: ToolEventParams,
         ) => void;
-        func({ ctx, event, api: wasm.api, zoom: app.zoom });
+        func({ ctx, event, api: wasm.api });
       },
     ]),
   );

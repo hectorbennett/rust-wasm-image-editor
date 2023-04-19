@@ -10,20 +10,30 @@ let currY = 0;
 let drawing = false;
 
 const events = {
-  onMouseDown: function ({ event, zoom }: ToolEventParams) {
-    const [x, y] = getRelativeMouseCoords(event, zoom);
+  onMouseDown: function ({ event, api }: ToolEventParams) {
+    const [x, y] = getRelativeMouseCoords(
+      event,
+      api.state.workspace.zoom,
+      api.state.workspace.x,
+      api.state.workspace.y,
+    );
     drawing = true;
     startX = x;
     startY = y;
     currX = x;
     currY = y;
   },
-  onMouseMove: function ({ event, api, zoom }: ToolEventParams) {
+  onMouseMove: function ({ event, api }: ToolEventParams) {
     if (!drawing) {
       return;
     }
     [startX, startY] = [currX, currY];
-    [currX, currY] = getRelativeMouseCoords(event, zoom);
+    [currX, currY] = getRelativeMouseCoords(
+      event,
+      api.state.workspace.zoom,
+      api.state.workspace.x,
+      api.state.workspace.y,
+    );
     move_active_layer(api);
   },
   onMouseUp: function ({ api }: ToolEventParams) {

@@ -10,7 +10,6 @@ const YELLOW: Pixel = [255, 255, 0, 255];
 const GREY_1: Pixel = [135, 135, 135, 255];
 const GREY_2: Pixel = [90, 90, 90, 255];
 const BLACK: Pixel = [0, 0, 0, 255];
-const WHITE: Pixel = [255, 255, 255, 255];
 
 pub struct Workspace {
     project: Rc<RefCell<Project>>,
@@ -95,7 +94,7 @@ impl Workspace {
             .selection
             .pixel_is_on_border(rel_x as u32, rel_y as u32)
         {
-            return Some(get_selection_pixel(rel_x as u32, rel_y as u32));
+            return Some(get_selection_pixel(x, y));
         }
 
         let p = self
@@ -110,7 +109,7 @@ impl Workspace {
         }
 
         /* if not, blend with the background checkerboard */
-        let c = get_background_pixel(rel_x as u32, rel_y as u32);
+        let c = get_background_pixel(x, y);
         Some(blend_pixels(c, p))
     }
 
