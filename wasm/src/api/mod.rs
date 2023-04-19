@@ -285,6 +285,15 @@ impl Api {
             .scroll(delta_x, delta_y);
     }
 
+    pub fn position_workspace(&mut self, x: i32, y: i32) {
+        self.app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .workspace
+            .set_position(x, y);
+        self.render_to_canvas();
+    }
+
     pub fn zoom_workspace(&mut self, zoom: u32) {
         self.app
             .get_active_project_controller_mut()
@@ -310,9 +319,12 @@ impl Api {
         let width: u32 = canvas.width();
         let height: u32 = canvas.height();
 
-        let workspace = &mut self.app.get_active_project_controller_mut().unwrap().workspace;
+        let workspace = &mut self
+            .app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .workspace;
         workspace.resize(width, height);
-        workspace.center_canvas();
 
         let context = canvas
             .get_context("2d")

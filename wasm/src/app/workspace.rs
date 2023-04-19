@@ -37,6 +37,11 @@ impl Workspace {
         self.height = height;
     }
 
+    pub fn set_position(&mut self, x: i32, y: i32) {
+        self.x = x;
+        self.y = y;
+    }
+
     pub fn scroll(&mut self, delta_x: i32, delta_y: i32) {
         self.x += delta_x;
         self.y += delta_y;

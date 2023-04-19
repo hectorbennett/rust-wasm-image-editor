@@ -1,23 +1,11 @@
-import { useState, useRef, useEffect } from "react";
+import { useRef } from "react";
 import { NumberInput, Group, ActionIcon, NumberInputHandlers } from "@mantine/core";
 import { AppContext } from "../../context/app";
+import { WasmContext } from "../../context/wasm";
 
 function Zoom() {
   const app = AppContext.useContainer();
-  const [value, setValue] = useState<number>(100);
   const handlers = useRef<NumberInputHandlers>();
-
-  useEffect(() => {
-    if (value !== app.zoom) {
-      app.setZoom(value);
-    }
-  }, [value]);
-
-  useEffect(() => {
-    if (value != app.zoom) {
-      setValue(app.zoom);
-    }
-  }, [app.zoom]);
 
   return (
     <Group spacing={5}>
@@ -27,14 +15,15 @@ function Zoom() {
 
       <NumberInput
         hideControls
-        value={value}
-        onChange={(val) => setValue(val || 100)}
+        value={app.zoom}
+        onChange={(value) => app.setZoom(value || 100)}
         handlersRef={handlers}
         max={1000}
         min={10}
         step={10}
-        styles={{ input: { width: "3rem", textAlign: "center" } }}
+        styles={{ input: { width: "4rem", textAlign: "center" } }}
         size="xs"
+        rightSection="%"
       />
 
       <ActionIcon size={30} variant="default" onClick={() => handlers.current?.increment()}>
@@ -44,9 +33,32 @@ function Zoom() {
   );
 }
 
+function Position() {
+  const wasm = WasmContext.useContainer();
+  return (
+    <Group spacing={5}>
+      <NumberInput
+        value={wasm.state?.workspace.x}
+        onChange={(value) => wasm.api?.position_workspace(value || 0, wasm.state?.workspace.y || 0)}
+        styles={{ input: { width: "4rem", textAlign: "center" } }}
+        size="xs"
+        rightSection="x"
+      />
+      <NumberInput
+        value={wasm.state?.workspace.y}
+        onChange={(value) => wasm.api?.position_workspace(wasm.state?.workspace.x || 0, value || 0)}
+        styles={{ input: { width: "4rem", textAlign: "center" } }}
+        size="xs"
+        rightSection="y"
+      />
+    </Group>
+  );
+}
+
 export default function Footer() {
   return (
     <div style={{ height: "100%", display: "flex", alignItems: "center", justifyContent: "end" }}>
+      <Position />
       <Zoom />
     </div>
   );
