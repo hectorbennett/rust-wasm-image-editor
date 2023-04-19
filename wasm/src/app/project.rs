@@ -89,9 +89,8 @@ impl Project {
     pub fn to_png(&self) -> Vec<u8> {
         let img = self.get_image();
         let mut bytes: Vec<u8> = Vec::new();
-        match img.write_to(&mut Cursor::new(&mut bytes), image::ImageOutputFormat::Png) {
-            Err(e) => println!("{:?}", e),
-            _ => (),
+        if let Err(e) = img.write_to(&mut Cursor::new(&mut bytes), image::ImageOutputFormat::Png) {
+            println!("{:?}", e)
         }
         bytes
     }
