@@ -81,10 +81,17 @@ impl App {
         self.active_project_uid = uid;
     }
 
-    pub fn get_active_project_controller(&mut self) -> Option<&mut ProjectController> {
-        match self.projects.get_mut(&self.active_project_uid.unwrap()) {
+    pub fn get_active_project_controller(&self) -> Option<&ProjectController> {
+        match self.active_project_uid {
             None => None,
-            Some(controller) => Some(controller),
+            Some(uid) => self.projects.get(&uid),
+        }
+    }
+
+    pub fn get_active_project_controller_mut(&mut self) -> Option<&mut ProjectController> {
+        match self.active_project_uid {
+            None => None,
+            Some(uid) => self.projects.get_mut(&uid),
         }
     }
 

@@ -24,6 +24,7 @@ export interface ToolEvents {
   onMouseMove?: (params: ToolEventParams) => void;
   onMouseOut?: (params: ToolEventParams) => void;
   onMouseUp?: (params: ToolEventParams) => void;
+  onScroll?: (params: ToolEventParams) => void;
 }
 
 export interface Tool {

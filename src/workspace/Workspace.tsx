@@ -72,7 +72,7 @@ export default function Workspace() {
   /* re-render canvas on project change */
   useEffect(() => {
     wasm.api?.render_to_canvas();
-  }, [activeProject.activeProject.uid, workspaceSize.width, workspaceSize.height]);
+  }, [activeProject.activeProject.uid, workspaceSize.width, workspaceSize.height, app.zoom]);
 
   useResizeObserver(containerRef, (entry) => {
     const w = entry.contentRect.width;

@@ -5,11 +5,17 @@ use super::project::Project;
 use super::utils::blend_pixels;
 use super::utils::coord_is_on_outline_of_rect;
 
+const ALPHA: Pixel = [0, 0, 0, 0];
+const YELLOW: Pixel = [255, 255, 0, 255];
+const GREY_1: Pixel = [135, 135, 135, 255];
+const GREY_2: Pixel = [90, 90, 90, 255];
+const BLACK: Pixel = [0, 0, 0, 255];
+
 pub struct Workspace {
     project: Rc<RefCell<Project>>,
     pub width: u32,
     pub height: u32,
-    pub zoom: u32,
+    pub zoom: f64,
     pub x: i32,
     pub y: i32,
 }
@@ -20,7 +26,7 @@ impl Workspace {
             project,
             width: 0,
             height: 0,
-            zoom: 100,
+            zoom: 100.0,
             x: 0,
             y: 0,
         }
@@ -29,6 +35,15 @@ impl Workspace {
     pub fn resize(&mut self, width: u32, height: u32) {
         self.width = width;
         self.height = height;
+    }
+
+    pub fn scroll(&mut self, delta_x: i32, delta_y: i32) {
+        self.x = self.x + delta_x;
+        self.y = self.y + delta_y;
+    }
+
+    pub fn zoom(&mut self, zoom: u32) {
+        self.zoom = zoom.into();
     }
 
     pub fn center_canvas(&mut self) {
@@ -41,14 +56,13 @@ impl Workspace {
             return None;
         }
 
-        // Get x and y relative to the project
-        let rel_x: i32 = x as i32 - self.x;
-        let rel_y: i32 = y as i32 - self.y;
+        let rel_x: i32 = ((x as f64 - self.x as f64) / (self.zoom / 100.0)) as i32;
+        let rel_y: i32 = ((y as f64 - self.y as f64) / (self.zoom / 100.0)) as i32;
 
         // Render a yellow Active layer border
         if let Some(layer) = self.project.borrow().get_active_layer() {
             if layer.coord_is_on_outline(rel_x, rel_y) {
-                return Some([255, 255, 0, 255]);
+                return Some(YELLOW);
             }
         }
 
@@ -57,15 +71,15 @@ impl Workspace {
         let project_height = self.project.borrow().height as i32;
         let project_rect = [0, 0, project_width, project_height];
         if coord_is_on_outline_of_rect(project_rect, [rel_x, rel_y]) {
-            return Some([0, 0, 0, 255]);
+            return Some(BLACK);
         }
 
         // zone outside the project
         if rel_x < 0 || rel_y < 0 {
-            return Some([0, 0, 0, 0]);
+            return Some(ALPHA);
         }
         if rel_x > project_width || rel_y > project_height {
-            return Some([0, 0, 0, 0]);
+            return Some(ALPHA);
         }
 
         let p = self
@@ -98,8 +112,6 @@ impl Workspace {
 
 fn get_background_pixel(x: u32, y: u32) -> Pixel {
     const SQUARE_SIZE: u32 = 10;
-    const GREY_1: Pixel = [135, 135, 135, 255];
-    const GREY_2: Pixel = [90, 90, 90, 255];
     if ((x / SQUARE_SIZE) + (y / SQUARE_SIZE)).rem_euclid(2) == 0 {
         GREY_1
     } else {
@@ -199,10 +211,33 @@ mod tests {
         workspace.resize(3, 3);
         workspace.center_canvas();
 
-        // assert_eq!(workspace.to_vec(), vec![
-        //     0, 0, 0, 0,         255, 255, 0, 255,       255, 255, 0, 255,
-        //     255, 255, 0, 255,   0, 0, 0, 0,             255, 255, 0, 255,
-        //     255, 255, 0, 255,   255, 255, 0, 255,       255, 255, 0, 255]
-        // );
+        let v = [
+            [YELLOW, YELLOW, YELLOW],
+            [YELLOW, GREY_1, YELLOW],
+            [YELLOW, YELLOW, YELLOW],
+        ];
+
+        let flattened = v.into_iter().flatten().flatten().collect::<Vec<u8>>();
+        assert_eq!(workspace.to_vec(), flattened);
+    }
+
+    #[test]
+    fn zoom() {
+        /* create a 2x2 project in a 4x4 workspace and zoom it to 200% */
+        let project = Rc::new(RefCell::new(Project::new("Untitled", 1, 1)));
+        let mut workspace = Workspace::new(Rc::clone(&project));
+        workspace.resize(4, 4);
+        workspace.zoom(200);
+        workspace.center_canvas();
+
+        let v = [
+            [YELLOW, YELLOW, YELLOW, YELLOW],
+            [YELLOW, GREY_1, GREY_1, YELLOW],
+            [YELLOW, GREY_1, GREY_1, YELLOW],
+            [YELLOW, YELLOW, YELLOW, YELLOW],
+        ];
+
+        let flattened = v.into_iter().flatten().flatten().collect::<Vec<u8>>();
+        assert_eq!(workspace.to_vec(), flattened);
     }
 }

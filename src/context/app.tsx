@@ -98,7 +98,7 @@ function useImage() {
 }
 
 function useApp() {
-  const [zoom, setZoom] = useState<number>(100);
+  const wasm = WasmContext.useContainer();
   return {
     exit: function exit() {
       console.log("exit");
@@ -107,8 +107,8 @@ function useApp() {
     edit: useEdit(),
     filters: useFilters(),
     image: useImage(),
-    zoom,
-    setZoom,
+    zoom: wasm.state?.workspace.zoom || 100,
+    setZoom: (zoom: number) => wasm.api?.zoom_workspace(zoom),
   };
 }
 

@@ -1,5 +1,4 @@
-use crate::app::{colour::Colour, timer::Timer, workspace::Workspace};
-use std::rc::Rc;
+use crate::app::{colour::Colour, timer::Timer};
 use std::vec;
 
 use super::app::App;
@@ -53,7 +52,7 @@ impl Api {
     pub fn resize_canvas(&mut self, width: u32, height: u32) {
         web_sys::console::time_with_label("Api::resize_canvas");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .resize_canvas(width, height);
         web_sys::console::time_end_with_label("Api::resize_canvas");
@@ -62,14 +61,14 @@ impl Api {
 
     pub fn create_layer(&mut self) -> u64 {
         let _timer = Timer::new("Api::create_layer");
-        let project = self.app.get_active_project_controller().unwrap();
+        let project = self.app.get_active_project_controller_mut().unwrap();
         project.create_layer();
         project.project.borrow().layers.last().unwrap().uid
     }
 
     pub fn delete_layer(&mut self, layer_uid: u64) {
         let _timer = Timer::new("Api::delete_layer");
-        let project = self.app.get_active_project_controller().unwrap();
+        let project = self.app.get_active_project_controller_mut().unwrap();
         project.delete_layer(layer_uid);
     }
 
@@ -77,7 +76,7 @@ impl Api {
         web_sys::console::time_with_label("Api::fill_selection");
         let colour = self.app.primary_colour;
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .fill_selection(&colour);
         web_sys::console::time_end_with_label("Api::fill_selection");
@@ -92,7 +91,7 @@ impl Api {
     pub fn move_active_layer(&mut self, move_x: i32, move_y: i32) {
         web_sys::console::time_with_label("Api::move_layer");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .move_active_layer(move_x, move_y);
         web_sys::console::time_end_with_label("Api::move_layer");
@@ -102,7 +101,7 @@ impl Api {
     pub fn select_rect(&mut self, x: u32, y: u32, width: u32, height: u32) {
         web_sys::console::time_with_label("Api::select_rect");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .select_rect(x, y, width, height);
         web_sys::console::time_end_with_label("Api::select_rect");
@@ -112,7 +111,7 @@ impl Api {
     pub fn select_ellipse(&mut self, x: u32, y: u32, width: u32, height: u32) {
         web_sys::console::time_with_label("Api::select_rect");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .select_ellipse(x, y, width, height);
         web_sys::console::time_end_with_label("Api::select_rect");
@@ -122,7 +121,7 @@ impl Api {
     pub fn select_all(&mut self) {
         web_sys::console::time_with_label("Api::select_all");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .select_all();
         web_sys::console::time_end_with_label("Api::select_all");
@@ -132,7 +131,7 @@ impl Api {
     pub fn select_none(&mut self) {
         web_sys::console::time_with_label("Api::select_none");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .select_none();
         web_sys::console::time_end_with_label("Api::select_none");
@@ -142,7 +141,7 @@ impl Api {
     pub fn select_inverse(&mut self) {
         web_sys::console::time_with_label("Api::select_inverse");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .select_inverse();
         web_sys::console::time_end_with_label("Api::select_inverse");
@@ -152,7 +151,7 @@ impl Api {
     pub fn set_active_layer(&mut self, layer_uid: u64) {
         web_sys::console::time_with_label("Api::set_active_layer");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .select_layer(layer_uid);
         web_sys::console::time_end_with_label("Api::set_active_layer");
@@ -162,7 +161,7 @@ impl Api {
     pub fn rename_layer(&mut self, layer_uid: u64, name: &str) {
         web_sys::console::time_with_label("Api::rename_layer");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .rename_layer(layer_uid, name);
         web_sys::console::time_end_with_label("Api::rename_layer");
@@ -171,7 +170,7 @@ impl Api {
     pub fn set_layer_visibile(&mut self, layer_uid: u64, visible: bool) {
         web_sys::console::time_with_label("Api::set_layer_visibile");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .set_layer_visibile(layer_uid, visible);
         web_sys::console::time_end_with_label("Api::set_layer_visibile");
@@ -181,7 +180,7 @@ impl Api {
     pub fn set_layer_locked(&mut self, layer_uid: u64, locked: bool) {
         web_sys::console::time_with_label("Api::set_layer_locked");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .set_layer_locked(layer_uid, locked);
         web_sys::console::time_end_with_label("Api::set_layer_locked");
@@ -189,14 +188,14 @@ impl Api {
 
     pub fn undo(&mut self) {
         web_sys::console::time_with_label("Api::undo");
-        self.app.get_active_project_controller().unwrap().undo();
+        self.app.get_active_project_controller_mut().unwrap().undo();
         web_sys::console::time_end_with_label("Api::undo");
         self.render_to_canvas();
     }
 
     pub fn redo(&mut self) {
         web_sys::console::time_with_label("Api::undo");
-        self.app.get_active_project_controller().unwrap().redo();
+        self.app.get_active_project_controller_mut().unwrap().redo();
         web_sys::console::time_end_with_label("Api::undo");
         self.render_to_canvas();
     }
@@ -204,7 +203,7 @@ impl Api {
     // #[wasm_bindgen(getter)]
     // pub fn image_data(&mut self) -> Clamped<Vec<u8>> {
     //     let _timer = Timer::new("Api::image_data");
-    //     let _project = self.app.get_active_project_controller();
+    //     let _project = self.app.get_active_project_controller_mut();
     //     match _project {
     //         None => Clamped(vec![]),
     //         Some(project) => {
@@ -217,7 +216,7 @@ impl Api {
     pub fn pick_colour(&mut self, x: u32, y: u32) -> Vec<u8> {
         let _timer = Timer::new("Api::pick_colour");
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .project
             .borrow()
@@ -229,7 +228,7 @@ impl Api {
         let _timer = Timer::new("Api::eye_dropper");
         let colour = self
             .app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .project
             .borrow()
@@ -258,7 +257,7 @@ impl Api {
 
     pub fn to_json(&mut self) -> String {
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .project
             .borrow()
@@ -271,11 +270,27 @@ impl Api {
 
     pub fn to_postcard(&mut self) -> Vec<u8> {
         self.app
-            .get_active_project_controller()
+            .get_active_project_controller_mut()
             .unwrap()
             .project
             .borrow()
             .to_postcard()
+    }
+
+    pub fn scroll_workspace(&mut self, delta_x: i32, delta_y: i32) {
+        self.app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .workspace
+            .scroll(delta_x, delta_y);
+    }
+
+    pub fn zoom_workspace(&mut self, zoom: u32) {
+        self.app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .workspace
+            .zoom(zoom);
     }
 
     pub fn render_to_canvas(&mut self) {
@@ -295,9 +310,7 @@ impl Api {
         let width: u32 = canvas.width();
         let height: u32 = canvas.height();
 
-        let mut workspace = Workspace::new(Rc::clone(
-            &self.app.get_active_project_controller().unwrap().project,
-        ));
+        let workspace = &mut self.app.get_active_project_controller_mut().unwrap().workspace;
         workspace.resize(width, height);
         workspace.center_canvas();
 

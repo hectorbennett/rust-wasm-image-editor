@@ -1,6 +1,9 @@
 use std::collections::HashMap;
 
-use crate::app::{history::History, layer::Layer, project_controller::ProjectController, App};
+use crate::app::{
+    history::History, layer::Layer, project_controller::ProjectController, workspace::Workspace,
+    App,
+};
 use serde::Serialize;
 use tsify::Tsify;
 use wasm_bindgen::{prelude::wasm_bindgen, JsValue};
@@ -19,6 +22,7 @@ impl ApiSerializer {
 pub struct ApiSerializerSchema {
     active_project_uid: Option<String>,
     projects: HashMap<String, ProjectSerializer>,
+    workspace: WorkspaceSerializer,
     primary_colour: [u8; 4],
 }
 
@@ -33,10 +37,16 @@ impl ApiSerializerSchema {
         let active_project_uid: Option<String> = app.active_project_uid.map(|uid| uid.to_string());
         let primary_colour: [u8; 4] = app.primary_colour.as_rgba();
 
+        let workspace = match app.get_active_project_controller() {
+            None => WorkspaceSerializer::blank(),
+            Some(p) => WorkspaceSerializer::from_workspace(&p.workspace),
+        };
+
         ApiSerializerSchema {
             projects,
             active_project_uid,
             primary_colour,
+            workspace,
         }
     }
 }
@@ -126,4 +136,29 @@ impl HistorySerializer {
 #[derive(Serialize, Debug, Tsify)]
 struct CommandSerializer {
     name: String,
+}
+
+#[derive(Serialize, Debug, Tsify)]
+struct WorkspaceSerializer {
+    zoom: f64,
+    x: i32,
+    y: i32,
+}
+
+impl WorkspaceSerializer {
+    pub fn from_workspace(workspace: &Workspace) -> WorkspaceSerializer {
+        WorkspaceSerializer {
+            zoom: workspace.zoom,
+            x: workspace.x,
+            y: workspace.y,
+        }
+    }
+
+    pub fn blank() -> WorkspaceSerializer {
+        WorkspaceSerializer {
+            zoom: 0.0,
+            x: 0,
+            y: 0,
+        }
+    }
 }
