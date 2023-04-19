@@ -283,9 +283,10 @@ impl Api {
             .unwrap()
             .workspace
             .scroll(delta_x, delta_y);
+        self.render_to_canvas();
     }
 
-    pub fn position_workspace(&mut self, x: i32, y: i32) {
+    pub fn set_workspace_position(&mut self, x: i32, y: i32) {
         self.app
             .get_active_project_controller_mut()
             .unwrap()
@@ -294,12 +295,20 @@ impl Api {
         self.render_to_canvas();
     }
 
-    pub fn zoom_workspace(&mut self, zoom: u32) {
+    pub fn zoom_workspace(&mut self, zoom_delta: i32) {
         self.app
             .get_active_project_controller_mut()
             .unwrap()
             .workspace
-            .zoom(zoom);
+            .zoom(zoom_delta);
+    }
+
+    pub fn set_workspace_zoom(&mut self, zoom: u32) {
+        self.app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .workspace
+            .set_zoom(zoom);
     }
 
     pub fn render_to_canvas(&mut self) {

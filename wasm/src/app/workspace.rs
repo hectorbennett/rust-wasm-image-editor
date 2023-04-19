@@ -1,4 +1,4 @@
-use std::{cell::RefCell, rc::Rc};
+use std::{cell::RefCell, cmp, rc::Rc};
 
 use super::pixel_buffer::Pixel;
 use super::project::Project;
@@ -47,7 +47,12 @@ impl Workspace {
         self.y += delta_y;
     }
 
-    pub fn zoom(&mut self, zoom: u32) {
+    pub fn zoom(&mut self, zoom_delta: i32) {
+        /* zoom in and out, negative values zoom out, positive values zoom in */
+        self.zoom = cmp::max(self.zoom as i32 + zoom_delta, 0) as f64;
+    }
+
+    pub fn set_zoom(&mut self, zoom: u32) {
         self.zoom = zoom.into();
     }
 

@@ -39,14 +39,14 @@ function Position() {
     <Group spacing={5}>
       <NumberInput
         value={wasm.state?.workspace.x}
-        onChange={(value) => wasm.api?.position_workspace(value || 0, wasm.state?.workspace.y || 0)}
+        onChange={(value) => wasm.api?.set_workspace_position(value || 0, wasm.state?.workspace.y || 0)}
         styles={{ input: { width: "4rem", textAlign: "center" } }}
         size="xs"
         rightSection="x"
       />
       <NumberInput
         value={wasm.state?.workspace.y}
-        onChange={(value) => wasm.api?.position_workspace(wasm.state?.workspace.x || 0, value || 0)}
+        onChange={(value) => wasm.api?.set_workspace_position(wasm.state?.workspace.x || 0, value || 0)}
         styles={{ input: { width: "4rem", textAlign: "center" } }}
         size="xs"
         rightSection="y"

@@ -53,15 +53,32 @@ export default function Workspace() {
     setApiInted(true);
   }, [canvasRef.current, wasm.api, apiInited]);
 
+  const default_events: ToolEvents = {
+    onWheel: function ({ event }: ToolEventParams) {
+      /* todo: can we do some better TypeScript here - e.g. dynamic event type with <T> syntax? */
+      const e = event as unknown as WheelEvent;
+
+      if (e.metaKey) {
+        // zoom workspace
+        wasm.api?.zoom_workspace(-e.deltaY);
+      } else {
+        // scroll workspace
+        wasm.api?.scroll_workspace(-e.deltaX, -e.deltaY);
+      }
+    },
+  };
+
+  const combined_events = { ...default_events, ...tools.activeTool.events };
+
   const events = Object.fromEntries(
-    Object.keys(tools.activeTool.events).map((eventName) => [
+    Object.keys(combined_events).map((eventName) => [
       eventName,
       (event: React.MouseEvent) => {
         const ctx = canvasRef.current?.getContext("2d");
         if (!ctx || !wasm.api) {
           return;
         }
-        const func = tools.activeTool.events[eventName as keyof ToolEvents] as (
+        const func = combined_events[eventName as keyof ToolEvents] as (
           params: ToolEventParams,
         ) => void;
         func({ ctx, event, api: wasm.api });
