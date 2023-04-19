@@ -69,20 +69,10 @@ export default function Workspace() {
     ]),
   );
 
-  //   const centerCanvas = () => {
-  //     containerRef.current?.scrollIntoView({ behavior: "auto", block: "center", inline: "center" });
-  //   };
-
   /* re-render canvas on project change */
-  //   useEffect(() => {
-  //     wasm.api?.render_to_canvas();
-  //     // centerCanvas();
-  //     // app.setZoom(100);
-  //   }, [
-  //     activeProject.activeProject.uid,
-  //     activeProject.activeProject.width,
-  //     activeProject.activeProject.height,
-  //   ]);
+  useEffect(() => {
+    wasm.api?.render_to_canvas();
+  }, [activeProject.activeProject.uid, workspaceSize.width, workspaceSize.height]);
 
   useResizeObserver(containerRef, (entry) => {
     const w = entry.contentRect.width;
