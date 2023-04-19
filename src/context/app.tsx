@@ -52,6 +52,17 @@ function useFile() {
     export: function _export() {
       console.log("export");
     },
+    export_png: function save() {
+      if (!wasm.api) {
+        return;
+      }
+      const link = document.createElement("a");
+      const file = new Blob([wasm.api.to_png()], { type: "image/png" });
+      link.href = URL.createObjectURL(file);
+      link.download = `${"Untitled"}.png`;
+      link.click();
+      URL.revokeObjectURL(link.href);
+    },
     close: function close() {
       console.log("close");
     },

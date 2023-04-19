@@ -220,7 +220,8 @@ impl Api {
             .unwrap()
             .project
             .borrow()
-            .get_compiled_pixel(x, y)
+            .get_pixel(x, y)
+            .unwrap()
             .to_vec()
     }
 
@@ -232,7 +233,8 @@ impl Api {
             .unwrap()
             .project
             .borrow()
-            .get_compiled_pixel(x, y);
+            .get_pixel(x, y)
+            .unwrap();
 
         self.app.primary_colour = Colour::from_rgba_array(colour);
         self.render_to_canvas();
@@ -275,6 +277,15 @@ impl Api {
             .project
             .borrow()
             .to_postcard()
+    }
+
+    pub fn to_png(&self) -> Vec<u8> {
+        self.app
+            .get_active_project_controller()
+            .unwrap()
+            .project
+            .borrow()
+            .to_png()
     }
 
     pub fn scroll_workspace(&mut self, delta_x: i32, delta_y: i32) {

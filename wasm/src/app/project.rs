@@ -1,7 +1,7 @@
-use std::ops::Deref;
-
 use image::{ImageBuffer, RgbaImage};
 use serde::{Deserialize, Serialize};
+use std::io::Cursor;
+use std::ops::Deref;
 
 use postcard;
 
@@ -82,29 +82,15 @@ impl Project {
 
     pub fn get_image(&self) -> RgbaImage {
         ImageBuffer::from_fn(self.width, self.height, |x, y| {
-            image::Rgba(self.get_compiled_pixel(x, y))
+            image::Rgba(self.get_pixel(x, y).unwrap())
         })
     }
 
-    pub fn get_compiled_pixel(&self, x: u32, y: u32) -> Pixel {
-        // layer border
-        // if let Some(layer) = self.get_active_layer() {
-        //     if layer.pixel_is_on_border(x, y) {
-        //         return [255, 255, 0, 255];
-        //     }
-        // }
-
-        // selection border
-        if self.selection.pixel_is_on_border(x, y) {
-            return [0, 0, 0, 255];
-        }
-
-        let mut output: [u8; 4] = [0, 0, 0, 0];
-        for layer in self.layers.iter().filter(|l| l.visible) {
-            let pixel = layer.get_pixel_from_canvas_coordinates(x, y);
-            output = blend_pixels(output, pixel);
-        }
-        output
+    pub fn to_png(&self) -> Vec<u8> {
+        let img = self.get_image();
+        let mut bytes: Vec<u8> = Vec::new();
+        img.write_to(&mut Cursor::new(&mut bytes), image::ImageOutputFormat::Png);
+        bytes
     }
 
     pub fn get_pixel(&self, x: u32, y: u32) -> Option<Pixel> {
