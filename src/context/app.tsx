@@ -1,6 +1,5 @@
 import { createContainer } from "unstated-next";
 import { WasmContext } from "./wasm";
-import { useState } from "react";
 
 function readFile(file: File): Promise<ArrayBuffer> {
   return new Promise((resolve) => {

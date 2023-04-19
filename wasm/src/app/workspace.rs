@@ -38,8 +38,8 @@ impl Workspace {
     }
 
     pub fn scroll(&mut self, delta_x: i32, delta_y: i32) {
-        self.x = self.x + delta_x;
-        self.y = self.y + delta_y;
+        self.x += delta_x;
+        self.y += delta_y;
     }
 
     pub fn zoom(&mut self, zoom: u32) {
