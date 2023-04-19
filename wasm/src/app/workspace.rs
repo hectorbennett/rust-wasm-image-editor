@@ -3,6 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use super::pixel_buffer::Pixel;
 use super::project::Project;
 use super::utils::blend_pixels;
+use super::utils::coord_is_on_outline_of_rect;
 
 pub struct Workspace {
     project: Rc<RefCell<Project>>,
@@ -40,23 +41,30 @@ impl Workspace {
             return None;
         }
 
-        // x and y relative to the project
+        // Get x and y relative to the project
         let rel_x: i32 = x as i32 - self.x;
         let rel_y: i32 = y as i32 - self.y;
 
-        // active layer border
+        // Render a yellow Active layer border
         if let Some(layer) = self.project.borrow().get_active_layer() {
-            if layer.coord_is_on_border(rel_x, rel_y) {
+            if layer.coord_is_on_outline(rel_x, rel_y) {
                 return Some([255, 255, 0, 255]);
             }
+        }
+
+        // Render a black Project border
+        let project_width = self.project.borrow().width as i32;
+        let project_height = self.project.borrow().height as i32;
+        let project_rect = [0, 0, project_width, project_height];
+        if coord_is_on_outline_of_rect(project_rect, [rel_x, rel_y]) {
+            return Some([0, 0, 0, 255]);
         }
 
         // zone outside the project
         if rel_x < 0 || rel_y < 0 {
             return Some([0, 0, 0, 0]);
         }
-        if rel_x > self.project.borrow().width as i32 || rel_y > self.project.borrow().height as i32
-        {
+        if rel_x > project_width || rel_y > project_height as i32 {
             return Some([0, 0, 0, 0]);
         }
 

@@ -10,6 +10,7 @@ use super::{
     colour::Colour,
     pixel_buffer::{Pixel, PixelBuffer},
     selection::Selection,
+    utils::coord_is_on_outline_of_rect,
     utils::generate_uid,
 };
 
@@ -108,14 +109,14 @@ impl Layer {
         });
     }
 
-    pub fn coord_is_on_border(&self, x: i32, y: i32) -> bool {
-        let is_on_x: bool = x == self.left - 1 || x == self.left + (self.width as i32);
-        let is_on_y: bool = y == self.top - 1 || y == self.top + (self.height as i32);
-
-        let is_in_x: bool = x >= self.left && x <= self.left + (self.width as i32);
-        let is_in_y: bool = y >= self.top && y <= self.top + (self.height as i32);
-
-        is_on_x && is_in_y || is_on_y && is_in_x
+    pub fn coord_is_on_outline(&self, x: i32, y: i32) -> bool {
+        let rect = [
+            self.left as i32,
+            self.top as i32,
+            self.width as i32,
+            self.height as i32,
+        ];
+        coord_is_on_outline_of_rect(rect, [x, y])
     }
 
     pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> Pixel {
