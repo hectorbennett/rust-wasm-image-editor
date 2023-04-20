@@ -1,19 +1,15 @@
-use crate::app::{colour::Colour, timer::Timer};
 use std::vec;
-
-use super::app::App;
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
-
-use web_sys::ImageData;
 extern crate console_error_panic_hook;
-use wasm_bindgen::JsCast;
+use crate::api::canvas::Canvas;
+use crate::app::{colour::Colour, timer::Timer, App};
+pub mod canvas;
 pub mod serialize;
 
 #[wasm_bindgen]
 pub struct Api {
     app: App,
-    canvas_id: String,
-    canvas_inited: bool,
+    canvas: Option<Canvas>,
 }
 
 #[wasm_bindgen]
@@ -23,15 +19,13 @@ impl Api {
         console_error_panic_hook::set_once();
         Api {
             app: App::new(),
-            canvas_inited: false,
-            canvas_id: "".to_string(),
+            canvas: None,
         }
     }
 
-    pub fn init_canvas(&mut self, canvas_id: String) {
+    pub fn init_canvas(&mut self, canvas_id: &str) {
         let _timer = Timer::new("Api::init_canvas");
-        self.canvas_id = canvas_id;
-        self.canvas_inited = true;
+        self.canvas = Some(Canvas::new(canvas_id));
     }
 
     pub fn set_active_project(&mut self, project_uid: u64) {
@@ -56,7 +50,6 @@ impl Api {
             .unwrap()
             .resize_canvas(width, height);
         web_sys::console::time_end_with_label("Api::resize_canvas");
-        self.render_to_canvas();
     }
 
     pub fn create_layer(&mut self) -> u64 {
@@ -80,7 +73,6 @@ impl Api {
             .unwrap()
             .fill_selection(&colour);
         web_sys::console::time_end_with_label("Api::fill_selection");
-        self.render_to_canvas();
     }
 
     pub fn set_primary_colour(&mut self, red: u8, green: u8, blue: u8, alpha: u8) {
@@ -95,7 +87,6 @@ impl Api {
             .unwrap()
             .move_active_layer(move_x, move_y);
         web_sys::console::time_end_with_label("Api::move_layer");
-        self.render_to_canvas();
     }
 
     pub fn select_rect(&mut self, x: u32, y: u32, width: u32, height: u32) {
@@ -105,7 +96,6 @@ impl Api {
             .unwrap()
             .select_rect(x, y, width, height);
         web_sys::console::time_end_with_label("Api::select_rect");
-        self.render_to_canvas();
     }
 
     pub fn select_ellipse(&mut self, x: u32, y: u32, width: u32, height: u32) {
@@ -115,7 +105,6 @@ impl Api {
             .unwrap()
             .select_ellipse(x, y, width, height);
         web_sys::console::time_end_with_label("Api::select_rect");
-        self.render_to_canvas();
     }
 
     pub fn select_all(&mut self) {
@@ -125,7 +114,6 @@ impl Api {
             .unwrap()
             .select_all();
         web_sys::console::time_end_with_label("Api::select_all");
-        self.render_to_canvas();
     }
 
     pub fn select_none(&mut self) {
@@ -135,7 +123,6 @@ impl Api {
             .unwrap()
             .select_none();
         web_sys::console::time_end_with_label("Api::select_none");
-        self.render_to_canvas();
     }
 
     pub fn select_inverse(&mut self) {
@@ -145,7 +132,6 @@ impl Api {
             .unwrap()
             .select_inverse();
         web_sys::console::time_end_with_label("Api::select_inverse");
-        self.render_to_canvas();
     }
 
     pub fn set_active_layer(&mut self, layer_uid: u64) {
@@ -155,7 +141,6 @@ impl Api {
             .unwrap()
             .select_layer(layer_uid);
         web_sys::console::time_end_with_label("Api::set_active_layer");
-        self.render_to_canvas();
     }
 
     pub fn rename_layer(&mut self, layer_uid: u64, name: &str) {
@@ -174,7 +159,6 @@ impl Api {
             .unwrap()
             .set_layer_visibile(layer_uid, visible);
         web_sys::console::time_end_with_label("Api::set_layer_visibile");
-        self.render_to_canvas();
     }
 
     pub fn set_layer_locked(&mut self, layer_uid: u64, locked: bool) {
@@ -190,28 +174,13 @@ impl Api {
         web_sys::console::time_with_label("Api::undo");
         self.app.get_active_project_controller_mut().unwrap().undo();
         web_sys::console::time_end_with_label("Api::undo");
-        self.render_to_canvas();
     }
 
     pub fn redo(&mut self) {
         web_sys::console::time_with_label("Api::undo");
         self.app.get_active_project_controller_mut().unwrap().redo();
         web_sys::console::time_end_with_label("Api::undo");
-        self.render_to_canvas();
     }
-
-    // #[wasm_bindgen(getter)]
-    // pub fn image_data(&mut self) -> Clamped<Vec<u8>> {
-    //     let _timer = Timer::new("Api::image_data");
-    //     let _project = self.app.get_active_project_controller_mut();
-    //     match _project {
-    //         None => Clamped(vec![]),
-    //         Some(project) => {
-    //             let image = project.get_image();
-    //             Clamped(image.into_vec())
-    //         }
-    //     }
-    // }
 
     pub fn pick_colour(&mut self, x: u32, y: u32) -> Vec<u8> {
         let _timer = Timer::new("Api::pick_colour");
@@ -237,7 +206,6 @@ impl Api {
             .unwrap();
 
         self.app.primary_colour = Colour::from_rgba_array(colour);
-        self.render_to_canvas();
     }
 
     pub fn get_layer_thumbnail(&mut self, _layer_uid: u64) -> Clamped<Vec<u8>> {
@@ -294,7 +262,6 @@ impl Api {
             .unwrap()
             .workspace
             .scroll(delta_x, delta_y);
-        self.render_to_canvas();
     }
 
     pub fn set_workspace_position(&mut self, x: i32, y: i32) {
@@ -303,7 +270,6 @@ impl Api {
             .unwrap()
             .workspace
             .set_position(x, y);
-        self.render_to_canvas();
     }
 
     pub fn zoom_workspace(&mut self, zoom_delta: i32) {
@@ -323,43 +289,17 @@ impl Api {
     }
 
     pub fn render_to_canvas(&mut self) {
-        if !self.canvas_inited {
-            return;
+        match &self.canvas {
+            None => (),
+            Some(canvas) => {
+                // let _timer = Timer::new("Api::render_to_canvas");
+                let workspace = &mut self
+                    .app
+                    .get_active_project_controller_mut()
+                    .unwrap()
+                    .workspace;
+                canvas.render_workspace(workspace)
+            }
         }
-
-        let _timer = Timer::new("Api::render_to_canvas");
-        let document = web_sys::window().unwrap().document().unwrap();
-        let canvas = document.get_element_by_id("wasm-canvas").unwrap();
-
-        let canvas: web_sys::HtmlCanvasElement = canvas
-            .dyn_into::<web_sys::HtmlCanvasElement>()
-            .map_err(|_| ())
-            .unwrap();
-
-        let width: u32 = canvas.width();
-        let height: u32 = canvas.height();
-
-        let workspace = &mut self
-            .app
-            .get_active_project_controller_mut()
-            .unwrap()
-            .workspace;
-        workspace.resize(width, height);
-
-        let context = canvas
-            .get_context("2d")
-            .unwrap()
-            .unwrap()
-            .dyn_into::<web_sys::CanvasRenderingContext2d>()
-            .unwrap();
-
-        let v = &workspace.to_vec();
-        if v.is_empty() {
-            return;
-        }
-
-        let data = ImageData::new_with_u8_clamped_array(Clamped(v), workspace.width).unwrap();
-
-        let _result = context.put_image_data(&data, 0.0, 0.0);
     }
 }

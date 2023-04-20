@@ -37,24 +37,11 @@ export interface Tool {
 
 function useTools() {
   const tools: Array<Tool> = [
-    {
-      name: "select",
-      label: "Select",
-      icon: Cursor,
-      events: {},
-    },
     move_layer,
     rectangle_select,
     ellipse_select,
     bucket_fill,
     eye_dropper,
-    paintbrush,
-    {
-      name: "crop",
-      label: "Crop",
-      icon: Crop,
-      events: {},
-    },
   ];
 
   const [activeTool, setActiveTool] = useState(tools[0]);

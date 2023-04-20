@@ -8,6 +8,9 @@ import { createContainer } from "unstated-next";
 const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
   const [api, setApi] = useState<Api>();
   const inited = useRef(false);
+
+  const methods_without_callback = ["render_to_canvas"];
+
   useEffect(() => {
     if (inited.current) {
       return;
@@ -23,7 +26,9 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
           if (p instanceof Function) {
             return (...args: Array<unknown>) => {
               const result = p.apply(target, args);
-              methodCallback();
+              if (!methods_without_callback.includes(prop)) {
+                methodCallback();
+              }
               return result;
             };
           } else {
@@ -64,6 +69,7 @@ function useWasm() {
     isLoading,
     api,
     state: appState,
+    render_to_canvas: () => api?.render_to_canvas(),
   };
 }
 
