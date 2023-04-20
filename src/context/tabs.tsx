@@ -53,8 +53,20 @@ function useTabs() {
     }
   }, [settings.isOpen]);
 
-  function closeTab(_uid: string) {
-    console.log("close tab");
+  function closeTab(uid: string) {
+    if (uid === "settings") {
+      // focus another tab if it exists.
+      const project_uids = tabs.filter((tab) => tab.type !== "settings").map((tab) => tab.uid);
+      if (project_uids.length) {
+        focusTab(project_uids[0]);
+      } else {
+        wasm.api?.clear_active_project();
+      }
+      // focusTab(tabs.map(tab => tab))
+      settings.close();
+    } else {
+      wasm.api?.close_project(BigInt(uid));
+    }
   }
 
   function focusTab(uid: string) {
