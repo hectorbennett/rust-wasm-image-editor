@@ -45,9 +45,7 @@ impl Canvas {
     }
 
     pub fn render_workspace(&self, workspace: &mut Workspace) {
-        let width: u32 = self.canvas.width();
-        let height: u32 = self.canvas.height();
-        workspace.resize(width, height);
+        workspace.resize(self.canvas.width(), self.canvas.height());
         let v = workspace.to_vec();
         if v.is_empty() {
             return;

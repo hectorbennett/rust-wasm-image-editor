@@ -25,7 +25,9 @@ impl Api {
 
     pub fn init_canvas(&mut self, canvas_id: &str) {
         let _timer = Timer::new("Api::init_canvas");
-        self.canvas = Some(Canvas::new(canvas_id));
+        let canvas = Canvas::new(canvas_id);
+        self.canvas = Some(canvas);
+        self.center_canvas();
     }
 
     pub fn set_active_project(&mut self, project_uid: u64) {
@@ -38,9 +40,9 @@ impl Api {
         self.app.set_active_project(None);
     }
 
-    pub fn create_project(&mut self) -> u64 {
-        let project = self.app.new_project();
-        project.project.borrow().uid
+    pub fn create_project(&mut self) {
+        self.app.new_project();
+        self.center_canvas();
     }
 
     pub fn resize_canvas(&mut self, width: u32, height: u32) {
@@ -293,13 +295,20 @@ impl Api {
             None => (),
             Some(canvas) => {
                 // let _timer = Timer::new("Api::render_to_canvas");
-                let workspace = &mut self
-                    .app
-                    .get_active_project_controller_mut()
-                    .unwrap()
-                    .workspace;
-                canvas.render_workspace(workspace)
+                match self.app.get_active_project_controller_mut() {
+                    None => (),
+                    Some(project) => canvas.render_workspace(&mut project.workspace),
+                }
             }
         }
+    }
+
+    pub fn center_canvas(&mut self) {
+        self.render_to_canvas();
+        self.app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .workspace
+            .center_canvas();
     }
 }
