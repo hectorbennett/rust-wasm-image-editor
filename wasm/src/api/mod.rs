@@ -241,6 +241,13 @@ impl Api {
         serialize::ApiSerializer::to_json(&self.app)
     }
 
+    pub fn import_image_as_layer(&mut self, bytes: Vec<u8>) {
+        self.app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .import_image_as_layer(bytes);
+    }
+
     pub fn from_json(&mut self, json: &str) {
         self.app.open_project_from_json(json);
     }

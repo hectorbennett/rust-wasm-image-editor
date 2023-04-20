@@ -7,8 +7,8 @@ import {
   IconCut,
   IconDeviceFloppy,
   IconFile,
-  IconFileOff,
-  IconLogout,
+  // IconFileOff,
+  // IconLogout,
   TablerIconProps,
 } from "@tabler/icons";
 import { FunctionComponent, useEffect } from "react";
@@ -99,6 +99,12 @@ function useCommands() {
       id: "file.export",
       label: "Export",
       action: app.file.export_png,
+    },
+    {
+      category: "file",
+      id: "file.import_image",
+      label: "Import image",
+      action: app.file.import_image_as_layer,
     },
     // {
     //   category: "file",
