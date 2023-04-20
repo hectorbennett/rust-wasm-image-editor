@@ -2,6 +2,7 @@ pub mod command;
 pub mod create_layer;
 pub mod delete_layer;
 pub mod fill_selection;
+pub mod generate_checkerboard;
 pub mod rename_layer;
 pub mod resize_canvas;
 pub mod select_layer;

@@ -251,6 +251,13 @@ function useCommands() {
       label: "Noise",
       action: () => app.filters.generateNoise(),
     },
+    {
+      category: "filters",
+      id: "filters.checkerboard",
+      label: "Checkerboard",
+      action: () => wasm.api?.generate_checkerboard(),
+    },
+
     /* image */
     {
       category: "image",

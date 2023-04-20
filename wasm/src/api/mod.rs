@@ -80,6 +80,15 @@ impl Api {
         web_sys::console::time_end_with_label("Api::fill_selection");
     }
 
+    pub fn generate_checkerboard(&mut self) {
+        web_sys::console::time_with_label("Api::generate_checkerboard");
+        self.app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .generate_checkerboard();
+        web_sys::console::time_end_with_label("Api::generate_checkerboard");
+    }
+
     pub fn set_primary_colour(&mut self, red: u8, green: u8, blue: u8, alpha: u8) {
         let _timer = Timer::new("Api::set_primary_colour");
         self.app.primary_colour = Colour::from_rgba(red, green, blue, alpha);
