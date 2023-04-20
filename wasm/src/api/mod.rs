@@ -45,6 +45,10 @@ impl Api {
         self.center_canvas();
     }
 
+    pub fn close_project(&mut self, project_uid: u64) {
+        self.app.close_project(project_uid);
+    }
+
     pub fn resize_canvas(&mut self, width: u32, height: u32) {
         web_sys::console::time_with_label("Api::resize_canvas");
         self.app

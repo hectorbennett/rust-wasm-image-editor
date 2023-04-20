@@ -53,8 +53,12 @@ function useTabs() {
     }
   }, [settings.isOpen]);
 
-  function closeTab(_uid: string) {
-    console.log("close tab");
+  function closeTab(uid: string) {
+    if (uid === "settings") {
+      console.log("close settings");
+    } else {
+      wasm.api?.close_project(BigInt(uid));
+    }
   }
 
   function focusTab(uid: string) {
