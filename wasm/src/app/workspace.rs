@@ -278,7 +278,7 @@ mod tests {
         let project = Rc::new(RefCell::new(Project::new("Untitled", 1, 1)));
         let mut workspace = Workspace::new(Rc::clone(&project));
         workspace.resize(4, 4);
-        workspace.zoom(200);
+        workspace.zoom(200, 0, 0);
         workspace.center_canvas();
 
         // let v = [
