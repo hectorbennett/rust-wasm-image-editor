@@ -9,7 +9,7 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
   const [api, setApi] = useState<Api>();
   const inited = useRef(false);
 
-  const methods_without_callback = ["render_to_canvas"];
+  const methods_without_callback = ["render_to_canvas", "scroll_workspace", "zoom_workspace"];
 
   useEffect(() => {
     if (inited.current) {
@@ -27,6 +27,7 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
             return (...args: Array<unknown>) => {
               const result = p.apply(target, args);
               if (!methods_without_callback.includes(prop)) {
+                console.log(prop);
                 methodCallback();
               }
               return result;
