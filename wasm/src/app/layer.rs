@@ -63,8 +63,17 @@ impl Layer {
     }
 
     pub fn get_thumbnail(&self) -> Vec<u8> {
-        // imageops::resize(&self.img, 20, 20, Nearest)
-        vec![]
+        let mut v = vec![];
+        /* 20x20 thumbnail */
+        (0..20).for_each(|i| {
+            (0..20).for_each(|j| {
+                let i2 = self.width * i / 20;
+                let j2 = self.height * j / 20;
+                let pixel = self.buffer.get(i2, j2).unwrap();
+                v.extend_from_slice(&pixel);
+            })
+        });
+        v
     }
 
     pub fn get_thumbnail_hash(&self) -> u64 {
@@ -110,16 +119,11 @@ impl Layer {
     }
 
     pub fn coord_is_on_outline(&self, x: i32, y: i32) -> bool {
-        let rect = [
-            self.left,
-            self.top,
-            self.width as i32,
-            self.height as i32,
-        ];
+        let rect = [self.left, self.top, self.width as i32, self.height as i32];
         coord_is_on_outline_of_rect(rect, [x, y])
     }
 
-    pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> Pixel {
+    pub fn get_pixel_from_project_coordinates(&self, x: u32, y: u32) -> Pixel {
         if x < cmp::max(self.left, 0).try_into().unwrap()
             || y < cmp::max(self.top, 0).try_into().unwrap()
             || x >= (self.left + self.width as i32).try_into().unwrap()
