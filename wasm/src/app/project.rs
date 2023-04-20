@@ -101,7 +101,7 @@ impl Project {
         }
         let mut output: [u8; 4] = [0, 0, 0, 0];
         for layer in self.layers.iter().filter(|l| l.visible) {
-            let pixel = layer.get_pixel_from_canvas_coordinates(x, y);
+            let pixel = layer.get_pixel_from_project_coordinates(x, y);
             output = blend_pixels(output, pixel);
         }
         Some(output)

@@ -1,4 +1,3 @@
-use std::vec;
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
 extern crate console_error_panic_hook;
 use crate::api::canvas::Canvas;
@@ -214,11 +213,17 @@ impl Api {
         self.app.primary_colour = Colour::from_rgba_array(colour);
     }
 
-    pub fn get_layer_thumbnail(&mut self, _layer_uid: u64) -> Clamped<Vec<u8>> {
-        // let _timer = Timer::new("Api::get_layer_thumbnail");
-        // let _img = self.get_layer(layer_uid).unwrap().get_thumbnail();
-        // Clamped(img.into_vec())
-        Clamped(vec![])
+    pub fn get_layer_thumbnail(&self, layer_uid: u64) -> Clamped<Vec<u8>> {
+        let _timer = Timer::new("Api::get_layer_thumbnail");
+        let thumbnail = self
+            .app
+            .get_active_project_controller()
+            .unwrap()
+            .project
+            .borrow()
+            .get_layer(layer_uid)
+            .get_thumbnail();
+        Clamped(thumbnail)
     }
 
     #[wasm_bindgen(getter)]
