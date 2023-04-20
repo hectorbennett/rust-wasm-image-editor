@@ -10,7 +10,7 @@ import Main from "./main/Main";
 import { CustomSpotlightAction } from "./components/CustomSpotlightAction";
 import { useEffect, useRef } from "react";
 
-// const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
+const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
 function Testing() {
   const wasm = WasmContext.useContainer();
@@ -30,7 +30,10 @@ function Testing() {
       return;
     }
     wasm.api.create_project();
-    wasm.api.resize_canvas(500, 500);
+
+    await sleep(200);
+
+    wasm.api.center_canvas();
 
     // red square layer
     wasm.api.set_primary_colour(255, 0, 0, 100);
