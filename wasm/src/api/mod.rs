@@ -99,12 +99,12 @@ impl Api {
     }
 
     pub fn select_ellipse(&mut self, x: u32, y: u32, width: u32, height: u32) {
-        web_sys::console::time_with_label("Api::select_rect");
+        web_sys::console::time_with_label("Api::select_ellipse");
         self.app
             .get_active_project_controller_mut()
             .unwrap()
             .select_ellipse(x, y, width, height);
-        web_sys::console::time_end_with_label("Api::select_rect");
+        web_sys::console::time_end_with_label("Api::select_ellipse");
     }
 
     pub fn select_all(&mut self) {
