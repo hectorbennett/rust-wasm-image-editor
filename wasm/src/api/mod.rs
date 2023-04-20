@@ -198,7 +198,7 @@ impl Api {
         let _timer = Timer::new("Api::eye_dropper");
         let colour = self
             .app
-            .get_active_project_controller_mut()
+            .get_active_project_controller()
             .unwrap()
             .project
             .borrow()
