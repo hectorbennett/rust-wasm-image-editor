@@ -85,8 +85,7 @@ impl Layer {
     pub fn resize(&mut self, width: u32, height: u32) {
         self.width = width;
         self.height = height;
-        // let sub_img = imageops::crop(&mut self.img, 0, 0, width as u32, height as u32);
-        // self.img = sub_img.to_image();
+        self.buffer = PixelBuffer::new(width, height);
     }
 
     pub fn set_position(&mut self, left: i32, top: i32) {

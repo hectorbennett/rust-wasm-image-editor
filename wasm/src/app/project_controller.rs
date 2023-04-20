@@ -7,6 +7,7 @@ use super::{
         delete_layer::DeleteLayer,
         fill_selection::FillSelection,
         generate_checkerboard::GenerateCheckerboard,
+        import_image_as_layer::ImportImageAsLayer,
         rename_layer::RenameLayer,
         resize_canvas::ResizeCanvas,
         select_layer::SelectLayer,
@@ -178,6 +179,14 @@ impl ProjectController {
     pub fn generate_checkerboard(&mut self) {
         self.history
             .append(Box::new(GenerateCheckerboard::new(self.project.clone())));
+        self.history.execute();
+    }
+
+    pub fn import_image_as_layer(&mut self, bytes: Vec<u8>) {
+        self.history.append(Box::new(ImportImageAsLayer::new(
+            self.project.clone(),
+            bytes,
+        )));
         self.history.execute();
     }
 }
