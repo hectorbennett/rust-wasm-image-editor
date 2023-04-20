@@ -6,6 +6,7 @@ use super::{
         create_layer::CreateLayer,
         delete_layer::DeleteLayer,
         fill_selection::FillSelection,
+        generate_checkerboard::GenerateCheckerboard,
         rename_layer::RenameLayer,
         resize_canvas::ResizeCanvas,
         select_layer::SelectLayer,
@@ -171,6 +172,12 @@ impl ProjectController {
     pub fn fill_selection(&mut self, colour: &Colour) {
         self.history
             .append(Box::new(FillSelection::new(self.project.clone(), *colour)));
+        self.history.execute();
+    }
+
+    pub fn generate_checkerboard(&mut self) {
+        self.history
+            .append(Box::new(GenerateCheckerboard::new(self.project.clone())));
         self.history.execute();
     }
 }

@@ -66,13 +66,13 @@ function useCommands() {
       label: "Command palette",
       action: spotlight.openSpotlight,
     },
-    {
-      category: "app",
-      id: "app.exit",
-      label: "Exit",
-      icon: IconLogout,
-      action: () => app.exit(),
-    },
+    // {
+    //   category: "app",
+    //   id: "app.exit",
+    //   label: "Exit",
+    //   icon: IconLogout,
+    //   action: () => app.exit(),
+    // },
     /* file */
     {
       category: "file",
@@ -100,13 +100,13 @@ function useCommands() {
       label: "Export",
       action: app.file.export_png,
     },
-    {
-      category: "file",
-      id: "file.close",
-      label: "Close",
-      icon: IconFileOff,
-      action: () => app.file.close(),
-    },
+    // {
+    //   category: "file",
+    //   id: "file.close",
+    //   label: "Close",
+    //   icon: IconFileOff,
+    //   action: () => app.file.close(),
+    // },
     /* edit */
     {
       category: "edit",
@@ -245,12 +245,19 @@ function useCommands() {
       action: () => console.warn("not implemented"),
     },
     /* filters */
+    // {
+    //   category: "filters",
+    //   id: "filters.noise",
+    //   label: "Noise",
+    //   action: () => app.filters.generateNoise(),
+    // },
     {
       category: "filters",
-      id: "filters.noise",
-      label: "Noise",
-      action: () => app.filters.generateNoise(),
+      id: "filters.checkerboard",
+      label: "Checkerboard",
+      action: () => wasm.api?.generate_checkerboard(),
     },
+
     /* image */
     {
       category: "image",

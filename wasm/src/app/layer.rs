@@ -118,6 +118,27 @@ impl Layer {
         });
     }
 
+    pub fn fill_selection_with_function(
+        &mut self,
+        selection: &Selection,
+        f: fn(u32, u32) -> Colour,
+    ) {
+        (0..self.width).for_each(|i| {
+            (0..=self.height).for_each(|j| {
+                let coords = self.layer_to_canvas_coords(i, j);
+                if coords[0] >= 0 && coords[1] >= 0 {
+                    let value = selection.from_coords(coords[0] as u32, coords[1] as u32);
+                    if value != 0 {
+                        let colour = f(i, j);
+                        let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
+                        let pixel = [colour.red, colour.green, colour.blue, alpha];
+                        self.buffer.set(i, j, pixel);
+                    }
+                }
+            });
+        });
+    }
+
     pub fn coord_is_on_outline(&self, x: i32, y: i32) -> bool {
         let rect = [self.left, self.top, self.width as i32, self.height as i32];
         coord_is_on_outline_of_rect(rect, [x, y])
