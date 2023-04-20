@@ -5,6 +5,7 @@ import { ToolEventParams, ToolEvents } from "../context/tools";
 import { WasmContext } from "../context/wasm";
 import useResizeObserver from "../hooks";
 import Stats from "stats.js";
+import { getWorkspaceMouseCoords } from "../utils";
 
 // todo: generate uid;
 const CANVAS_ID = "123456";
@@ -72,10 +73,10 @@ export default function Workspace() {
     onWheel: function ({ event }: ToolEventParams) {
       /* todo: can we do some better TypeScript here - e.g. dynamic event type with <T> syntax? */
       const e = event as unknown as WheelEvent;
-
+      const [mouseX, mouseY] = getWorkspaceMouseCoords(event);
       if (e.metaKey) {
         // zoom workspace
-        wasm.api?.zoom_workspace(-e.deltaY);
+        wasm.api?.zoom_workspace(-e.deltaY, mouseX, mouseY);
       } else {
         // scroll workspace
         wasm.api?.scroll_workspace(-e.deltaX, -e.deltaY);

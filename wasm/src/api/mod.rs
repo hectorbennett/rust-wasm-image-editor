@@ -272,12 +272,12 @@ impl Api {
             .set_position(x, y);
     }
 
-    pub fn zoom_workspace(&mut self, zoom_delta: i32) {
+    pub fn zoom_workspace(&mut self, zoom_delta: i32, around_x: u32, around_y: u32) {
         self.app
             .get_active_project_controller_mut()
             .unwrap()
             .workspace
-            .zoom(zoom_delta);
+            .zoom(zoom_delta, around_x, around_y);
     }
 
     pub fn set_workspace_zoom(&mut self, zoom: u32) {
