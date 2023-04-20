@@ -17,4 +17,3 @@ export function getWorkspaceMouseCoords(event: React.MouseEvent<Element, MouseEv
   const rect = target.getBoundingClientRect();
   return [event.clientX - rect.left, event.clientY - rect.top];
 }
-
