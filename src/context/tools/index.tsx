@@ -3,8 +3,7 @@ import { Api } from "wasm";
 import { createContainer } from "unstated-next";
 
 import { TablerIcon } from "@tabler/icons";
-import { Cursor, Crop, Icon } from "react-bootstrap-icons";
-import { paintbrush } from "./paintbrush";
+import { Icon } from "react-bootstrap-icons";
 import { eye_dropper } from "./eye_dropper";
 import { bucket_fill } from "./bucket_fill";
 import { rectangle_select } from "./rectangle_select";
@@ -37,24 +36,11 @@ export interface Tool {
 
 function useTools() {
   const tools: Array<Tool> = [
-    {
-      name: "select",
-      label: "Select",
-      icon: Cursor,
-      events: {},
-    },
     move_layer,
     rectangle_select,
     ellipse_select,
     bucket_fill,
     eye_dropper,
-    paintbrush,
-    {
-      name: "crop",
-      label: "Crop",
-      icon: Crop,
-      events: {},
-    },
   ];
 
   const [activeTool, setActiveTool] = useState(tools[0]);

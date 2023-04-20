@@ -1,7 +1,7 @@
 import { Api } from "wasm";
 import { TbOvalVertical } from "react-icons/tb";
 import { Tool, ToolEventParams } from ".";
-import { getRelativeMouseCoords } from "./utils";
+import { getProjectMouseCoords } from "../../utils";
 
 let startX = 0;
 let startY = 0;
@@ -11,12 +11,7 @@ let drawing = false;
 
 const events = {
   onMouseDown: function ({ event, api }: ToolEventParams) {
-    const [x, y] = getRelativeMouseCoords(
-      event,
-      api.state.workspace.zoom,
-      api.state.workspace.x,
-      api.state.workspace.y,
-    );
+    const [x, y] = getProjectMouseCoords(event, api);
     drawing = true;
     startX = x;
     startY = y;
@@ -27,12 +22,7 @@ const events = {
     if (!drawing) {
       return;
     }
-    [startX, startY] = getRelativeMouseCoords(
-      event,
-      api.state.workspace.zoom,
-      api.state.workspace.x,
-      api.state.workspace.y,
-    );
+    [startX, startY] = getProjectMouseCoords(event, api);
     select_ellipse(api);
   },
   onMouseUp: function ({ api }: ToolEventParams) {
