@@ -98,11 +98,7 @@ function useCommands() {
       category: "file",
       id: "file.export",
       label: "Export",
-      action: () =>
-        openContextModal({
-          modal: "file.export",
-          innerProps: {},
-        }),
+      action: app.file.export_png,
     },
     {
       category: "file",

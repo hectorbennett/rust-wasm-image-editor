@@ -4,19 +4,15 @@ use std::{
     hash::{Hash, Hasher},
 };
 
-// use image::{
-//     imageops::{self, FilterType::Nearest},
-//     ImageBuffer, Pixel, RgbaImage,
-// };
 use serde::{Deserialize, Serialize};
 
 use super::{
     colour::Colour,
+    pixel_buffer::{Pixel, PixelBuffer},
     selection::Selection,
-    utils::{generate_uid, get_1d_index_from_2d_coord},
+    utils::coord_is_on_outline_of_rect,
+    utils::generate_uid,
 };
-
-pub type LayerBuffer = Vec<u8>;
 
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Layer {
@@ -29,7 +25,8 @@ pub struct Layer {
     pub visible: bool,
     pub locked: bool,
     // img: RgbaImage,
-    buffer: LayerBuffer,
+    #[serde(skip)]
+    buffer: PixelBuffer,
 }
 
 impl Default for Layer {
@@ -49,15 +46,15 @@ impl Layer {
             top: 0,
             visible: true,
             locked: false,
-            buffer: vec![0; (width * height * 4) as usize],
+            buffer: PixelBuffer::new(width, height),
         }
     }
 
-    pub fn get_buffer(&self) -> &LayerBuffer {
+    pub fn get_buffer(&self) -> &PixelBuffer {
         &self.buffer
     }
 
-    pub fn set_buffer(&mut self, buffer: LayerBuffer) {
+    pub fn set_buffer(&mut self, buffer: PixelBuffer) {
         self.buffer = buffer
     }
 
@@ -99,31 +96,30 @@ impl Layer {
     pub fn fill_selection(&mut self, selection: &Selection, colour: &Colour) {
         (0..self.width).for_each(|i| {
             (0..=self.height).for_each(|j| {
-                let value = selection.from_coords(i, j);
-                if value != 0 {
-                    let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
-                    let i: usize = get_1d_index_from_2d_coord(self.width, i, j) * 4;
-                    self.buffer[i] = colour.red;
-                    self.buffer[i + 1] = colour.green;
-                    self.buffer[i + 2] = colour.blue;
-                    self.buffer[i + 3] = alpha;
+                let coords = self.layer_to_canvas_coords(i, j);
+                if coords[0] >= 0 && coords[1] >= 0 {
+                    let value = selection.from_coords(coords[0] as u32, coords[1] as u32);
+                    if value != 0 {
+                        let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
+                        let pixel = [colour.red, colour.green, colour.blue, alpha];
+                        self.buffer.set(i, j, pixel);
+                    }
                 }
             });
         });
     }
 
-    pub fn pixel_is_on_border(&self, x: u32, y: u32) -> bool {
-        let is_on_x: bool =
-            x as i32 == self.left || x as i32 == self.left + (self.width as i32) - 1;
-        let is_on_y: bool = y as i32 == self.top || y as i32 == self.top + (self.height as i32) - 1;
-
-        let is_in_x: bool = x as i32 > self.left && (x as i32) < self.left + (self.width as i32);
-        let is_in_y: bool = y as i32 > self.top && (y as i32) < self.top + (self.height as i32);
-
-        is_on_x && is_in_y || is_on_y && is_in_x
+    pub fn coord_is_on_outline(&self, x: i32, y: i32) -> bool {
+        let rect = [
+            self.left,
+            self.top,
+            self.width as i32,
+            self.height as i32,
+        ];
+        coord_is_on_outline_of_rect(rect, [x, y])
     }
 
-    pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> [u8; 4] {
+    pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> Pixel {
         if x < cmp::max(self.left, 0).try_into().unwrap()
             || y < cmp::max(self.top, 0).try_into().unwrap()
             || x >= (self.left + self.width as i32).try_into().unwrap()
@@ -135,14 +131,11 @@ impl Layer {
 
         let translated_x: u32 = (x as i32 - self.left).try_into().unwrap();
         let translated_y: u32 = (y as i32 - self.top).try_into().unwrap();
+        self.buffer.get(translated_x, translated_y).unwrap()
+    }
 
-        let i: usize = get_1d_index_from_2d_coord(self.width, translated_x, translated_y) * 4;
-        [
-            self.buffer[i],
-            self.buffer[i + 1],
-            self.buffer[i + 2],
-            self.buffer[i + 3],
-        ]
+    pub fn layer_to_canvas_coords(&self, i: u32, j: u32) -> [i32; 2] {
+        [i as i32 + self.left, j as i32 + self.top]
     }
 }
 
@@ -161,9 +154,9 @@ mod tests {
 
         layer.fill_selection(&selection, &colour);
 
-        // assert_eq!(
-        //     layer.img.into_raw(),
-        //     vec![1, 2, 3, 4, 1, 2, 3, 4, 255, 255, 255, 0, 255, 255, 255, 0]
-        // );
+        assert_eq!(
+            layer.buffer.as_vec(),
+            vec![1, 2, 3, 4, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0]
+        );
     }
 }

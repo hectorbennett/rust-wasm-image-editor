@@ -20,6 +20,7 @@
     "react-icons": "^4.7.1",
     "react-rnd": "^10.4.1",
     "serve": "^14.1.2",
+    "stats.js": "^0.17.0",
     "unstated-next": "^1.1.0"
   },
   "devDependencies": {
@@ -32,6 +33,7 @@
     "@storybook/testing-library": "^0.0.14-next.1",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.8",
+    "@types/stats.js": "^0.17.0",
     "@typescript-eslint/eslint-plugin": "^5.54.1",
     "@typescript-eslint/parser": "^5.54.1",
     "@vitejs/plugin-react": "^2.2.0",

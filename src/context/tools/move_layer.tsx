@@ -1,7 +1,7 @@
 import { ArrowsMove } from "react-bootstrap-icons";
 import { Api } from "wasm";
 import { Tool, ToolEventParams } from ".";
-import { getRelativeMouseCoords } from "./utils";
+import { getProjectMouseCoords } from "../../utils";
 
 let startX = 0;
 let startY = 0;
@@ -10,20 +10,20 @@ let currY = 0;
 let drawing = false;
 
 const events = {
-  onMouseDown: function ({ event, zoom }: ToolEventParams) {
-    const [x, y] = getRelativeMouseCoords(event, zoom);
+  onMouseDown: function ({ event, api }: ToolEventParams) {
+    const [x, y] = getProjectMouseCoords(event, api);
     drawing = true;
     startX = x;
     startY = y;
     currX = x;
     currY = y;
   },
-  onMouseMove: function ({ event, api, zoom }: ToolEventParams) {
+  onMouseMove: function ({ event, api }: ToolEventParams) {
     if (!drawing) {
       return;
     }
     [startX, startY] = [currX, currY];
-    [currX, currY] = getRelativeMouseCoords(event, zoom);
+    [currX, currY] = getProjectMouseCoords(event, api);
     move_active_layer(api);
   },
   onMouseUp: function ({ api }: ToolEventParams) {

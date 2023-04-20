@@ -1,7 +1,7 @@
 import { Api } from "wasm";
 import { TbOvalVertical } from "react-icons/tb";
 import { Tool, ToolEventParams } from ".";
-import { getRelativeMouseCoords } from "./utils";
+import { getProjectMouseCoords } from "../../utils";
 
 let startX = 0;
 let startY = 0;
@@ -10,19 +10,19 @@ let currY = 0;
 let drawing = false;
 
 const events = {
-  onMouseDown: function ({ event, zoom }: ToolEventParams) {
-    const [x, y] = getRelativeMouseCoords(event, zoom);
+  onMouseDown: function ({ event, api }: ToolEventParams) {
+    const [x, y] = getProjectMouseCoords(event, api);
     drawing = true;
     startX = x;
     startY = y;
     currX = x;
     currY = y;
   },
-  onMouseMove: function ({ event, api, zoom }: ToolEventParams) {
+  onMouseMove: function ({ event, api }: ToolEventParams) {
     if (!drawing) {
       return;
     }
-    [startX, startY] = getRelativeMouseCoords(event, zoom);
+    [startX, startY] = getProjectMouseCoords(event, api);
     select_ellipse(api);
   },
   onMouseUp: function ({ api }: ToolEventParams) {
@@ -34,13 +34,13 @@ const events = {
   },
 };
 
-const select_ellipse = (api: Api) =>
-  api.select_ellipse(
-    Math.min(startX, currX),
-    Math.min(startY, currY),
-    Math.abs(currX - startX),
-    Math.abs(currY - startY),
-  );
+const select_ellipse = (api: Api) => {
+  const sX = Math.max(startX, 0);
+  const cX = Math.max(currX, 0);
+  const sY = Math.max(startY, 0);
+  const cY = Math.max(currY, 0);
+  api.select_ellipse(Math.min(sX, cX), Math.min(sY, currY), Math.abs(cX - sX), Math.abs(cY - sY));
+};
 
 export const ellipse_select: Tool = {
   name: "ellipse_select",

@@ -1,12 +1,13 @@
-use std::ops::Deref;
-
 use image::{ImageBuffer, RgbaImage};
 use serde::{Deserialize, Serialize};
+use std::io::Cursor;
+use std::ops::Deref;
 
 use postcard;
 
 use super::{
     layer::Layer,
+    pixel_buffer::Pixel,
     selection::Selection,
     utils::{blend_pixels, generate_uid},
 };
@@ -81,29 +82,29 @@ impl Project {
 
     pub fn get_image(&self) -> RgbaImage {
         ImageBuffer::from_fn(self.width, self.height, |x, y| {
-            image::Rgba(self.get_compiled_pixel(x, y))
+            image::Rgba(self.get_pixel(x, y).unwrap())
         })
     }
 
-    pub fn get_compiled_pixel(&self, x: u32, y: u32) -> [u8; 4] {
-        // layer border
-        if let Some(layer) = self.get_active_layer() {
-            if layer.pixel_is_on_border(x, y) {
-                return [255, 255, 0, 255];
-            }
+    pub fn to_png(&self) -> Vec<u8> {
+        let img = self.get_image();
+        let mut bytes: Vec<u8> = Vec::new();
+        if let Err(e) = img.write_to(&mut Cursor::new(&mut bytes), image::ImageOutputFormat::Png) {
+            println!("{:?}", e)
         }
+        bytes
+    }
 
-        // selection border
-        if self.selection.pixel_is_on_border(x, y) {
-            return [0, 0, 0, 255];
+    pub fn get_pixel(&self, x: u32, y: u32) -> Option<Pixel> {
+        if x > self.width || y > self.height {
+            return None;
         }
-
         let mut output: [u8; 4] = [0, 0, 0, 0];
         for layer in self.layers.iter().filter(|l| l.visible) {
             let pixel = layer.get_pixel_from_canvas_coordinates(x, y);
             output = blend_pixels(output, pixel);
         }
-        output
+        Some(output)
     }
 
     pub fn save_project(&self, path: &str) -> std::io::Result<()> {
