@@ -75,7 +75,7 @@ export default function Workspace() {
       /* todo: can we do some better TypeScript here - e.g. dynamic event type with <T> syntax? */
       const e = event as unknown as WheelEvent;
       const [mouseX, mouseY] = getWorkspaceMouseCoords(event);
-      if (e.metaKey) {
+      if (e.metaKey || e.ctrlKey) {
         // zoom workspace
         wasm.api?.zoom_workspace(-e.deltaY, mouseX, mouseY);
       } else {

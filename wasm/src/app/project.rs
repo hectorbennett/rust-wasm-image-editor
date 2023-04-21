@@ -7,7 +7,7 @@ use postcard;
 
 use super::{
     layer::Layer,
-    pixel_buffer::Pixel,
+    pixel_buffer::{Pixel, PixelBuffer},
     selection::Selection,
     utils::{blend_pixels, generate_uid},
 };
@@ -21,6 +21,8 @@ pub struct Project {
     pub layers: Vec<Layer>,
     pub active_layer_uid: Option<u64>,
     pub selection: Selection,
+    #[serde(skip)]
+    buffer: PixelBuffer,
 }
 
 impl Default for Project {
@@ -39,6 +41,7 @@ impl Project {
             layers: vec![],
             active_layer_uid: None,
             selection: Selection::new(width, height),
+            buffer: PixelBuffer::new(width, height),
         };
         project.create_layer();
         project
@@ -80,7 +83,7 @@ impl Project {
         }
     }
 
-    pub fn get_image(&self) -> RgbaImage {
+    fn get_image(&self) -> RgbaImage {
         ImageBuffer::from_fn(self.width, self.height, |x, y| {
             image::Rgba(self.get_pixel(x, y).unwrap())
         })
@@ -95,7 +98,29 @@ impl Project {
         bytes
     }
 
+    pub fn recalculate_buffer(&mut self) {
+        let mut buffer = PixelBuffer::new(self.width, self.height);
+
+        (0..self.width).for_each(|i| {
+            (0..self.height).for_each(|j| {
+                let pixel = self
+                    .calculate_pixel_with_checkerboard_background(i, j)
+                    .unwrap();
+                buffer.set(i, j, pixel);
+            })
+        });
+        self.buffer = buffer;
+    }
+
     pub fn get_pixel(&self, x: u32, y: u32) -> Option<Pixel> {
+        self.buffer.get(x, y)
+    }
+
+    pub fn buffer(&self) -> &PixelBuffer {
+        &self.buffer
+    }
+
+    fn calculate_pixel(&self, x: u32, y: u32) -> Option<Pixel> {
         if x > self.width || y > self.height {
             return None;
         }
@@ -105,6 +130,20 @@ impl Project {
             output = blend_pixels(output, pixel);
         }
         Some(output)
+    }
+
+    fn calculate_pixel_with_checkerboard_background(&self, x: u32, y: u32) -> Option<Pixel> {
+        match self.calculate_pixel(x, y) {
+            None => None,
+            Some(pixel) => {
+                if pixel[3] == 255 {
+                    Some(pixel)
+                } else {
+                    let c = get_checkerboard_pixel(x, y);
+                    Some(blend_pixels(c, pixel))
+                }
+            }
+        }
     }
 
     pub fn save_project(&self, path: &str) -> std::io::Result<()> {
@@ -126,5 +165,16 @@ impl Project {
 
     pub fn from_postcard(p: Vec<u8>) -> Project {
         postcard::from_bytes(p.deref()).unwrap()
+    }
+}
+
+fn get_checkerboard_pixel(x: u32, y: u32) -> Pixel {
+    const GREY_1: Pixel = [135, 135, 135, 255];
+    const GREY_2: Pixel = [90, 90, 90, 255];
+    const SQUARE_SIZE: u32 = 10;
+    if ((x / SQUARE_SIZE) + (y / SQUARE_SIZE)).rem_euclid(2) == 0 {
+        GREY_1
+    } else {
+        GREY_2
     }
 }

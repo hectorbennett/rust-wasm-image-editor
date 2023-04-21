@@ -1,6 +1,6 @@
 use std::cmp;
 
-use super::commands::command::Command;
+use super::commands::command::{merge_commands, Command};
 
 pub struct History {
     // A log of all the commands in their execution order
@@ -32,21 +32,37 @@ impl History {
         // Destroy anything ahead of the current revision
         self.history.truncate(self.revision);
 
-        // Add a command to the history
-        self.history.push(command);
-
-        // Move forward one step in the history
-        self.revision += 1;
-    }
-
-    pub fn execute(&mut self) {
-        // Execute all the methods that have not yet been executed
-        for i in self.cursor..self.revision {
-            self.history[i].execute();
+        // either merge the command with the previous one,
+        // or add a new command and increase the revision
+        if self.should_merge_command_with_previous(&*command) {
+            self.merge_command_with_previous(command);
+        } else {
+            self.add_new_command(command);
         }
 
-        // Move the cursor forward
-        self.cursor = self.revision
+        // execute the command
+        self.history.last().unwrap().execute();
+    }
+
+    fn should_merge_command_with_previous(&self, command: &dyn Command) -> bool {
+        // If the previous command is of the same type and executed very recently, return true
+        match self.history.last() {
+            Some(previous_command) => command.name() == previous_command.name(),
+            None => false,
+        }
+    }
+
+    fn merge_command_with_previous(&mut self, command: Box<dyn Command>) {
+        // Replace the current command with an existing one. Do not increase the revision.
+        let previous_command = self.history.pop().unwrap();
+        let merged_command = merge_commands(previous_command, command);
+        self.history.push(Box::new(merged_command));
+    }
+
+    fn add_new_command(&mut self, command: Box<dyn Command>) {
+        // Add a new command to the history. Increase the revision.
+        self.history.push(command);
+        self.revision += 1;
     }
 
     pub fn undo(&mut self) {

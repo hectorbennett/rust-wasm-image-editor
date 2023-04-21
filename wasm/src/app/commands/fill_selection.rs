@@ -38,6 +38,7 @@ impl Command for FillSelection {
             .get_active_layer_mut()
             .unwrap()
             .fill_selection(&selection, &self.colour);
+        self.project.borrow_mut().recalculate_buffer();
     }
 
     fn rollback(&self) {
@@ -46,6 +47,7 @@ impl Command for FillSelection {
             .borrow_mut()
             .get_active_layer_mut()
             .unwrap()
-            .set_buffer(self.old_layer_buffer.clone())
+            .set_buffer(self.old_layer_buffer.clone());
+        self.project.borrow_mut().recalculate_buffer();
     }
 }
