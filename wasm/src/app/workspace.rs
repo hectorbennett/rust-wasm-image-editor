@@ -1,23 +1,17 @@
 use std::{cell::RefCell, cmp, rc::Rc};
 
-// use super::pixel_buffer;
 use super::pixel_buffer::Pixel;
 use super::pixel_buffer::PixelBuffer;
 use super::project::Project;
-use super::utils::blend_pixels;
-// u 0se super::utils::coord_is_on_outline_of_rect;
 
-// const ALPHA: Pixel = [0, 0, 0, 0];
 const YELLOW: Pixel = [255, 255, 0, 255];
-const GREY_1: Pixel = [135, 135, 135, 255];
-const GREY_2: Pixel = [90, 90, 90, 255];
 const BLACK: Pixel = [0, 0, 0, 255];
 
 pub struct Workspace {
     project: Rc<RefCell<Project>>,
     pub width: u32,
     pub height: u32,
-    pub zoom: f64,
+    pub zoom: f32,
     pub x: i32,
     pub y: i32,
 }
@@ -52,31 +46,31 @@ impl Workspace {
     pub fn zoom(&mut self, zoom_delta: i32, workspace_x: u32, workspace_y: u32) {
         /* Zoom in, around the mouse cursor */
         let previous_zoom = self.zoom;
-        self.zoom = cmp::max(self.zoom as i32 + zoom_delta, 1) as f64;
-        self.x = (workspace_x as f64
-            - ((workspace_x as f64 - self.x as f64) / previous_zoom) * self.zoom)
+        self.zoom = cmp::max(self.zoom as i32 + zoom_delta, 1) as f32;
+        self.x = (workspace_x as f32
+            - ((workspace_x as f32 - self.x as f32) / previous_zoom) * self.zoom)
             as i32;
-        self.y = (workspace_y as f64
-            - ((workspace_y as f64 - self.y as f64) / previous_zoom) * self.zoom)
+        self.y = (workspace_y as f32
+            - ((workspace_y as f32 - self.y as f32) / previous_zoom) * self.zoom)
             as i32;
     }
 
     pub fn workspace_to_project_coords(&self, coords: [i32; 2]) -> [i32; 2] {
         [
-            ((coords[0] as f64 - self.x as f64) / (self.zoom / 100.0)) as i32,
-            ((coords[1] as f64 - self.y as f64) / (self.zoom / 100.0)) as i32,
+            100 * (coords[0] - self.x) / self.zoom as i32,
+            100 * (coords[1] - self.y) / self.zoom as i32,
         ]
     }
 
     pub fn project_to_workspace_coords(&self, coords: [i32; 2]) -> [i32; 2] {
         [
-            (coords[0] as f64 * (self.zoom / 100.0) + self.x as f64) as i32,
-            (coords[1] as f64 * (self.zoom / 100.0) + self.y as f64) as i32,
+            (coords[0] as f32 * (self.zoom / 100.0) + self.x as f32) as i32,
+            (coords[1] as f32 * (self.zoom / 100.0) + self.y as f32) as i32,
         ]
     }
 
     pub fn set_zoom(&mut self, zoom: u32) {
-        self.zoom = zoom.into();
+        self.zoom = zoom as f32;
     }
 
     pub fn center_canvas(&mut self) {
@@ -87,24 +81,26 @@ impl Workspace {
     pub fn to_vec(&self) -> Vec<u8> {
         let mut pixel_buffer = PixelBuffer::new(self.width, self.height);
 
-        let project_width = self.project.borrow().width as i32;
-        let project_height = self.project.borrow().height as i32;
+        let project = self.project.borrow();
 
-        let [p_l, p_t] = self.project_to_workspace_coords([0, 0]);
-        let [p_r, p_b] = self.project_to_workspace_coords([project_width, project_height]);
+        let project_width = project.width as i32;
+        let project_height = project.height as i32;
+
+        let [mut p_l, mut p_t] = self.project_to_workspace_coords([0, 0]);
+        let [mut p_r, mut p_b] = self.project_to_workspace_coords([project_width, project_height]);
+
+        p_l = cmp::max(p_l, 0);
+        p_t = cmp::max(p_t, 0);
+        p_r = cmp::min(p_r, self.width as i32);
+        p_b = cmp::min(p_b, self.height as i32);
 
         // render project pixels
         (p_l..p_r).for_each(|i| {
             (p_t..p_b).for_each(|j| {
                 let [p_x, p_y] = self.workspace_to_project_coords([i as i32, j as i32]);
 
-                if let Some(p) = self.project.borrow().get_pixel(p_x as u32, p_y as u32) {
-                    if p[3] == 244 {
-                        pixel_buffer.set(i as u32, j as u32, p);
-                    } else {
-                        let c = get_background_pixel(i as u32, j as u32);
-                        pixel_buffer.set(i as u32, j as u32, blend_pixels(c, p))
-                    }
+                if let Some(p) = project.get_pixel(p_x as u32, p_y as u32) {
+                    pixel_buffer.set(i as u32, j as u32, p);
                 }
             });
         });
@@ -120,7 +116,7 @@ impl Workspace {
         });
 
         // Render a yellow Active layer border
-        if let Some(layer) = self.project.borrow().get_active_layer() {
+        if let Some(layer) = project.get_active_layer() {
             let [l_l, l_t] = self.project_to_workspace_coords([layer.left, layer.top]);
             let [l_r, l_b] = self.project_to_workspace_coords([
                 layer.left + layer.width as i32,
@@ -141,7 +137,7 @@ impl Workspace {
         }
 
         // render selection
-        for [i, j] in self.project.borrow().selection.border_coordinates() {
+        for [i, j] in project.selection.border_coordinates() {
             let [s_x, s_y] = self.project_to_workspace_coords([*i, *j]);
             pixel_buffer.set(
                 s_x as u32,
@@ -151,15 +147,6 @@ impl Workspace {
         }
 
         pixel_buffer.as_vec()
-    }
-}
-
-fn get_background_pixel(x: u32, y: u32) -> Pixel {
-    const SQUARE_SIZE: u32 = 10;
-    if ((x / SQUARE_SIZE) + (y / SQUARE_SIZE)).rem_euclid(2) == 0 {
-        GREY_1
-    } else {
-        GREY_2
     }
 }
 

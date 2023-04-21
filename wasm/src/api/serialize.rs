@@ -140,7 +140,7 @@ struct CommandSerializer {
 
 #[derive(Serialize, Debug, Tsify)]
 struct WorkspaceSerializer {
-    zoom: f64,
+    zoom: f32,
     x: i32,
     y: i32,
 }
