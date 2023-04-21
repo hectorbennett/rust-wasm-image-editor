@@ -38,6 +38,21 @@ function useFile() {
       };
       inp.click();
     },
+    import_image_as_layer: function import_image() {
+      const inp = document.createElement("input");
+      inp.type = "file";
+      inp.onchange = (e) => {
+        const target: HTMLInputElement = e.target as HTMLInputElement;
+        if (!target.files) {
+          return;
+        }
+        const file = target.files[0];
+        getAsByteArray(file).then((result) => {
+          wasm.api?.import_image_as_layer(result);
+        });
+      };
+      inp.click();
+    },
     save: function save() {
       if (!wasm.api) {
         return;

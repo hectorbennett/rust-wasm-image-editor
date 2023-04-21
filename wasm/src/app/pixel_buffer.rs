@@ -1,12 +1,13 @@
 pub type Pixel = [u8; 4];
 
 use super::utils::get_1d_index_from_2d_coord;
+use image::DynamicImage;
 
 #[derive(Clone, Debug)]
 pub struct PixelBuffer {
-    buffer: Vec<u8>,
-    width: u32,
-    height: u32,
+    pub buffer: Vec<u8>,
+    pub width: u32,
+    pub height: u32,
 }
 
 impl Default for PixelBuffer {
@@ -21,6 +22,19 @@ impl PixelBuffer {
             width,
             height,
             buffer: vec![0; (width * height * 4) as usize],
+        }
+    }
+
+    pub fn from_image(img: DynamicImage) -> PixelBuffer {
+        let (width, height) = (img.width(), img.height());
+        let mut buffer = vec![];
+        for pixel in img.to_rgba8().pixels() {
+            buffer.extend_from_slice(&pixel.0);
+        }
+        PixelBuffer {
+            width,
+            height,
+            buffer,
         }
     }
 

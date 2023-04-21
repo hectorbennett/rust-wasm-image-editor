@@ -1,6 +1,6 @@
-use serde::{Deserialize, Serialize};
-
 use super::utils;
+use crate::app::layer::Layer;
+use serde::{Deserialize, Serialize};
 
 #[derive(Clone, Serialize, Deserialize)]
 
@@ -99,16 +99,18 @@ impl Selection {
         self.add_ellipse(x, y, width, height);
     }
 
-    // pub fn get_border_indices(&self) -> Vec<usize> {
-    //     // return coordinates for all the pixels that are on the border of the selection
-    //     let indices = vec![];
-    //     (0..self.width).for_each(|i| {
-    //         (0..self.height).for_each(|j| {
-
-    //         })
-    //     });
-    //     indices
-    // }
+    pub fn fuzzy_select(&mut self, layer: &Layer, x: u32, y: u32) {
+        // self.select_rect(10, 10, 10, 10);
+        self.select_none();
+        let colour = layer.get_pixel_from_project_coordinates(x, y);
+        (0..self.width).for_each(|i| {
+            (0..self.height).for_each(|j| {
+                if layer.get_pixel_from_project_coordinates(i, j) == colour {
+                    self.put(i, j, 255);
+                };
+            });
+        });
+    }
 
     pub fn pixel_is_on_border(&self, x: u32, y: u32) -> bool {
         if self.from_coords(x, y) != 0 && self.coord_has_empty_neighbour(x, y) {

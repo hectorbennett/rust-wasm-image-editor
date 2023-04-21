@@ -29,9 +29,9 @@ pub struct ApiSerializerSchema {
 impl ApiSerializerSchema {
     pub fn from_app(app: &App) -> ApiSerializerSchema {
         let mut projects: HashMap<String, ProjectSerializer> = HashMap::new();
-        app.projects.iter().for_each(|(uid, p)| {
+        app.projects.iter().for_each(|p| {
             let s = ProjectSerializer::from_project_controller(p);
-            projects.insert(uid.to_string(), s);
+            projects.insert(p.project.borrow().uid.to_string(), s);
         });
 
         let active_project_uid: Option<String> = app.active_project_uid.map(|uid| uid.to_string());

@@ -50,7 +50,7 @@ impl Workspace {
     pub fn zoom(&mut self, zoom_delta: i32, workspace_x: u32, workspace_y: u32) {
         /* Zoom in, around the mouse cursor */
         let previous_zoom = self.zoom;
-        self.zoom = cmp::max(self.zoom as i32 + zoom_delta, 0) as f64;
+        self.zoom = cmp::max(self.zoom as i32 + zoom_delta, 1) as f64;
         self.x = (workspace_x as f64
             - ((workspace_x as f64 - self.x as f64) / previous_zoom) * self.zoom)
             as i32;

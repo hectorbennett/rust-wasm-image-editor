@@ -23,11 +23,19 @@ const events = {
       return;
     }
     [startX, startY] = getProjectMouseCoords(event, api);
-    select_ellipse(api);
+    if (event.shiftKey) {
+      select_circle(api);
+    } else {
+      select_ellipse(api);
+    }
   },
-  onMouseUp: function ({ api }: ToolEventParams) {
+  onMouseUp: function ({ event, api }: ToolEventParams) {
     drawing = false;
-    select_ellipse(api);
+    if (event.shiftKey) {
+      select_circle(api);
+    } else {
+      select_ellipse(api);
+    }
   },
   onMouseOut: function () {
     drawing = false;
@@ -40,6 +48,19 @@ const select_ellipse = (api: Api) => {
   const sY = Math.max(startY, 0);
   const cY = Math.max(currY, 0);
   api.select_ellipse(Math.min(sX, cX), Math.min(sY, currY), Math.abs(cX - sX), Math.abs(cY - sY));
+};
+
+const select_circle = (api: Api) => {
+  const sX = Math.max(startX, 0);
+  const cX = Math.max(currX, 0);
+  const sY = Math.max(startY, 0);
+  const cY = Math.max(currY, 0);
+
+  const width = Math.abs(cX - sX);
+  const height = Math.abs(cY - sY);
+  const size = Math.max(width, height);
+
+  api.select_ellipse(Math.min(sX, cX), Math.min(sY, currY), size, size);
 };
 
 export const ellipse_select: Tool = {

@@ -6,12 +6,14 @@ use super::{
         create_layer::CreateLayer,
         delete_layer::DeleteLayer,
         fill_selection::FillSelection,
+        generate_checkerboard::GenerateCheckerboard,
+        import_image_as_layer::ImportImageAsLayer,
         rename_layer::RenameLayer,
         resize_canvas::ResizeCanvas,
         select_layer::SelectLayer,
         selection::{
-            select_all::SelectAll, select_ellipse::SelectEllipse, select_inverse::SelectInverse,
-            select_none::SelectNone, select_rect::SelectRect,
+            fuzzy_select::FuzzySelect, select_all::SelectAll, select_ellipse::SelectEllipse,
+            select_inverse::SelectInverse, select_none::SelectNone, select_rect::SelectRect,
         },
         set_layer_locked::SetLayerLocked,
         set_layer_position::SetLayerPosition,
@@ -138,6 +140,15 @@ impl ProjectController {
             .append(Box::new(SelectInverse::new(self.project.clone())));
         self.history.execute();
     }
+
+    pub fn fuzzy_select(&mut self, project_x: u32, project_y: u32) {
+        self.history.append(Box::new(FuzzySelect::new(
+            self.project.clone(),
+            project_x,
+            project_y,
+        )));
+        self.history.execute();
+    }
 }
 
 impl ProjectController {
@@ -171,6 +182,20 @@ impl ProjectController {
     pub fn fill_selection(&mut self, colour: &Colour) {
         self.history
             .append(Box::new(FillSelection::new(self.project.clone(), *colour)));
+        self.history.execute();
+    }
+
+    pub fn generate_checkerboard(&mut self) {
+        self.history
+            .append(Box::new(GenerateCheckerboard::new(self.project.clone())));
+        self.history.execute();
+    }
+
+    pub fn import_image_as_layer(&mut self, bytes: Vec<u8>) {
+        self.history.append(Box::new(ImportImageAsLayer::new(
+            self.project.clone(),
+            bytes,
+        )));
         self.history.execute();
     }
 }

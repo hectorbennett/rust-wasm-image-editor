@@ -7,8 +7,8 @@ import {
   IconCut,
   IconDeviceFloppy,
   IconFile,
-  IconFileOff,
-  IconLogout,
+  // IconFileOff,
+  // IconLogout,
   TablerIconProps,
 } from "@tabler/icons";
 import { FunctionComponent, useEffect } from "react";
@@ -66,13 +66,13 @@ function useCommands() {
       label: "Command palette",
       action: spotlight.openSpotlight,
     },
-    {
-      category: "app",
-      id: "app.exit",
-      label: "Exit",
-      icon: IconLogout,
-      action: () => app.exit(),
-    },
+    // {
+    //   category: "app",
+    //   id: "app.exit",
+    //   label: "Exit",
+    //   icon: IconLogout,
+    //   action: () => app.exit(),
+    // },
     /* file */
     {
       category: "file",
@@ -102,11 +102,17 @@ function useCommands() {
     },
     {
       category: "file",
-      id: "file.close",
-      label: "Close",
-      icon: IconFileOff,
-      action: () => app.file.close(),
+      id: "file.import_image",
+      label: "Import image",
+      action: app.file.import_image_as_layer,
     },
+    // {
+    //   category: "file",
+    //   id: "file.close",
+    //   label: "Close",
+    //   icon: IconFileOff,
+    //   action: () => app.file.close(),
+    // },
     /* edit */
     {
       category: "edit",
@@ -245,12 +251,19 @@ function useCommands() {
       action: () => console.warn("not implemented"),
     },
     /* filters */
+    // {
+    //   category: "filters",
+    //   id: "filters.noise",
+    //   label: "Noise",
+    //   action: () => app.filters.generateNoise(),
+    // },
     {
       category: "filters",
-      id: "filters.noise",
-      label: "Noise",
-      action: () => app.filters.generateNoise(),
+      id: "filters.checkerboard",
+      label: "Checkerboard",
+      action: () => wasm.api?.generate_checkerboard(),
     },
+
     /* image */
     {
       category: "image",

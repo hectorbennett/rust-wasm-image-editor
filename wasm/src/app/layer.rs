@@ -63,8 +63,17 @@ impl Layer {
     }
 
     pub fn get_thumbnail(&self) -> Vec<u8> {
-        // imageops::resize(&self.img, 20, 20, Nearest)
-        vec![]
+        let mut v = vec![];
+        /* 20x20 thumbnail */
+        (0..20).for_each(|i| {
+            (0..20).for_each(|j| {
+                let i2 = self.width * i / 20;
+                let j2 = self.height * j / 20;
+                let pixel = self.buffer.get(i2, j2).unwrap();
+                v.extend_from_slice(&pixel);
+            })
+        });
+        v
     }
 
     pub fn get_thumbnail_hash(&self) -> u64 {
@@ -76,8 +85,7 @@ impl Layer {
     pub fn resize(&mut self, width: u32, height: u32) {
         self.width = width;
         self.height = height;
-        // let sub_img = imageops::crop(&mut self.img, 0, 0, width as u32, height as u32);
-        // self.img = sub_img.to_image();
+        self.buffer = PixelBuffer::new(width, height);
     }
 
     pub fn set_position(&mut self, left: i32, top: i32) {
@@ -109,17 +117,33 @@ impl Layer {
         });
     }
 
+    pub fn fill_selection_with_function(
+        &mut self,
+        selection: &Selection,
+        f: fn(u32, u32) -> Colour,
+    ) {
+        (0..self.width).for_each(|i| {
+            (0..=self.height).for_each(|j| {
+                let coords = self.layer_to_canvas_coords(i, j);
+                if coords[0] >= 0 && coords[1] >= 0 {
+                    let value = selection.from_coords(coords[0] as u32, coords[1] as u32);
+                    if value != 0 {
+                        let colour = f(i, j);
+                        let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
+                        let pixel = [colour.red, colour.green, colour.blue, alpha];
+                        self.buffer.set(i, j, pixel);
+                    }
+                }
+            });
+        });
+    }
+
     pub fn coord_is_on_outline(&self, x: i32, y: i32) -> bool {
-        let rect = [
-            self.left,
-            self.top,
-            self.width as i32,
-            self.height as i32,
-        ];
+        let rect = [self.left, self.top, self.width as i32, self.height as i32];
         coord_is_on_outline_of_rect(rect, [x, y])
     }
 
-    pub fn get_pixel_from_canvas_coordinates(&self, x: u32, y: u32) -> Pixel {
+    pub fn get_pixel_from_project_coordinates(&self, x: u32, y: u32) -> Pixel {
         if x < cmp::max(self.left, 0).try_into().unwrap()
             || y < cmp::max(self.top, 0).try_into().unwrap()
             || x >= (self.left + self.width as i32).try_into().unwrap()

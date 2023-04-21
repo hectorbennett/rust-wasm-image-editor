@@ -9,7 +9,6 @@ import { getWorkspaceMouseCoords } from "../utils";
 
 // todo: generate uid;
 const CANVAS_ID = "123456";
-let API_INITED = false;
 
 interface CanvasProps {
   width: number;
@@ -29,7 +28,8 @@ export default function Workspace() {
   const containerRef = useRef<HTMLDivElement>(null);
 
   const [workspaceSize, setWorkspaceSize] = useState({ width: 0, height: 0 });
-  // const [cursorPosition, setCursorPosition] = useState({ x: 0, y: 0 });
+
+  const inited = useRef(false);
 
   if (!activeProject.activeProject) {
     return null;
@@ -49,10 +49,11 @@ export default function Workspace() {
     if (!wasm.api) {
       return;
     }
-    if (API_INITED) {
+    if (inited.current === true) {
       return;
     }
-    API_INITED = true;
+    inited.current = true;
+    console.log("INIT WORKSPACE");
     wasm.api.init_canvas(CANVAS_ID);
 
     const stats = new Stats();
@@ -67,7 +68,7 @@ export default function Workspace() {
       requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
-  }, [canvasRef.current, wasm.api]);
+  }, []);
 
   const default_events: ToolEvents = {
     onWheel: function ({ event }: ToolEventParams) {

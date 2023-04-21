@@ -23,11 +23,19 @@ const events = {
       return;
     }
     [startX, startY] = getProjectMouseCoords(event, api);
-    select_rect(api);
+    if (event.shiftKey) {
+      select_square(api);
+    } else {
+      select_rect(api);
+    }
   },
-  onMouseUp: function ({ api }: ToolEventParams) {
+  onMouseUp: function ({ event, api }: ToolEventParams) {
     drawing = false;
-    select_rect(api);
+    if (event.shiftKey) {
+      select_square(api);
+    } else {
+      select_rect(api);
+    }
   },
   onMouseOut: function () {
     drawing = false;
@@ -40,6 +48,18 @@ const select_rect = (api: Api) => {
   const sY = Math.max(startY, 0);
   const cY = Math.max(currY, 0);
   api.select_rect(Math.min(sX, cX), Math.min(sY, currY), Math.abs(cX - sX), Math.abs(cY - sY));
+};
+
+const select_square = (api: Api) => {
+  const sX = Math.max(startX, 0);
+  const cX = Math.max(currX, 0);
+  const sY = Math.max(startY, 0);
+  const cY = Math.max(currY, 0);
+
+  const width = Math.abs(cX - sX);
+  const height = Math.abs(cY - sY);
+  const size = Math.max(width, height);
+  api.select_rect(Math.min(sX, cX), Math.min(sY, currY), size, size);
 };
 
 export const rectangle_select: Tool = {

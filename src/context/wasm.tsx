@@ -60,9 +60,9 @@ function useWasm() {
     refreshAppState();
   }, [api]);
 
-  // useEffect(() => {
-  //   console.log(appState);
-  // }, [appState]);
+  useEffect(() => {
+    console.log(appState);
+  }, [appState]);
 
   const isLoading = !api || !appState;
 
