@@ -98,9 +98,14 @@ fn blend_alpha(alpha_fg: f32, alpha_bg: f32) -> f32 {
     alpha_bg + alpha_fg - alpha_bg * alpha_fg
 }
 
-fn blend_colour_channel(colour_fg: f32, colour_bg: f32, alpha_fg: f32, alpha_bg: f32) -> f32 {
-    (colour_fg * alpha_fg)
-        + (colour_bg * alpha_bg) * (1.0 - alpha_fg) / blend_alpha(alpha_fg, alpha_bg)
+fn blend_colour_channel(
+    colour_fg: f32,
+    colour_bg: f32,
+    alpha_fg: f32,
+    alpha_bg: f32,
+    alpha_final: f32,
+) -> f32 {
+    (colour_fg * alpha_fg) + (colour_bg * alpha_bg) * (1.0 - alpha_fg) / alpha_final
 }
 
 pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
@@ -120,9 +125,15 @@ pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
     let alpha_bg: f32 = pixel_bg[3] as f32 / 255.0;
 
     let alpha_final = blend_alpha(alpha_fg, alpha_bg);
-    let red_final: f32 = blend_colour_channel(red_fg, red_bg, alpha_fg, alpha_bg);
-    let green_final: f32 = blend_colour_channel(green_fg, green_bg, alpha_fg, alpha_bg);
-    let blue_final: f32 = blend_colour_channel(blue_fg, blue_bg, alpha_fg, alpha_bg);
+
+    if alpha_final == 0.0 {
+        return [0, 0, 0, 0];
+    }
+
+    let red_final: f32 = blend_colour_channel(red_fg, red_bg, alpha_fg, alpha_bg, alpha_final);
+    let green_final: f32 =
+        blend_colour_channel(green_fg, green_bg, alpha_fg, alpha_bg, alpha_final);
+    let blue_final: f32 = blend_colour_channel(blue_fg, blue_bg, alpha_fg, alpha_bg, alpha_final);
 
     [
         (red_final * 255.0) as u8,
@@ -131,3 +142,5 @@ pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
         (alpha_final * 255.0) as u8,
     ]
 }
+
+/* TODO: Alpha Blending with No Division Operations Jerry R. Van Aken */
