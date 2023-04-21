@@ -10,3 +10,8 @@ body {
 * {
   box-sizing: border-box;
 }
+
+/* hide scrollbars on chrome */
+::-webkit-scrollbar {
+  display: none;
+}

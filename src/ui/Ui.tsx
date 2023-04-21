@@ -44,7 +44,7 @@ const useStyles = createStyles((theme, _params, _getRef) => ({
   tabBar: {
     height: TAB_BAR_HEIGHT,
     display: "flex",
-    overflow: "scroll",
+    overflow: "auto",
     background: theme.colors.dark[6],
   },
   canvasInner: {
