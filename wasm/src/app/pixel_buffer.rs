@@ -53,7 +53,7 @@ impl PixelBuffer {
 
     pub fn set(&mut self, x: u32, y: u32, pixel: Pixel) {
         let i: usize = get_1d_index_from_2d_coord(self.width, x, y) * 4;
-        if i < 0 || x >= self.width || y >= self.height {
+        if x >= self.width || y >= self.height {
             return;
         }
         self.buffer[i] = pixel[0];

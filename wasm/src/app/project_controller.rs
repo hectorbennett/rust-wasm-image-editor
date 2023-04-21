@@ -3,7 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use super::{
     colour::Colour,
     commands::{
-        command::Command,
+        // command::Command,
         create_layer::CreateLayer,
         delete_layer::DeleteLayer,
         fill_selection::FillSelection,

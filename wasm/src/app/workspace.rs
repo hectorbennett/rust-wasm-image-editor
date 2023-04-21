@@ -1,13 +1,13 @@
 use std::{cell::RefCell, cmp, rc::Rc};
 
-use super::pixel_buffer;
+// use super::pixel_buffer;
 use super::pixel_buffer::Pixel;
 use super::pixel_buffer::PixelBuffer;
 use super::project::Project;
 use super::utils::blend_pixels;
-use super::utils::coord_is_on_outline_of_rect;
+// u 0se super::utils::coord_is_on_outline_of_rect;
 
-const ALPHA: Pixel = [0, 0, 0, 0];
+// const ALPHA: Pixel = [0, 0, 0, 0];
 const YELLOW: Pixel = [255, 255, 0, 255];
 const GREY_1: Pixel = [135, 135, 135, 255];
 const GREY_2: Pixel = [90, 90, 90, 255];
