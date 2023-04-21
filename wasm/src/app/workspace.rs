@@ -252,13 +252,13 @@ mod tests {
         workspace.resize(3, 3);
         workspace.center_canvas();
 
-        let v = [
-            [YELLOW, YELLOW, YELLOW],
-            [YELLOW, GREY_1, YELLOW],
-            [YELLOW, YELLOW, YELLOW],
-        ];
+        // let v = [
+        //     [YELLOW, YELLOW, YELLOW],
+        //     [YELLOW, GREY_1, YELLOW],
+        //     [YELLOW, YELLOW, YELLOW],
+        // ];
 
-        let flattened = v.into_iter().flatten().flatten().collect::<Vec<u8>>();
+        // let flattened = v.into_iter().flatten().flatten().collect::<Vec<u8>>();
         // assert_eq!(workspace.to_vec(), flattened);
     }
 
