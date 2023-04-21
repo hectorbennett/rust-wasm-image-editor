@@ -47,6 +47,8 @@ pub fn coord_is_on_outline_of_rect(rect: [i32; 4], coord: [i32; 2]) -> bool {
     coord_is_on_border_of_rect(expanded_rect, coord)
 }
 
+
+
 #[cfg(test)]
 mod get_1d_index_from_2d_coord_tests {
     use super::*;

@@ -44,11 +44,15 @@ impl Command for ResizeCanvas {
         self.project.borrow_mut().width = self.new_width;
         self.project.borrow_mut().height = self.new_height;
         self.project.borrow_mut().selection = Selection::new(self.new_width, self.new_height);
+
+        self.project.borrow_mut().recalculate_buffer();
     }
 
     fn rollback(&self) {
         self.project.borrow_mut().width = self.old_width;
         self.project.borrow_mut().height = self.old_height;
         self.project.borrow_mut().selection = self.old_selection.clone();
+
+        self.project.borrow_mut().recalculate_buffer();
     }
 }

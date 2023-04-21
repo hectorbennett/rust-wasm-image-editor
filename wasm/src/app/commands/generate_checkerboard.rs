@@ -47,6 +47,8 @@ impl Command for GenerateCheckerboard {
             .get_active_layer_mut()
             .unwrap()
             .fill_selection_with_function(&selection, checkerboard);
+
+        self.project.borrow_mut().recalculate_buffer();
     }
 
     fn rollback(&self) {
@@ -55,6 +57,8 @@ impl Command for GenerateCheckerboard {
             .borrow_mut()
             .get_active_layer_mut()
             .unwrap()
-            .set_buffer(self.old_layer_buffer.clone())
+            .set_buffer(self.old_layer_buffer.clone());
+
+        self.project.borrow_mut().recalculate_buffer();
     }
 }

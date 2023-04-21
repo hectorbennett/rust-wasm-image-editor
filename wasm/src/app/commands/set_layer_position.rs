@@ -34,6 +34,8 @@ impl Command for SetLayerPosition {
             .get_active_layer_mut()
             .unwrap()
             .set_position(self.new_pos[0], self.new_pos[1]);
+
+        self.project.borrow_mut().recalculate_buffer();
     }
 
     fn rollback(&self) {
@@ -42,5 +44,7 @@ impl Command for SetLayerPosition {
             .get_active_layer_mut()
             .unwrap()
             .set_position(self.old_pos[0], self.old_pos[1]);
+
+        self.project.borrow_mut().recalculate_buffer();
     }
 }

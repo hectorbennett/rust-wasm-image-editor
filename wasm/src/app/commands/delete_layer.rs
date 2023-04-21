@@ -61,6 +61,8 @@ impl Command for DeleteLayer {
             let last_element_uid = self.project.borrow().layers.last().map(|layer| layer.uid);
             self.project.borrow_mut().set_active_layer(last_element_uid);
         }
+
+        self.project.borrow_mut().recalculate_buffer();
     }
 
     fn rollback(&self) {
@@ -75,5 +77,7 @@ impl Command for DeleteLayer {
         self.project
             .borrow_mut()
             .set_active_layer(self.previous_active_layer_uid);
+
+        self.project.borrow_mut().recalculate_buffer();
     }
 }
