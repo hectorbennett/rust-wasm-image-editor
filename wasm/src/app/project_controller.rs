@@ -35,25 +35,21 @@ impl ProjectController {
     pub fn create_layer(&mut self) {
         self.history
             .append(Box::new(CreateLayer::new(self.project.clone())));
-        self.history.execute();
     }
 
     pub fn delete_layer(&mut self, uid: u64) {
         self.history
             .append(Box::new(DeleteLayer::new(self.project.clone(), uid)));
-        self.history.execute();
     }
 
     pub fn select_layer(&mut self, uid: u64) {
         self.history
             .append(Box::new(SelectLayer::new(self.project.clone(), uid)));
-        self.history.execute();
     }
 
     pub fn rename_layer(&mut self, uid: u64, name: &str) {
         self.history
             .append(Box::new(RenameLayer::new(self.project.clone(), uid, name)));
-        self.history.execute();
     }
 
     pub fn set_layer_visibile(&mut self, uid: u64, visible: bool) {
@@ -62,7 +58,6 @@ impl ProjectController {
             uid,
             visible,
         )));
-        self.history.execute();
     }
 
     pub fn set_layer_locked(&mut self, uid: u64, locked: bool) {
@@ -71,7 +66,6 @@ impl ProjectController {
             uid,
             locked,
         )));
-        self.history.execute();
     }
 
     pub fn move_active_layer(&mut self, delta_x: i32, delta_y: i32) {
@@ -95,7 +89,6 @@ impl ProjectController {
     pub fn set_active_layer_position(&mut self, x: i32, y: i32) {
         self.history
             .append(Box::new(SetLayerPosition::new(self.project.clone(), x, y)));
-        self.history.execute();
     }
 }
 
@@ -109,7 +102,6 @@ impl ProjectController {
             width,
             height,
         )));
-        self.history.execute();
     }
 
     pub fn select_ellipse(&mut self, x: u32, y: u32, width: u32, height: u32) {
@@ -120,25 +112,21 @@ impl ProjectController {
             width,
             height,
         )));
-        self.history.execute();
     }
 
     pub fn select_all(&mut self) {
         self.history
             .append(Box::new(SelectAll::new(self.project.clone())));
-        self.history.execute();
     }
 
     pub fn select_none(&mut self) {
         self.history
             .append(Box::new(SelectNone::new(self.project.clone())));
-        self.history.execute();
     }
 
     pub fn select_inverse(&mut self) {
         self.history
             .append(Box::new(SelectInverse::new(self.project.clone())));
-        self.history.execute();
     }
 
     pub fn fuzzy_select(&mut self, project_x: u32, project_y: u32) {
@@ -147,7 +135,6 @@ impl ProjectController {
             project_x,
             project_y,
         )));
-        self.history.execute();
     }
 }
 
@@ -176,19 +163,16 @@ impl ProjectController {
             width,
             height,
         )));
-        self.history.execute();
     }
 
     pub fn fill_selection(&mut self, colour: &Colour) {
         self.history
             .append(Box::new(FillSelection::new(self.project.clone(), *colour)));
-        self.history.execute();
     }
 
     pub fn generate_checkerboard(&mut self) {
         self.history
             .append(Box::new(GenerateCheckerboard::new(self.project.clone())));
-        self.history.execute();
     }
 
     pub fn import_image_as_layer(&mut self, bytes: Vec<u8>) {
@@ -196,6 +180,5 @@ impl ProjectController {
             self.project.clone(),
             bytes,
         )));
-        self.history.execute();
     }
 }

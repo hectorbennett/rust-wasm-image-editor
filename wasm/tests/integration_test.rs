@@ -68,12 +68,10 @@ fn test_history() {
     let mut history = History::new();
 
     history.append(Box::new(SetName::new(project.clone(), "A new name")));
-    history.execute();
 
     assert_eq!(project.borrow().name, "A new name");
 
     history.append(Box::new(ResizeCanvas::new(project.clone(), 10, 10)));
-    history.execute();
 
     assert_eq!(project.borrow().width, 10);
 }
