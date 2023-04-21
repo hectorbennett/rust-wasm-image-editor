@@ -3,6 +3,7 @@ use std::{cell::RefCell, rc::Rc};
 use super::{
     colour::Colour,
     commands::{
+        command::Command,
         create_layer::CreateLayer,
         delete_layer::DeleteLayer,
         fill_selection::FillSelection,
@@ -32,6 +33,11 @@ pub struct ProjectController {
 
 // Layers
 impl ProjectController {
+    // pub fn execute_command(&mut self, command: Box<dyn Command>) {
+    //     self.history.append(command);
+    //     self.project.borrow_mut().recalculate_buffer();
+    // }
+
     pub fn create_layer(&mut self) {
         self.history
             .append(Box::new(CreateLayer::new(self.project.clone())));

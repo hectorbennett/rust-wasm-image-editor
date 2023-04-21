@@ -32,6 +32,8 @@ impl Command for SetLayerVisible {
             .borrow_mut()
             .get_layer_mut(self.layer_uid)
             .set_visible(self.set_visible);
+
+        self.project.borrow_mut().recalculate_buffer();
     }
 
     fn rollback(&self) {
@@ -39,5 +41,7 @@ impl Command for SetLayerVisible {
             .borrow_mut()
             .get_layer_mut(self.layer_uid)
             .set_visible(!self.set_visible);
+
+        self.project.borrow_mut().recalculate_buffer();
     }
 }

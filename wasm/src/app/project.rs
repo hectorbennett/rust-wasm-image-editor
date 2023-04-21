@@ -7,7 +7,7 @@ use postcard;
 
 use super::{
     layer::Layer,
-    pixel_buffer::Pixel,
+    pixel_buffer::{Pixel, PixelBuffer},
     selection::Selection,
     utils::{blend_pixels, generate_uid},
 };
@@ -21,6 +21,8 @@ pub struct Project {
     pub layers: Vec<Layer>,
     pub active_layer_uid: Option<u64>,
     pub selection: Selection,
+    #[serde(skip)]
+    buffer: PixelBuffer,
 }
 
 impl Default for Project {
@@ -39,6 +41,7 @@ impl Project {
             layers: vec![],
             active_layer_uid: None,
             selection: Selection::new(width, height),
+            buffer: PixelBuffer::new(width, height),
         };
         project.create_layer();
         project
@@ -95,7 +98,27 @@ impl Project {
         bytes
     }
 
+    pub fn recalculate_buffer(&mut self) {
+        let mut buffer = PixelBuffer::new(self.width, self.height);
+
+        (0..self.width).for_each(|i| {
+            (0..self.height).for_each(|j| {
+                let pixel = self.calculate_pixel(i, j).unwrap();
+                buffer.set(i, j, pixel);
+            })
+        });
+        self.buffer = buffer;
+    }
+
     pub fn get_pixel(&self, x: u32, y: u32) -> Option<Pixel> {
+        self.buffer.get(x, y)
+    }
+
+    pub fn buffer(&self) -> &PixelBuffer {
+        &self.buffer
+    }
+
+    fn calculate_pixel(&self, x: u32, y: u32) -> Option<Pixel> {
         if x > self.width || y > self.height {
             return None;
         }
