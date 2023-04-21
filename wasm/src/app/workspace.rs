@@ -70,8 +70,8 @@ impl Workspace {
 
     pub fn project_to_workspace_coords(&self, coords: [i32; 2]) -> [i32; 2] {
         [
-            ((self.x as f64 + coords[0] as f64) * (self.zoom / 100.0)) as i32,
-            ((self.y as f64 + coords[1] as f64) * (self.zoom / 100.0)) as i32,
+            (coords[0] as f64 * (self.zoom / 100.0) + self.x as f64) as i32,
+            (coords[1] as f64 * (self.zoom / 100.0) + self.y as f64) as i32,
         ]
     }
 
@@ -102,7 +102,7 @@ impl Workspace {
                     if p[3] == 244 {
                         pixel_buffer.set(i as u32, j as u32, p);
                     } else {
-                        let c = get_background_pixel(p_x as u32, p_y as u32);
+                        let c = get_background_pixel(i as u32, j as u32);
                         pixel_buffer.set(i as u32, j as u32, blend_pixels(c, p))
                     }
                 }
