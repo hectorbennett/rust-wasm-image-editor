@@ -34,7 +34,7 @@ impl History {
 
         // either merge the command with the previous one,
         // or add a new command and increase the revision
-        if self.should_merge_command_with_previous(&command) {
+        if self.should_merge_command_with_previous(&*command) {
             self.merge_command_with_previous(command);
         } else {
             self.add_new_command(command);
@@ -44,16 +44,10 @@ impl History {
         self.history.last().unwrap().execute();
     }
 
-    fn should_merge_command_with_previous(&self, command: &Box<dyn Command>) -> bool {
+    fn should_merge_command_with_previous(&self, command: &dyn Command) -> bool {
         // If the previous command is of the same type and executed very recently, return true
         match self.history.last() {
-            Some(previous_command) => {
-                if command.name() == previous_command.name() {
-                    true
-                } else {
-                    false
-                }
-            }
+            Some(previous_command) => command.name() == previous_command.name(),
             None => false,
         }
     }
