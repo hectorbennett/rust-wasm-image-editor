@@ -148,6 +148,15 @@ impl Api {
         web_sys::console::time_end_with_label("Api::select_inverse");
     }
 
+    pub fn fuzzy_select(&mut self, project_x: u32, project_y: u32) {
+        web_sys::console::time_with_label("Api::fuzzy_select");
+        self.app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .fuzzy_select(project_x, project_y);
+        web_sys::console::time_end_with_label("Api::fuzzy_select");
+    }
+
     pub fn set_active_layer(&mut self, layer_uid: u64) {
         web_sys::console::time_with_label("Api::set_active_layer");
         self.app

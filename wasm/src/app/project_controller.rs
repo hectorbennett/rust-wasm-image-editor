@@ -12,8 +12,8 @@ use super::{
         resize_canvas::ResizeCanvas,
         select_layer::SelectLayer,
         selection::{
-            select_all::SelectAll, select_ellipse::SelectEllipse, select_inverse::SelectInverse,
-            select_none::SelectNone, select_rect::SelectRect,
+            fuzzy_select::FuzzySelect, select_all::SelectAll, select_ellipse::SelectEllipse,
+            select_inverse::SelectInverse, select_none::SelectNone, select_rect::SelectRect,
         },
         set_layer_locked::SetLayerLocked,
         set_layer_position::SetLayerPosition,
@@ -138,6 +138,15 @@ impl ProjectController {
     pub fn select_inverse(&mut self) {
         self.history
             .append(Box::new(SelectInverse::new(self.project.clone())));
+        self.history.execute();
+    }
+
+    pub fn fuzzy_select(&mut self, project_x: u32, project_y: u32) {
+        self.history.append(Box::new(FuzzySelect::new(
+            self.project.clone(),
+            project_x,
+            project_y,
+        )));
         self.history.execute();
     }
 }
