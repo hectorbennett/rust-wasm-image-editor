@@ -1,3 +1,4 @@
+pub mod fuzzy_select;
 pub mod select_all;
 pub mod select_ellipse;
 pub mod select_inverse;

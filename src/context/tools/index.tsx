@@ -9,6 +9,7 @@ import { bucket_fill } from "./bucket_fill";
 import { rectangle_select } from "./rectangle_select";
 import { ellipse_select } from "./ellipse_select";
 import { move_layer } from "./move_layer";
+import { fuzzy_select } from "./fuzzy_select";
 
 export interface ToolEventParams {
   ctx: CanvasRenderingContext2D;
@@ -41,6 +42,7 @@ function useTools() {
     ellipse_select,
     bucket_fill,
     eye_dropper,
+    fuzzy_select,
   ];
 
   const [activeTool, setActiveTool] = useState(tools[0]);

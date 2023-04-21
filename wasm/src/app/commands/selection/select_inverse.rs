@@ -27,7 +27,6 @@ impl Command for SelectInverse {
     }
 
     fn rollback(&self) {
-        /* TODO: Maybe in future instead of copying the buffer for the whole layer, we could copy the buffer for just the selection */
         self.project.borrow_mut().selection = self.old_selection.clone();
     }
 }
