@@ -137,10 +137,10 @@ impl Project {
             None => None,
             Some(pixel) => {
                 if pixel[3] == 255 {
-                    return Some(pixel);
+                    Some(pixel)
                 } else {
                     let c = get_checkerboard_pixel(x, y);
-                    return Some(blend_pixels(c, pixel));
+                    Some(blend_pixels(c, pixel))
                 }
             }
         }
