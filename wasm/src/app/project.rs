@@ -83,6 +83,21 @@ impl Project {
         }
     }
 
+    pub fn reeorder_layers(&mut self, uids_in_order: &Vec<u64>) {
+        let mut layers = vec![];
+        // assert_eq!(uids_in_order.len(), layers.len());
+        uids_in_order.iter().for_each(|uid| {
+            let l = self.layers.remove(
+                self.layers
+                    .iter()
+                    .position(|l| l.uid == *uid)
+                    .expect("layer not found"),
+            );
+            layers.push(l);
+        });
+        self.layers = layers;
+    }
+
     fn get_image(&self) -> RgbaImage {
         ImageBuffer::from_fn(self.width, self.height, |x, y| {
             image::Rgba(self.get_pixel(x, y).unwrap())

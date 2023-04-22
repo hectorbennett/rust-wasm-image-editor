@@ -1,11 +1,12 @@
 import { useState, MouseEventHandler, useRef, useEffect } from "react";
-import { SegmentedControl, Box, ActionIcon, TextInput, Menu } from "@mantine/core";
+import { Box, ActionIcon, TextInput, Menu } from "@mantine/core";
 import { EyeFill, EyeSlash, LockFill, Lock, Plus, Trash } from "react-bootstrap-icons";
 import { useRightClick } from "../../../hooks";
 import { LayersContext } from "../../../context/layers";
 import { WasmContext } from "../../../context/wasm";
 
 import { LayerSerializer } from "wasm";
+import Sortable, { Item } from "../../../components/Sortable";
 
 interface LayerCheckboxProps {
   checked: boolean;
@@ -182,25 +183,26 @@ function NewLayerButton() {
 
 export default function Layers() {
   const layers = LayersContext.useContainer();
+  const wasm = WasmContext.useContainer();
+
+  const l = layers.layers?.slice(0).reverse() || [];
+
+  const onChange = (items: Item[]) => {
+    const biguint64 = new BigUint64Array(items.length);
+
+    items.forEach((item, index) => {
+      biguint64[items.length - index - 1] = BigInt(item.id);
+    });
+
+    wasm.api?.reeorder_layers(biguint64);
+  };
 
   return (
     <>
       <NewLayerButton />
-      <SegmentedControl
-        value={layers.active_layer_uid || ""}
-        onChange={layers.setActiveLayer}
-        fullWidth
-        orientation="vertical"
-        transitionDuration={0}
-        data={
-          layers.layers
-            ?.slice(0)
-            .reverse()
-            .map((layer) => ({
-              value: layer.uid,
-              label: <LayerRow layer={layer} />,
-            })) || []
-        }
+      <Sortable
+        onChange={onChange}
+        items={l.map((layer) => ({ id: layer.uid, component: <LayerRow layer={layer} /> }))}
       />
     </>
   );

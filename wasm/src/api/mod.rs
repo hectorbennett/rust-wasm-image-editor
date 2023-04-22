@@ -94,6 +94,15 @@ impl Api {
         self.app.primary_colour = Colour::from_rgba(red, green, blue, alpha);
     }
 
+    pub fn reeorder_layers(&mut self, uids_in_order: Vec<u64>) {
+        web_sys::console::time_with_label("Api::reeorder_layers");
+        self.app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .reeorder_layers(uids_in_order);
+        web_sys::console::time_end_with_label("Api::reeorder_layers");
+    }
+
     pub fn move_active_layer(&mut self, move_x: i32, move_y: i32) {
         web_sys::console::time_with_label("Api::move_layer");
         self.app
