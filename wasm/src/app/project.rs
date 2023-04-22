@@ -83,7 +83,7 @@ impl Project {
         }
     }
 
-    pub fn reeorder_layers(&mut self, uids_in_order: &Vec<u64>) {
+    pub fn reeorder_layers(&mut self, uids_in_order: &[u64]) {
         let mut layers = vec![];
         // assert_eq!(uids_in_order.len(), layers.len());
         uids_in_order.iter().for_each(|uid| {
