@@ -44,7 +44,7 @@ const useStyles = createStyles((theme, _params, _getRef) => ({
   tabBar: {
     height: TAB_BAR_HEIGHT,
     display: "flex",
-    overflow: "scroll",
+    overflow: "auto",
     background: theme.colors.dark[6],
   },
   canvasInner: {
@@ -70,7 +70,7 @@ export default function Ui(props: UiProps) {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const [leftPaneWidth, setLeftPaneWidth] = useState(200);
-  const [rightPaneWidth, setRightPaneWidth] = useState(200);
+  const [rightPaneWidth, setRightPaneWidth] = useState(300);
 
   return (
     <Box

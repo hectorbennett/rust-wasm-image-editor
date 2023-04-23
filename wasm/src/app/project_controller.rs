@@ -10,6 +10,7 @@ use super::{
         generate_checkerboard::GenerateCheckerboard,
         import_image_as_layer::ImportImageAsLayer,
         rename_layer::RenameLayer,
+        reorder_layers::ReorderLayers,
         resize_canvas::ResizeCanvas,
         select_layer::SelectLayer,
         selection::{
@@ -72,6 +73,13 @@ impl ProjectController {
             uid,
             locked,
         )));
+    }
+
+    pub fn reeorder_layers(&mut self, uids_in_order: Vec<u64>) {
+        self.history.append(Box::new(ReorderLayers::new(
+            self.project.clone(),
+            uids_in_order,
+        )))
     }
 
     pub fn move_active_layer(&mut self, delta_x: i32, delta_y: i32) {
