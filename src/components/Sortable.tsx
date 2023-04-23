@@ -51,14 +51,7 @@ interface SortableProps {
 }
 
 export default function Sortable({ items, onChange }: SortableProps) {
-  const sensors = useSensors(
-    useSensor(PointerSensor, {
-      activationConstraint: { delay: 100, tolerance: 0 },
-    }),
-    useSensor(KeyboardSensor, {
-      coordinateGetter: sortableKeyboardCoordinates,
-    }),
-  );
+  const sensors = useSensors(useSensor(PointerSensor));
 
   return (
     <DndContext

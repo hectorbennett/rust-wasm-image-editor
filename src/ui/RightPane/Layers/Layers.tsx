@@ -54,6 +54,8 @@ export default function Layers() {
               active={layer.uid === layers.active_layer_uid}
               onSetActive={() => layers.setActiveLayer(layer.uid)}
               onDelete={() => layers.deleteLayer(layer.uid)}
+              getThumbnail={() => layers.getThumbnail(layer.uid)}
+              thumbnailHash={layer.thumbnail_hash}
             />
           ),
         }))}

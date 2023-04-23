@@ -1,5 +1,5 @@
 import { useState, MouseEventHandler, useRef, useEffect } from "react";
-import { Box, ActionIcon, TextInput, Menu, UnstyledButton } from "@mantine/core";
+import { Box, ActionIcon, TextInput, Menu, UnstyledButton, Divider } from "@mantine/core";
 import { EyeFill, EyeSlash, LockFill, Lock, Trash } from "react-bootstrap-icons";
 import { useRightClick } from "../hooks";
 
@@ -13,7 +13,8 @@ interface LayerProps {
   active?: boolean;
   onSetActive?: () => void;
   onDelete?: () => void;
-  thumbnail?: ImageData;
+  getThumbnail?: () => Uint8ClampedArray | undefined;
+  thumbnailHash?: string;
 }
 
 const noop = () => {
@@ -30,7 +31,8 @@ export function Layer({
   active = false,
   onSetActive = noop,
   onDelete = noop,
-  thumbnail,
+  getThumbnail,
+  thumbnailHash,
 }: LayerProps) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
   const rightClickRef = useRightClick<HTMLButtonElement>(function (_event: Event) {
@@ -56,12 +58,12 @@ export function Layer({
             display: "flex",
             height: 50,
             alignItems: "center",
-            // border: "1px solid grey",
+            width: "100%",
+            // todo: use mantine theme for background
             background: active ? "rgba(255, 255, 255, 0.05)" : undefined,
           }}
           ref={rightClickRef}
-          onClick={() => {
-            console.log("click!");
+          onMouseDown={() => {
             onSetActive();
           }}
         >
@@ -86,7 +88,11 @@ export function Layer({
             sx={{ display: "flex", alignItems: "center", width: "100%" }}
             // onClick={() => layers.setActiveLayerId(props.layer.id)}
           >
-            <LayerThumbnail thumbnail={thumbnail} active={active} />
+            <LayerThumbnail
+              thumbnailHash={thumbnailHash}
+              getThumbnail={getThumbnail}
+              active={active}
+            />
             <LayerLabel name={name} onChangeName={onChangeName} />
           </Box>
         </UnstyledButton>
@@ -97,6 +103,7 @@ export function Layer({
           Delete layer
         </Menu.Item>
       </Menu.Dropdown>
+      <Divider />
     </Menu>
   );
 }
@@ -121,7 +128,7 @@ function LayerLabel({ name, onChangeName }: LayerLabelProps) {
 
   return (
     <Box
-      mx="sm"
+      mx="md"
       sx={{ flex: 1, textAlign: "left", width: "100%" }}
       onDoubleClick={handleDoubleClick}
     >
@@ -149,7 +156,7 @@ interface LayerCheckboxProps {
 
 function VisibleCheckbox(props: LayerCheckboxProps) {
   return (
-    <ActionIcon size="sm" mx={2} onClick={props.onClick}>
+    <ActionIcon size="sm" mx={2} onMouseDown={props.onClick}>
       {props.checked ? <EyeFill size={12} /> : <EyeSlash size={12} />}
     </ActionIcon>
   );
@@ -157,20 +164,28 @@ function VisibleCheckbox(props: LayerCheckboxProps) {
 
 function LockedCheckbox(props: LayerCheckboxProps) {
   return (
-    <ActionIcon size="sm" mx={2} onClick={props.onClick}>
+    <ActionIcon size="sm" mx={2} onMouseDown={props.onClick}>
       {props.checked ? <LockFill size={12} /> : <Lock size={12} />}
     </ActionIcon>
   );
 }
 
-function LayerThumbnail({ thumbnail, active }: { thumbnail?: ImageData; active: boolean }) {
+function LayerThumbnail({
+  thumbnailHash,
+  getThumbnail,
+  active,
+}: {
+  thumbnailHash?: string;
+  getThumbnail?: () => Uint8ClampedArray | undefined;
+  active: boolean;
+}) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   const width = 30;
   const height = 30;
 
   useEffect(() => {
-    if (!thumbnail) {
+    if (!thumbnailHash || !getThumbnail) {
       return;
     }
     const canvas = ref.current;
@@ -181,8 +196,14 @@ function LayerThumbnail({ thumbnail, active }: { thumbnail?: ImageData; active: 
     if (!ctx) {
       return;
     }
-    ctx.putImageData(thumbnail, 0, 0);
-  }, [thumbnail]);
+    const thumbnail = getThumbnail();
+    if (!thumbnail) {
+      return;
+    }
+    const image_data = ctx.createImageData(width, height);
+    image_data.data.set(thumbnail);
+    ctx.putImageData(image_data, 0, 0);
+  }, [thumbnailHash]);
 
   return (
     <canvas
