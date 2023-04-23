@@ -70,7 +70,7 @@ export default function Ui(props: UiProps) {
   const { classes } = useStyles();
   const theme = useMantineTheme();
   const [leftPaneWidth, setLeftPaneWidth] = useState(200);
-  const [rightPaneWidth, setRightPaneWidth] = useState(200);
+  const [rightPaneWidth, setRightPaneWidth] = useState(300);
 
   return (
     <Box

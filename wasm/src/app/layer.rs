@@ -64,11 +64,11 @@ impl Layer {
 
     pub fn get_thumbnail(&self) -> Vec<u8> {
         let mut v = vec![];
-        /* 20x20 thumbnail */
-        (0..20).for_each(|i| {
-            (0..20).for_each(|j| {
-                let i2 = self.width * i / 20;
-                let j2 = self.height * j / 20;
+        /* 30x30 thumbnail */
+        (0..30).for_each(|i| {
+            (0..30).for_each(|j| {
+                let i2 = self.width * i / 30;
+                let j2 = self.height * j / 30;
                 let pixel = self.buffer.get(i2, j2).unwrap();
                 v.extend_from_slice(&pixel);
             })
