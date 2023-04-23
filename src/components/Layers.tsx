@@ -1,5 +1,5 @@
 import { useState, MouseEventHandler, useRef, useEffect } from "react";
-import { Box, ActionIcon, TextInput, Menu } from "@mantine/core";
+import { Box, ActionIcon, TextInput, Menu, UnstyledButton } from "@mantine/core";
 import { EyeFill, EyeSlash, LockFill, Lock, Trash } from "react-bootstrap-icons";
 import { useRightClick } from "../hooks";
 
@@ -33,7 +33,7 @@ export function Layer({
   thumbnail,
 }: LayerProps) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const rightClickRef = useRightClick<HTMLDivElement>(function (_event: Event) {
+  const rightClickRef = useRightClick<HTMLButtonElement>(function (_event: Event) {
     setMenuIsOpen(true);
   });
 
@@ -50,7 +50,7 @@ export function Layer({
       }}
     >
       <Menu.Target>
-        <Box
+        <UnstyledButton
           pl="xs"
           sx={{
             display: "flex",
@@ -86,10 +86,10 @@ export function Layer({
             sx={{ display: "flex", alignItems: "center", width: "100%" }}
             // onClick={() => layers.setActiveLayerId(props.layer.id)}
           >
-            <LayerThumbnail thumbnail={thumbnail} />
+            <LayerThumbnail thumbnail={thumbnail} active={active} />
             <LayerLabel name={name} onChangeName={onChangeName} />
           </Box>
-        </Box>
+        </UnstyledButton>
       </Menu.Target>
 
       <Menu.Dropdown>
@@ -163,7 +163,7 @@ function LockedCheckbox(props: LayerCheckboxProps) {
   );
 }
 
-function LayerThumbnail({ thumbnail }: { thumbnail?: ImageData }) {
+function LayerThumbnail({ thumbnail, active }: { thumbnail?: ImageData; active: boolean }) {
   const ref = useRef<HTMLCanvasElement>(null);
 
   const width = 30;
@@ -190,6 +190,7 @@ function LayerThumbnail({ thumbnail }: { thumbnail?: ImageData }) {
       width={width}
       height={height}
       style={{
+        outline: active ? "2px solid white" : undefined,
         background:
           "repeating-conic-gradient(rgb(135, 135, 135) 0%, rgb(135, 135, 135) 25%, rgb(90, 90, 90) 0%, rgb(90, 90, 90) 50%) 50% center / 10px 10px",
       }}
