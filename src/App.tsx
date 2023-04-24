@@ -76,8 +76,8 @@ function App() {
         shortcut={null}
         actions={[]}
         actionComponent={CustomSpotlightAction}
-        overlayBlur={0}
-        transitionDuration={0}
+        overlayProps={{ blur: 0 }}
+        transitionProps={{ duration: 0 }}
       >
         <WasmContext.Provider>
           <Provider>

@@ -1,5 +1,5 @@
 import { Tabs } from "@mantine/core";
-import { IconPhoto, IconSettings } from "@tabler/icons";
+import { IconPhoto, IconSettings } from "@tabler/icons-react";
 import { CloseButton } from "@mantine/core";
 import { WasmContext } from "../../context/wasm";
 import { TabsContext } from "../../context/tabs";
