@@ -22,6 +22,15 @@ async function getAsByteArray(file: File) {
 
 function useFile() {
   const wasm = WasmContext.useContainer();
+
+  const import_files_as_images_as_layers = (files: File[]) => {
+    files.forEach((file) => {
+      getAsByteArray(file).then((result) => {
+        wasm.api?.import_image_as_layer(result);
+      });
+    });
+  };
+
   return {
     open: function open() {
       const inp = document.createElement("input");
@@ -38,6 +47,7 @@ function useFile() {
       };
       inp.click();
     },
+    import_files_as_images_as_layers,
     import_image_as_layer: function import_image() {
       const inp = document.createElement("input");
       inp.type = "file";
@@ -46,10 +56,7 @@ function useFile() {
         if (!target.files) {
           return;
         }
-        const file = target.files[0];
-        getAsByteArray(file).then((result) => {
-          wasm.api?.import_image_as_layer(result);
-        });
+        import_files_as_images_as_layers([target.files[0]]);
       };
       inp.click();
     },

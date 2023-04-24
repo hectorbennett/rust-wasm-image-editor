@@ -9,12 +9,12 @@ import {
   IconFile,
   // IconFileOff,
   // IconLogout,
-  TablerIconProps,
-} from "@tabler/icons";
+  TablerIconsProps,
+} from "@tabler/icons-react";
 import { FunctionComponent, useEffect } from "react";
 import { createContainer } from "unstated-next";
 import type { SpotlightAction } from "@mantine/spotlight";
-import { IconSettings } from "@tabler/icons";
+import { IconSettings } from "@tabler/icons-react";
 import { KeyboardShortcutName, SettingsContext } from "./settings";
 import { AppContext } from "./app";
 import { LayersContext } from "./layers";
@@ -37,7 +37,7 @@ interface Command {
   id: string;
   label: string;
   action: () => void; // todo: make manditory
-  icon?: FunctionComponent<TablerIconProps>;
+  icon?: FunctionComponent<TablerIconsProps>;
   disabled?: boolean;
 }
 

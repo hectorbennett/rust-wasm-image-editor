@@ -47,7 +47,7 @@ impl Command for ImportImageAsLayer {
         layer.resize(buffer.width, buffer.height);
         layer.set_buffer(buffer);
 
-        self.project.borrow_mut().recalculate_buffer();
+        project.recalculate_buffer();
     }
 
     fn rollback(&self) {

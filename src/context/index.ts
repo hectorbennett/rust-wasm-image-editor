@@ -1,7 +1,10 @@
 export { default } from "./Provider";
+export { ActiveProjectContext } from "./activeProject";
+export { AppContext } from "./app";
 export { CanvasContext } from "./canvas";
 export { CommandsContext } from "./commands";
-// export { LayersContext } from "./layers";
-// export { ProjectContext } from "./project";
+export { LayersContext } from "./layers";
+export { SettingsContext } from "./settings";
+export { TabsContext } from "./tabs";
 export { ToolsContext } from "./tools";
-export { ActiveProjectContext } from "./activeProject";
+export { WasmContext } from "./wasm";

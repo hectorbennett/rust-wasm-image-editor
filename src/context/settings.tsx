@@ -1,6 +1,6 @@
 import { FunctionComponent, useState } from "react";
 import { createContainer } from "unstated-next";
-import { IconGauge, IconKeyboard, TablerIconProps } from "@tabler/icons";
+import { IconGauge, IconKeyboard, TablerIconsProps } from "@tabler/icons-react";
 
 export interface KeyboardShortcuts {
   "app.settings": Array<string>;
@@ -49,7 +49,7 @@ type TabId = "user_interface" | "keyboard_shortcuts";
 
 interface SettingsTab {
   id: TabId;
-  icon: FunctionComponent<TablerIconProps>;
+  icon: FunctionComponent<TablerIconsProps>;
   label: string;
 }
 
