@@ -1,6 +1,4 @@
-// import { Box } from "@mantine/core";
-import { IconColorPicker } from "@tabler/icons";
-
+import { IconColorPicker } from "@tabler/icons-react";
 import { Tool, ToolEventParams } from ".";
 import { getProjectMouseCoords } from "../../utils";
 

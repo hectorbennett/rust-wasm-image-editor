@@ -1,6 +1,6 @@
-import initWasm, { Api } from "wasm";
+import initWasm, { Api } from "../../wasm/pkg/wasm.js";
 
-import { ApiSerializerSchema } from "wasm";
+import { ApiSerializerSchema } from "../../wasm/pkg/wasm.js";
 
 import { useEffect, useRef, useState } from "react";
 import { createContainer } from "unstated-next";
@@ -9,9 +9,8 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
   const [api, setApi] = useState<Api>();
   const inited = useRef(false);
 
-  const methods_without_callback = ["render_to_canvas", "scroll_workspace", "zoom_workspace"];
-
   useEffect(() => {
+    const methods_without_callback = ["render_to_canvas", "scroll_workspace", "zoom_workspace"];
     if (inited.current) {
       return;
     }
@@ -39,7 +38,7 @@ const useWasmApi = ({ methodCallback }: { methodCallback: () => void }) => {
       };
       setApi(() => new Proxy(new Api(), apiHandler));
     });
-  }, []);
+  }, [methodCallback]);
   return api;
 };
 

@@ -2,13 +2,13 @@ import { MenuBarItem } from "./MenuBarItem";
 import { Group } from "@mantine/core";
 import { FunctionComponent, MouseEventHandler } from "react";
 import { CommandsContext } from "../../context";
-import { TablerIconProps } from "@tabler/icons";
+import { TablerIconsProps } from "@tabler/icons-react";
 
 export interface MenuItem {
   label: string;
   kbd_shortcut?: Array<string>;
   onClick: MouseEventHandler;
-  icon?: FunctionComponent<TablerIconProps>;
+  icon?: FunctionComponent<TablerIconsProps>;
   disabled?: boolean;
 }
 

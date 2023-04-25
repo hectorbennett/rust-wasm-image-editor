@@ -1,9 +1,9 @@
 import { ReactElement, useState } from "react";
-import { Api } from "wasm";
 import { createContainer } from "unstated-next";
+import { Api } from "../../../wasm/pkg/wasm";
 
-import { TablerIcon } from "@tabler/icons";
-import { Icon } from "react-bootstrap-icons";
+import type { Icon as TablerIcon } from "@tabler/icons-react";
+import type { Icon as ReactBootstrapIcon } from "react-bootstrap-icons";
 import { eye_dropper } from "./eye_dropper";
 import { bucket_fill } from "./bucket_fill";
 import { rectangle_select } from "./rectangle_select";
@@ -30,7 +30,7 @@ export interface ToolEvents {
 export interface Tool {
   name: string;
   label: string;
-  icon: Icon | TablerIcon;
+  icon: ReactBootstrapIcon | TablerIcon;
   events: ToolEvents;
   cursor?: ReactElement;
 }

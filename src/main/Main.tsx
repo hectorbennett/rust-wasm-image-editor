@@ -1,11 +1,10 @@
-import { HotkeyItem, useHotkeys } from "@mantine/hooks";
-import Ui from "../ui/Ui";
-import { SettingsContext } from "../context/settings";
-import { Settings } from "../settings";
-import { CommandsContext } from "../context";
-import Workspace from "../workspace/Workspace";
-import { TabsContext } from "../context/tabs";
 import { ReactNode } from "react";
+import { HotkeyItem, useHotkeys } from "@mantine/hooks";
+import { AppContext, CommandsContext, SettingsContext, TabsContext } from "../context";
+import Ui from "../ui/Ui";
+import { Settings } from "../settings";
+import Workspace from "../workspace/Workspace";
+import Dropzone from "../components/Dropzone";
 
 function Tabs() {
   const tabs = TabsContext.useContainer();
@@ -33,11 +32,15 @@ function HotkeyProvider(props: { children: ReactNode }) {
 }
 
 export default function Main() {
+  const app = AppContext.useContainer();
   return (
-    <HotkeyProvider>
-      <Ui>
-        <Tabs />
-      </Ui>
-    </HotkeyProvider>
+    <>
+      <HotkeyProvider>
+        <Ui>
+          <Tabs />
+        </Ui>
+      </HotkeyProvider>
+      <Dropzone onDropImages={app.file.import_files_as_images_as_layers} />
+    </>
   );
 }

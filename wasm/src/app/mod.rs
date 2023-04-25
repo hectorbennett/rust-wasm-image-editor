@@ -43,7 +43,7 @@ impl App {
                 n += 1;
             }
         }
-        let name: String = format!("Untitled {}", n);
+        let name: String = format!("Untitled {n}");
         let project: Project = Project::new(&name, 512, 512);
         self.init_project(project)
     }

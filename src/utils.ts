@@ -1,4 +1,4 @@
-import { Api } from "wasm";
+import { Api } from "../wasm/pkg/wasm";
 
 export function getProjectMouseCoords(event: React.MouseEvent<Element, MouseEvent>, api: Api) {
   const zoom = api.state.workspace.zoom;
