@@ -201,7 +201,7 @@ mod tests {
 
     #[test]
     fn test_select_inverse() {
-        let mut s = Selection::new(4, 2);
+        let _s = Selection::new(4, 2);
 
         // select a square to the right
         // s.select_rect(2, 0, 2, 2);

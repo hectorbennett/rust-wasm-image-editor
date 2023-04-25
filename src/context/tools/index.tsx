@@ -1,6 +1,6 @@
 import { ReactElement, useState } from "react";
-import { Api } from "wasm";
 import { createContainer } from "unstated-next";
+import { Api } from "../../../wasm/pkg/wasm";
 
 import type { Icon as TablerIcon } from "@tabler/icons-react";
 import type { Icon as ReactBootstrapIcon } from "react-bootstrap-icons";

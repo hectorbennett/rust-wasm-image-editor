@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { createContainer } from "unstated-next";
 import { WasmContext } from "./wasm";
 import { SettingsContext } from "./settings";
@@ -44,14 +44,7 @@ function useTabs() {
     if (activeTabUid && !tabOrder.includes(activeTabUid)) {
       setTabOrder((t) => [...t, activeTabUid]);
     }
-  }, [activeTabUid]);
-
-  useEffect(() => {
-    /* Focus the settings tab when it appears */
-    if (settings.isOpen) {
-      focusTab("settings");
-    }
-  }, [settings.isOpen]);
+  }, [activeTabUid, tabOrder]);
 
   function closeTab(uid: string) {
     if (uid === "settings") {
@@ -69,21 +62,31 @@ function useTabs() {
     }
   }
 
-  function focusTab(uid: string) {
-    if (uid == "settings") {
-      wasm.api?.clear_active_project();
-      setActiveTabUid("settings");
-    } else {
-      wasm.api?.set_active_project(BigInt(uid));
-      setActiveTabUid(uid);
+  const focusTab = useCallback(
+    (uid: string) => {
+      if (uid == "settings") {
+        wasm.api?.clear_active_project();
+        setActiveTabUid("settings");
+      } else {
+        wasm.api?.set_active_project(BigInt(uid));
+        setActiveTabUid(uid);
+      }
+    },
+    [wasm.api],
+  );
+
+  useEffect(() => {
+    /* Focus the settings tab when it appears */
+    if (settings.isOpen) {
+      focusTab("settings");
     }
-  }
+  }, [focusTab, settings.isOpen]);
 
   useEffect(() => {
     if (wasm.state?.active_project_uid && wasm.state.active_project_uid !== activeTabUid) {
       setActiveTabUid(wasm.state.active_project_uid);
     }
-  }, [wasm.state?.active_project_uid]);
+  }, [activeTabUid, wasm.state?.active_project_uid]);
 
   return {
     tabs,

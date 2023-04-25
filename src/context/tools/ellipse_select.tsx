@@ -1,4 +1,4 @@
-import { Api } from "wasm";
+import { Api } from "../../../wasm/pkg/wasm";
 import { TbOvalVertical } from "react-icons/tb";
 import { Tool, ToolEventParams } from ".";
 import { getProjectMouseCoords } from "../../utils";

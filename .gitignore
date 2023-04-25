@@ -45,3 +45,5 @@ Cargo.lock
 
 # cypress test videos
 /cypress/videos
+
+.next

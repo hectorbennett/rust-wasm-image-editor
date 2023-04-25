@@ -97,7 +97,7 @@ impl Workspace {
         // render project pixels
         (p_l..p_r).for_each(|i| {
             (p_t..p_b).for_each(|j| {
-                let [p_x, p_y] = self.workspace_to_project_coords([i as i32, j as i32]);
+                let [p_x, p_y] = self.workspace_to_project_coords([i, j]);
 
                 if let Some(p) = project.get_pixel(p_x as u32, p_y as u32) {
                     pixel_buffer.set(i as u32, j as u32, p);

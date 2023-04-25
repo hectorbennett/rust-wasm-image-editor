@@ -2,7 +2,7 @@ import { createContainer } from "unstated-next";
 
 import { WasmContext } from "./wasm";
 
-import { ProjectSerializer } from "wasm";
+import { ProjectSerializer } from "../../wasm/pkg/wasm.js";
 
 function useActiveProject() {
   const wasm = WasmContext.useContainer();
