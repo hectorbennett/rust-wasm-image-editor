@@ -148,17 +148,15 @@ impl Project {
     }
 
     fn calculate_pixel_with_checkerboard_background(&self, x: u32, y: u32) -> Option<Pixel> {
-        match self.calculate_pixel(x, y) {
-            None => None,
-            Some(pixel) => {
-                if pixel[3] == 255 {
-                    Some(pixel)
-                } else {
-                    let c = get_checkerboard_pixel(x, y);
-                    Some(blend_pixels(c, pixel))
-                }
+        if let Some(pixel) = self.calculate_pixel(x, y) {
+            if pixel[3] == 255 {
+                return Some(pixel);
+            } else {
+                let c = get_checkerboard_pixel(x, y);
+                return Some(blend_pixels(c, pixel));
             }
         }
+        None
     }
 
     pub fn save_project(&self, path: &str) -> std::io::Result<()> {
