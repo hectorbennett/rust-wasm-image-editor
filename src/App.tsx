@@ -16,45 +16,46 @@ function Testing() {
   const wasm = WasmContext.useContainer();
   const testCalled = useRef(false);
   useEffect(() => {
-    if (wasm.api) {
-      test();
-    }
-  }, [Boolean(wasm.api)]);
-
-  async function test() {
-    if (testCalled.current) {
-      return;
-    }
-    testCalled.current = true;
     if (!wasm.api) {
       return;
     }
-    wasm.api.create_project();
+    (async () => {
+      if (testCalled.current) {
+        return;
+      }
+      testCalled.current = true;
+      if (!wasm.api) {
+        return;
+      }
+      // return;
+      await wasm.api.create_project();
 
-    await sleep(200);
+      await sleep(200);
 
-    wasm.api.center_canvas();
+      wasm.api.center_canvas();
 
-    // red square layer
-    wasm.api.set_primary_colour(255, 0, 0, 100);
-    wasm.api.select_rect(100, 150, 150, 150);
-    wasm.api.fill_selection();
+      // red square layer
+      wasm.api.set_primary_colour(255, 0, 0, 100);
+      wasm.api.select_rect(100, 150, 150, 150);
+      wasm.api.fill_selection();
 
-    // green square layer
-    wasm.api.create_layer();
-    wasm.api.set_primary_colour(0, 255, 0, 100);
-    wasm.api.select_rect(220, 100, 180, 150);
-    wasm.api.fill_selection();
+      // green square layer
+      wasm.api.create_layer();
+      wasm.api.set_primary_colour(0, 255, 0, 100);
+      wasm.api.select_rect(220, 100, 180, 150);
+      wasm.api.fill_selection();
 
-    // blue circle layer
-    wasm.api.create_layer();
-    wasm.api.set_primary_colour(0, 0, 255, 100);
-    wasm.api.select_ellipse(180, 200, 200, 200);
-    wasm.api.fill_selection();
+      // blue circle layer
+      wasm.api.create_layer();
+      wasm.api.set_primary_colour(0, 0, 255, 100);
+      wasm.api.select_ellipse(180, 200, 200, 200);
+      wasm.api.fill_selection();
 
-    // clear selection
-    wasm.api.select_none();
-  }
+      // clear selection
+      wasm.api.select_none();
+    })();
+  }, [wasm.api]);
+
   return null;
 }
 

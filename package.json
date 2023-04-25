@@ -17,6 +17,7 @@
     "@mantine/modals": "^6.0.8",
     "@mantine/spotlight": "^6.0.8",
     "@tabler/icons-react": "^2.17.0",
+    "comlink": "^4.4.1",
     "next": "^13.3.1",
     "react": "^18.2.0",
     "react-bootstrap-icons": "^1.10.3",
@@ -25,7 +26,8 @@
     "react-rnd": "^10.4.1",
     "serve": "^14.1.2",
     "stats.js": "^0.17.0",
-    "unstated-next": "^1.1.0"
+    "unstated-next": "^1.1.0",
+    "wasm-feature-detect": "^1.5.1"
   },
   "devDependencies": {
     "@storybook/addon-essentials": "^7.0.0-beta.64",
@@ -55,8 +57,10 @@
     "install-wasm-pack": "curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh",
     "dev:wasm": "cd ./wasm && cargo watch -s 'wasm-pack build . --target web'",
     "dev:js": "next",
+    "build:wasm-single-threaded": "cd wasm && wasm-pack build --target web",
+    "build:wasm-multi-threaded": "cd wasm && RUSTFLAGS=\"-C target-feature=+atomics,+bulk-memory,+mutable-globals\" rustup run nightly-2022-12-12 wasm-pack build --target web --out-dir pkg-parallel -- --features parallel -Z build-std=panic_abort,std",
+    "build:wasm": "run-p build:wasm-single-threaded build:wasm-multi-threaded",
     "dev": "npm-run-all --parallel dev:wasm dev:js",
-    "build:wasm": "wasm-pack build ./wasm --target web --release",
     "build:js": "next build",
     "build": "yarn run build:wasm && yarn run build:js",
     "serve": "next start",

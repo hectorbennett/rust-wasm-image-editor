@@ -8,6 +8,8 @@ import Dropzone from "../components/Dropzone";
 
 function Tabs() {
   const tabs = TabsContext.useContainer();
+  console.log("tabs");
+  console.log(tabs);
   if (!tabs.activeTab) {
     return null;
   }

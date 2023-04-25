@@ -33,37 +33,63 @@ export default function Workspace() {
 
   const wasm = WasmContext.useContainer();
 
+  console.log("hi");
+
   useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      return;
-    }
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      return;
-    }
-    if (!wasm.api) {
-      return;
-    }
-    if (inited.current === true) {
-      return;
-    }
-    inited.current = true;
-    console.log("INIT WORKSPACE");
-    wasm.api.init_canvas(CANVAS_ID);
+    (async () => {
+      console.log("useEffect");
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        return;
+      }
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        return;
+      }
+      if (!wasm.api) {
+        return;
+      }
+      if (inited.current === true) {
+        return;
+      }
+      inited.current = true;
+      // console.log("INIT WORKSPACE");
+      // console.log(wasm.api);
+      // await wasm.api.init_canvas(CANVAS_ID);
+      const stats = new Stats();
+      stats.showPanel(0);
+      stats.dom.style.position = "static";
+      document.getElementById("fps-counter")?.appendChild(stats.dom);
 
-    const stats = new Stats();
-    stats.showPanel(0);
-    stats.dom.style.position = "static";
-    document.getElementById("fps-counter")?.appendChild(stats.dom);
-
-    const step = () => {
-      stats.begin();
-      wasm.render_to_canvas();
-      stats.end();
+      const step = async () => {
+        stats.begin();
+        const width = canvasRef.current.width;
+        const height = canvasRef.current.height;
+        if (width && height) {
+          const buffer = await wasm.api.get_workspace_buffer(width, height);
+          var image = new ImageData(buffer, width, height);
+          ctx.putImageData(image, 0, 0);
+        }
+        stats.end();
+        requestAnimationFrame(step);
+      };
       requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
+    })();
+
+    //
+
+    // const stats = new Stats();
+    // stats.showPanel(0);
+    // stats.dom.style.position = "static";
+    // document.getElementById("fps-counter")?.appendChild(stats.dom);
+
+    // const step = () => {
+    //   stats.begin();
+    //   wasm.render_to_canvas();
+    //   stats.end();
+    //   requestAnimationFrame(step);
+    // };
+    // requestAnimationFrame(step);
   }, [wasm]);
 
   const default_events: ToolEvents = {

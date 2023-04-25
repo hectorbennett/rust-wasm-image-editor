@@ -346,6 +346,22 @@ impl Api {
         }
     }
 
+    // pub fn get_workspace_buffer(&mut self) {
+    //     workspace.resize(self.canvas.width(), self.canvas.height());
+    //     let v = workspace.to_vec();
+    // }
+
+    pub fn get_workspace_buffer(&mut self, width: u32, height: u32) -> Clamped<Vec<u8>> {
+        let _timer = Timer::new("Api::get_workspace_buffer");
+        let workspace = &mut self
+            .app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .workspace;
+        workspace.resize(width, height);
+        Clamped(workspace.to_vec())
+    }
+
     pub fn center_canvas(&mut self) {
         self.render_to_canvas();
         self.app

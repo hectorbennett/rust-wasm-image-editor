@@ -139,7 +139,7 @@ function useApp() {
     edit: useEdit(),
     filters: useFilters(),
     image: useImage(),
-    zoom: wasm.state?.workspace.zoom || 100,
+    zoom: wasm.state?.workspace?.zoom || 100,
     setZoom: (zoom: number) => wasm.api?.set_workspace_zoom(zoom),
   };
 }
