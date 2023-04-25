@@ -65,7 +65,6 @@
     "test:cypress": "yarn cypress run",
     "bench:wasm": "cd ./wasm && cargo bench",
     "type:check": "tsc",
-    "lint": "next lint",
     "lint:js:check": "eslint . --config ./.eslintrc.json",
     "lint:js": "eslint --fix . --config ./.eslintrc.json",
     "lint:wasm:check": "cd wasm && cargo clippy -- -D warnings",
