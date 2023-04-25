@@ -108,7 +108,7 @@ impl Project {
         let img = self.get_image();
         let mut bytes: Vec<u8> = Vec::new();
         if let Err(e) = img.write_to(&mut Cursor::new(&mut bytes), image::ImageOutputFormat::Png) {
-            println!("{:?}", e)
+            println!("{e:?}")
         }
         bytes
     }
@@ -148,17 +148,7 @@ impl Project {
     }
 
     fn calculate_pixel_with_checkerboard_background(&self, x: u32, y: u32) -> Option<Pixel> {
-        match self.calculate_pixel(x, y) {
-            None => None,
-            Some(pixel) => {
-                if pixel[3] == 255 {
-                    Some(pixel)
-                } else {
-                    let c = get_checkerboard_pixel(x, y);
-                    Some(blend_pixels(c, pixel))
-                }
-            }
-        }
+        self.calculate_pixel(x, y).filter(|&pixel| pixel[3] == 255)
     }
 
     pub fn save_project(&self, path: &str) -> std::io::Result<()> {
