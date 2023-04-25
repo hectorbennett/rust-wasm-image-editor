@@ -173,13 +173,13 @@ impl Project {
     }
 }
 
-fn get_checkerboard_pixel(x: u32, y: u32) -> Pixel {
-    const GREY_1: Pixel = [135, 135, 135, 255];
-    const GREY_2: Pixel = [90, 90, 90, 255];
-    const SQUARE_SIZE: u32 = 10;
-    if ((x / SQUARE_SIZE) + (y / SQUARE_SIZE)).rem_euclid(2) == 0 {
-        GREY_1
-    } else {
-        GREY_2
-    }
-}
+// fn get_checkerboard_pixel(x: u32, y: u32) -> Pixel {
+//     const GREY_1: Pixel = [135, 135, 135, 255];
+//     const GREY_2: Pixel = [90, 90, 90, 255];
+//     const SQUARE_SIZE: u32 = 10;
+//     if ((x / SQUARE_SIZE) + (y / SQUARE_SIZE)).rem_euclid(2) == 0 {
+//         GREY_1
+//     } else {
+//         GREY_2
+//     }
+// }
