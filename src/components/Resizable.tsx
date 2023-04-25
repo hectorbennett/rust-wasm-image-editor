@@ -1,4 +1,4 @@
-import { ReactNode, useEffect, useState } from "react";
+import { ReactNode, useCallback, useEffect, useState } from "react";
 
 import { Box, useMantineTheme } from "@mantine/core";
 
@@ -34,30 +34,33 @@ function EdgeHandle(props: EdgeHandleProps) {
     setStartWidth(props.width);
   }
 
+  const doDrag = useCallback(
+    (e: MouseEvent) => {
+      if (props.position == "left") {
+        const diff = e.clientX - startX;
+        const width = startWidth - diff;
+        props.onResize({ width: width });
+      } else if (props.position == "right") {
+        const diff = e.clientX - startX;
+        const width = startWidth + diff;
+        props.onResize({ width: width });
+      }
+    },
+    [props, startWidth, startX],
+  );
+
+  const stopDrag = useCallback(() => {
+    setDragging(false);
+    document.documentElement.removeEventListener("mousemove", doDrag, false);
+    document.documentElement.removeEventListener("mouseup", stopDrag, false);
+  }, [doDrag]);
+
   useEffect(() => {
     if (dragging) {
       document.documentElement.addEventListener("mousemove", doDrag, false);
       document.documentElement.addEventListener("mouseup", stopDrag, false);
     }
-  }, [startX]);
-
-  function doDrag(e: MouseEvent) {
-    if (props.position == "left") {
-      const diff = e.clientX - startX;
-      const width = startWidth - diff;
-      props.onResize({ width: width });
-    } else if (props.position == "right") {
-      const diff = e.clientX - startX;
-      const width = startWidth + diff;
-      props.onResize({ width: width });
-    }
-  }
-
-  function stopDrag() {
-    setDragging(false);
-    document.documentElement.removeEventListener("mousemove", doDrag, false);
-    document.documentElement.removeEventListener("mouseup", stopDrag, false);
-  }
+  }, [doDrag, dragging, stopDrag]);
 
   const colour = theme.colors[theme.primaryColor][theme.primaryShade as number];
 

@@ -31,10 +31,6 @@ export default function Workspace() {
 
   const inited = useRef(false);
 
-  if (!activeProject.activeProject) {
-    return null;
-  }
-
   const wasm = WasmContext.useContainer();
 
   useEffect(() => {
@@ -68,7 +64,7 @@ export default function Workspace() {
       requestAnimationFrame(step);
     };
     requestAnimationFrame(step);
-  }, []);
+  }, [wasm]);
 
   const default_events: ToolEvents = {
     onWheel: function ({ event }: ToolEventParams) {
@@ -110,6 +106,10 @@ export default function Workspace() {
       setWorkspaceSize({ width: w, height: h });
     }
   });
+
+  if (!activeProject.activeProject) {
+    return null;
+  }
 
   return (
     <div

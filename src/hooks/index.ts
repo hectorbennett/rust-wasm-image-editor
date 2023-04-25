@@ -1,24 +1,27 @@
-import { ReactNode, useEffect, useRef, RefObject } from "react";
+import { ReactNode, useEffect, useRef, RefObject, useMemo } from "react";
 import { ContextMenuContext } from "../components/ContextMenu";
 
 export function useRightClick<T extends HTMLElement>(callback: (event: MouseEvent) => unknown) {
   const ref = useRef<T>(null);
-  function handleContextMenu(event: MouseEvent) {
-    event.preventDefault();
-    callback(event);
-  }
+
   useEffect(() => {
-    if (!ref.current) {
+    function handleContextMenu(event: MouseEvent) {
+      event.preventDefault();
+      callback(event);
+    }
+    const el = ref.current;
+
+    if (!el) {
       return;
     }
-    ref.current.addEventListener("contextmenu", handleContextMenu);
+    el.addEventListener("contextmenu", handleContextMenu);
     return () => {
-      if (!ref.current) {
+      if (!el) {
         return;
       }
-      ref.current.removeEventListener("contextmenu", handleContextMenu);
+      el.removeEventListener("contextmenu", handleContextMenu);
     };
-  }, [ref]);
+  }, [callback]);
   return ref;
 }
 
@@ -36,18 +39,11 @@ export default function useResizeObserver<T extends HTMLElement>(
   ref: RefObject<T>,
   callback: (entry: ResizeObserverEntry) => void,
 ) {
-  // const observer = useMemo(
-  //   () =>
-
-  //   [callback],
-  // );
-
-  const observer = new ResizeObserver((entries) => {
-    callback(entries[0]);
-    // for (const entry of entries) {
-    //   callback(entry);
-    // }
-  });
+  const observer = useMemo(() => {
+    return new ResizeObserver((entries) => {
+      callback(entries[0]);
+    });
+  }, [callback]);
 
   const element = ref.current;
 
