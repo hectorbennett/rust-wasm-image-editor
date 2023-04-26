@@ -176,7 +176,7 @@ function LayerThumbnail({
   active,
 }: {
   thumbnailHash?: string;
-  getThumbnail?: () => Uint8ClampedArray | undefined;
+  getThumbnail?: () => Promise<Uint8ClampedArray | undefined>;
   active: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
