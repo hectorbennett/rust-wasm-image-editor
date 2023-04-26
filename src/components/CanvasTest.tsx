@@ -1,58 +1,27 @@
 // This is a test that directly imports wasm and executes a few functions to a canvas.
-
 import { useEffect, useRef } from "react";
-import { threads as supportsThreads } from "wasm-feature-detect";
-import * as Comlink from "comlink";
-import type { WasmWorker } from "../wasm.worker.st";
-
-async function getMtApi() {
-  console.log("Using multi threaded wasm");
-  const c = Comlink.wrap<WasmWorker>(
-    new Worker(new URL("../wasm.worker.mt.ts", import.meta.url), {
-      type: "module",
-    }),
-  );
-  return await c.handler;
-}
-
-async function getStApi() {
-  console.log("Using single threaded wasm");
-  const c = Comlink.wrap<WasmWorker>(
-    new Worker(new URL("../wasm.worker.st.ts", import.meta.url), {
-      type: "module",
-    }),
-  );
-  return await c.handler;
-}
-
-async function getApi() {
-  if (await supportsThreads()) {
-    return await getMtApi();
-  } else {
-    return await getStApi();
-  }
-}
+import { getApi, getMtApi, getStApi } from "../utils/wasm";
 
 export default function CanvasTest() {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   useEffect(() => {
     (async () => {
-      const { api } = await getApi();
-      await render(api);
+      const { api, rawImageData } = await getApi();
+      await render(api, rawImageData);
     })();
   }, []);
 
   const renderSingleThreaded = async () => {
-    const { api } = await getStApi();
-    await render(api);
+    const { api, rawImageData } = await getStApi();
+    await render(api, rawImageData);
   };
 
   const renderMultiThreaded = async () => {
-    const { api } = await getMtApi();
-    await render(api);
+    const { api, rawImageData } = await getMtApi();
+    await render(api, rawImageData);
   };
 
-  const render = async (api) => {
+  const render = async (api, rawImageData) => {
     await api.create_project();
     // red square layer
     await api.set_primary_colour(255, 0, 0, 100);
@@ -77,11 +46,10 @@ export default function CanvasTest() {
     await api.set_workspace_size(800, 800);
     await api.center_canvas();
 
-    const buffer = await api.get_workspace_buffer();
-
     const ctx = canvasRef.current.getContext("2d");
 
-    const image = new ImageData(buffer, 800, 800);
+    const imageData = await rawImageData();
+    const image = new ImageData(imageData, 800, 800);
     ctx.putImageData(image, 0, 0);
   };
 
@@ -89,7 +57,7 @@ export default function CanvasTest() {
     <>
       <button onClick={renderMultiThreaded}>Render multi-threaded</button>
       <button onClick={renderSingleThreaded}>Render single-threaded</button>
-      <canvas ref={canvasRef} width={800} height={800} />;
+      <canvas ref={canvasRef} width={800} height={800} />
     </>
   );
 }
