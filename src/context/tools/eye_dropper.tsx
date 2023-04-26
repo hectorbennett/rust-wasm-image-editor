@@ -7,8 +7,8 @@ export const eye_dropper: Tool = {
   label: "Eye dropper",
   icon: IconColorPicker,
   events: {
-    onClick: function ({ event, api }: ToolEventParams) {
-      const [x, y] = getProjectMouseCoords(event, api);
+    onClick: async function ({ event, api }: ToolEventParams) {
+      const [x, y] = await getProjectMouseCoords(event, api);
       api.eye_dropper(x, y);
     },
   },

@@ -94,4 +94,5 @@ function App() {
   );
 }
 
-export default CanvasTest;
+// export default CanvasTest;
+export default App;

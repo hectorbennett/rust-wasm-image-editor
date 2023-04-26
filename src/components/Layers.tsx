@@ -185,24 +185,28 @@ function LayerThumbnail({
   const height = 30;
 
   useEffect(() => {
-    if (!thumbnailHash || !getThumbnail) {
-      return;
-    }
-    const canvas = ref.current;
-    if (!canvas) {
-      return;
-    }
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      return;
-    }
-    const thumbnail = getThumbnail();
-    if (!thumbnail) {
-      return;
-    }
-    const image_data = ctx.createImageData(width, height);
-    image_data.data.set(thumbnail);
-    ctx.putImageData(image_data, 0, 0);
+    (async () => {
+      console.log(thumbnailHash);
+      console.log(getThumbnail);
+      if (!thumbnailHash || !getThumbnail) {
+        return;
+      }
+      const canvas = ref.current;
+      if (!canvas) {
+        return;
+      }
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        return;
+      }
+      const thumbnail = await getThumbnail();
+      if (!thumbnail) {
+        return;
+      }
+      const image_data = ctx.createImageData(width, height);
+      image_data.data.set(thumbnail);
+      ctx.putImageData(image_data, 0, 0);
+    })();
   }, [thumbnailHash]);
 
   return (

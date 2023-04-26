@@ -28,8 +28,8 @@ function useLayers() {
     deleteLayer: function (layer_uid: string) {
       wasm.api?.delete_layer(BigInt(layer_uid));
     },
-    getThumbnail: function (layer_uid: string) {
-      return wasm.api?.get_layer_thumbnail(BigInt(layer_uid));
+    getThumbnail: async function (layer_uid: string) {
+      return await wasm.api?.get_layer_thumbnail(BigInt(layer_uid));
     },
   };
 }

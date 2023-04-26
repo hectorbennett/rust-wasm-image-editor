@@ -362,7 +362,7 @@ impl Api {
     }
 
     pub fn get_workspace_buffer(&self) -> Clamped<Vec<u8>> {
-        let _timer = Timer::new("Api::get_workspace_buffer");
+        // let _timer = Timer::new("Api::get_workspace_buffer");
         let workspace = &self.app.get_active_project_controller().unwrap().workspace;
         Clamped(workspace.to_vec())
     }

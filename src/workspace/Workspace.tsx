@@ -3,7 +3,7 @@ import { ToolsContext, ActiveProjectContext } from "../context";
 import { ToolEventParams, ToolEvents } from "../context/tools";
 
 import { WasmContext } from "../context/wasm";
-import useResizeObserver from "../hooks";
+import { useResizeObserver } from "../hooks";
 import Stats from "stats.js";
 import { getWorkspaceMouseCoords } from "../utils";
 
@@ -66,7 +66,7 @@ export default function Workspace() {
         const width = canvasRef.current.width;
         const height = canvasRef.current.height;
         if (width && height) {
-          const buffer = await wasm.api.get_workspace_buffer(width, height);
+          const buffer = await wasm.api.get_raw_image_data();
           var image = new ImageData(buffer, width, height);
           ctx.putImageData(image, 0, 0);
         }
@@ -75,21 +75,6 @@ export default function Workspace() {
       };
       requestAnimationFrame(step);
     })();
-
-    //
-
-    // const stats = new Stats();
-    // stats.showPanel(0);
-    // stats.dom.style.position = "static";
-    // document.getElementById("fps-counter")?.appendChild(stats.dom);
-
-    // const step = () => {
-    //   stats.begin();
-    //   wasm.render_to_canvas();
-    //   stats.end();
-    //   requestAnimationFrame(step);
-    // };
-    // requestAnimationFrame(step);
   }, [wasm]);
 
   const default_events: ToolEvents = {
@@ -120,7 +105,7 @@ export default function Workspace() {
         const func = combined_events[eventName as keyof ToolEvents] as (
           params: ToolEventParams,
         ) => void;
-        func({ ctx, event, api: wasm.api });
+        func({ ctx, event, api: wasm.api, state: wasm.state });
       },
     ]),
   );
@@ -130,6 +115,7 @@ export default function Workspace() {
     const h = entry.contentRect.height;
     if (w !== workspaceSize.width || h !== workspaceSize.height) {
       setWorkspaceSize({ width: w, height: h });
+      wasm.api.set_workspace_size(w, h);
     }
   });
 
