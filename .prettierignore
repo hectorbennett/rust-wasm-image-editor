@@ -2,5 +2,5 @@
 build
 coverage
 dist
-./wasm
+/wasm
 .next

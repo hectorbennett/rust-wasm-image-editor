@@ -75,7 +75,7 @@
     "lint:js:check": "eslint . --config ./.eslintrc.json",
     "lint:js": "eslint --fix . --config ./.eslintrc.json",
     "lint:wasm:check": "cd wasm && RUSTFLAGS=\"-C target-feature=+atomics,+bulk-memory,+mutable-globals\" rustup run nightly-2022-12-12 cargo clippy -- -D warnings",
-    "lint:wasm": "cd wasm && cargo clippy --fix",
+    "lint:wasm": "cd wasm && RUSTFLAGS=\"-C target-feature=+atomics,+bulk-memory,+mutable-globals\" rustup run nightly-2022-12-12 cargo clippy --fix",
     "format:check": "prettier --check . --config ./.prettierrc.json",
     "format": "prettier --write . --config ./.prettierrc.json",
     "storybook": "storybook dev -p 6006",
