@@ -13,7 +13,7 @@ interface LayerProps {
   active?: boolean;
   onSetActive?: () => void;
   onDelete?: () => void;
-  getThumbnail?: () => Uint8ClampedArray | undefined;
+  getThumbnail?: () => Promise<Uint8ClampedArray | undefined>;
   thumbnailHash?: string;
 }
 
