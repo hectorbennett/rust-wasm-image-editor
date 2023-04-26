@@ -76,6 +76,7 @@ export default function Workspace() {
         stats.end();
         requestAnimationFrame(step);
       };
+      requestAnimationFrame(step);
     })();
   }, [wasm]);
 
