@@ -9,6 +9,7 @@ import { WasmContext } from "../context/wasm";
 import Main from "../main/Main";
 import { CustomSpotlightAction } from "../components/CustomSpotlightAction";
 import { useEffect, useRef } from "react";
+import CanvasTest from "../components/CanvasTest";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -58,7 +59,7 @@ function Testing() {
   return null;
 }
 
-export default function App() {
+function App() {
   return (
     // <DndProvider backend={HTML5Backend}>
     <MantineProvider
@@ -92,3 +93,5 @@ export default function App() {
     // </DndProvider>
   );
 }
+
+export default CanvasTest;

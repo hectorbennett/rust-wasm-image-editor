@@ -2,14 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { createContainer } from "unstated-next";
 import * as Comlink from "comlink";
 
-async function getApi() {
-  const c = Comlink.wrap<any>(
-    new Worker(new URL("../wasm.worker.ts", import.meta.url), {
-      type: "module",
-    }),
-  );
-  return await c.handler;
-}
+// async function getApi() {
+//   const c = Comlink.wrap<any>(
+//     new Worker(new URL("../wasm.worker.ts", import.meta.url), {
+//       type: "module",
+//     }),
+//   );
+//   return await c.handler;
+// }
 
 function wrapApiWithCallback(api: any, callback: any) {
   /* Perform callback any time any api method is called */
@@ -50,17 +50,17 @@ const useWasmApiHandler = () => {
   const handler = useRef();
   const [loaded, setLoaded] = useState(false);
 
-  useEffect(() => {
-    (async () => {
-      if (inited.current) {
-        return;
-      }
-      inited.current = true;
+  // useEffect(() => {
+  //   (async () => {
+  //     if (inited.current) {
+  //       return;
+  //     }
+  //     inited.current = true;
 
-      handler.current = await getApi();
-      setLoaded(true);
-    })();
-  }, []);
+  //     handler.current = await getApi();
+  //     setLoaded(true);
+  //   })();
+  // }, []);
 
   return {
     handler: loaded ? handler.current : null,

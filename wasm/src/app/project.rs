@@ -1,9 +1,11 @@
 use image::{ImageBuffer, RgbaImage};
+use postcard;
 use serde::{Deserialize, Serialize};
 use std::io::Cursor;
 use std::ops::Deref;
 
-use postcard;
+#[cfg(feature = "parallel")]
+use rayon::prelude::*;
 
 use super::{
     layer::Layer,
@@ -114,17 +116,40 @@ impl Project {
     }
 
     pub fn recalculate_buffer(&mut self) {
-        let mut buffer = PixelBuffer::new(self.width, self.height);
+        self.buffer = PixelBuffer {
+            width: self.width,
+            height: self.height,
+            buffer: self.get_bytes(),
+        };
+    }
 
-        (0..self.width).for_each(|i| {
-            (0..self.height).for_each(|j| {
-                let pixel = self
-                    .calculate_pixel_with_checkerboard_background(i, j)
-                    .unwrap();
-                buffer.set(i, j, pixel);
+    pub fn get_row_bytes(&self, y: u32) -> Vec<u8> {
+        (0..self.width)
+            .map(|x| {
+                self.calculate_pixel_with_checkerboard_background(x, y)
+                    .unwrap()
             })
-        });
-        self.buffer = buffer;
+            .flatten()
+            .collect()
+    }
+
+    // Single-threaded implementation.
+    #[cfg(not(feature = "rayon"))]
+    pub fn get_bytes(&self) -> Vec<u8> {
+        (0..self.height)
+            .map(|y| self.get_row_bytes(y))
+            .flatten()
+            .collect()
+    }
+
+    // Multi-threaded implementation.
+    #[cfg(feature = "rayon")]
+    pub fn get_bytes(&self) -> Vec<u8> {
+        (0..self.height)
+            .into_par_iter()
+            .map(|y| self.get_row_bytes(y))
+            .flatten()
+            .collect()
     }
 
     pub fn get_pixel(&self, x: u32, y: u32) -> Option<Pixel> {
