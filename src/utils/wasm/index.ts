@@ -11,6 +11,9 @@ const methods_with_callback = [
   "set_primary_colour",
   "set_workspace_size",
   "undo",
+  "reeorder_layers",
+  "rename_layer",
+  "set_active_project",
 ];
 
 // these methods only affect the canvas

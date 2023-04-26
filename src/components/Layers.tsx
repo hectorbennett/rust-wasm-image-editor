@@ -35,7 +35,7 @@ export function Layer({
   thumbnailHash,
 }: LayerProps) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const rightClickRef = useRightClick<HTMLButtonElement>(function (_event: Event) {
+  const rightClickRef = useRightClick<HTMLDivElement>(function (_event: Event) {
     setMenuIsOpen(true);
   });
 
@@ -52,7 +52,7 @@ export function Layer({
       }}
     >
       <Menu.Target>
-        <UnstyledButton
+        <Box
           pl="xs"
           sx={{
             display: "flex",
@@ -61,6 +61,7 @@ export function Layer({
             width: "100%",
             // todo: use mantine theme for background
             background: active ? "rgba(255, 255, 255, 0.05)" : undefined,
+            cursor: "default",
           }}
           ref={rightClickRef}
           onMouseDown={() => {
@@ -95,7 +96,7 @@ export function Layer({
             />
             <LayerLabel name={name} onChangeName={onChangeName} />
           </Box>
-        </UnstyledButton>
+        </Box>
       </Menu.Target>
 
       <Menu.Dropdown>
