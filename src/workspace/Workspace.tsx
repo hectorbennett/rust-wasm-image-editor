@@ -53,8 +53,13 @@ export default function Workspace() {
     wasm.api.init_canvas(CANVAS_ID);
 
     const stats = new Stats();
-    stats.showPanel(0);
     stats.dom.style.position = "static";
+    stats.dom.style.display = "flex";
+    stats.dom.style.gap = "10px";
+    stats.dom.children[0].style.display = "block";
+    stats.dom.children[2].style.display = "block";
+    console.log("stats.dom");
+    console.log(stats.dom);
     document.getElementById("fps-counter")?.appendChild(stats.dom);
 
     const step = () => {
