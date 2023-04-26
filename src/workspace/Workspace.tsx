@@ -56,8 +56,8 @@ export default function Workspace() {
     stats.dom.style.position = "static";
     stats.dom.style.display = "flex";
     stats.dom.style.gap = "10px";
-    stats.dom.children[0].style.display = "block";
-    stats.dom.children[2].style.display = "block";
+    (stats.dom.children[0] as HTMLDivElement).style.display = "block";
+    (stats.dom.children[2] as HTMLDivElement).style.display = "block";
     console.log("stats.dom");
     console.log(stats.dom);
     document.getElementById("fps-counter")?.appendChild(stats.dom);
