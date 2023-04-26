@@ -23,9 +23,9 @@ function useWasm() {
     })();
   });
 
-  useEffect(() => {
-    console.log(appState);
-  }, [appState]);
+  // useEffect(() => {
+  //   console.log(appState);
+  // }, [appState]);
 
   return {
     isLoading: !isLoaded || !appState,

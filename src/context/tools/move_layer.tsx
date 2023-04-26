@@ -36,7 +36,6 @@ const events = {
 };
 
 const move_active_layer = (api: Api) => {
-  console.log(currX - startX);
   api.move_active_layer(currX - startX, currY - startY);
 };
 

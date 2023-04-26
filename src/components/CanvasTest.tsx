@@ -49,6 +49,10 @@ export default function CanvasTest() {
     // clear selection
     await api.select_none();
 
+    const state = await api.state;
+    const layer_uids = get_layer_uids(state);
+    await api.reeorder_layers(layer_uids.reverse());
+
     await api.set_workspace_size(800, 800);
     await api.center_canvas();
 
@@ -67,3 +71,7 @@ export default function CanvasTest() {
     </>
   );
 }
+
+const get_layer_uids = (state) => {
+  return state.projects.get(state.active_project_uid).layers.map((layer) => layer.uid);
+};

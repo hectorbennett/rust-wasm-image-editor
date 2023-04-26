@@ -49,8 +49,6 @@ function useCommands() {
   const active_project = ActiveProjectContext.useContainer();
   const spotlight = useSpotlight();
 
-  console.log(active_project);
-
   const commands: Array<Command> = useMemo(
     () => [
       /* app */

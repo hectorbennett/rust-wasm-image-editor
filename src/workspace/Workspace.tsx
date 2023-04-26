@@ -3,21 +3,14 @@ import { ToolsContext, ActiveProjectContext } from "../context";
 import { ToolEventParams, ToolEvents } from "../context/tools";
 
 import { WasmContext } from "../context/wasm";
-import { useResizeObserver } from "../hooks";
+import { useEffectOnce, useResizeObserver } from "../hooks";
 import Stats from "stats.js";
 import { getWorkspaceMouseCoords } from "../utils";
-
-// todo: generate uid;
-const CANVAS_ID = "123456";
 
 interface CanvasProps {
   width: number;
   height: number;
 }
-
-const Canvas = forwardRef<HTMLCanvasElement, CanvasProps>(function Canvas({ width, height }, ref) {
-  return <canvas id={CANVAS_ID} ref={ref} width={width} height={height} />;
-});
 
 export default function Workspace() {
   const activeProject = ActiveProjectContext.useContainer();
@@ -33,11 +26,8 @@ export default function Workspace() {
 
   const wasm = WasmContext.useContainer();
 
-  console.log("hi");
-
-  useEffect(() => {
+  useEffectOnce(() => {
     (async () => {
-      console.log("useEffect");
       const canvas = canvasRef.current;
       if (!canvas) {
         return;
@@ -53,9 +43,6 @@ export default function Workspace() {
         return;
       }
       inited.current = true;
-      // console.log("INIT WORKSPACE");
-      // console.log(wasm.api);
-      // await wasm.api.init_canvas(CANVAS_ID);
       const stats = new Stats();
       stats.dom.style.position = "static";
       stats.dom.style.display = "flex";
@@ -78,7 +65,7 @@ export default function Workspace() {
       };
       requestAnimationFrame(step);
     })();
-  }, [wasm]);
+  });
 
   const default_events: ToolEvents = {
     onWheel: function ({ event }: ToolEventParams) {
@@ -136,7 +123,7 @@ export default function Workspace() {
       }}
       {...events}
     >
-      <Canvas ref={canvasRef} width={workspaceSize.width} height={workspaceSize.height} />
+      <canvas ref={canvasRef} width={workspaceSize.width} height={workspaceSize.height} />
       <Fps />
     </div>
   );

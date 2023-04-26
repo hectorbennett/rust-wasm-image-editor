@@ -62,7 +62,6 @@ export function ContextMenuWrapper({ children }: { children: ReactNode }) {
   const context = ContextMenuContext.useContainer();
 
   const handleUnfocus = (event: React.MouseEvent) => {
-    console.log(event);
     context.setIsOpen(false);
     context.setMenuContent(null);
   };

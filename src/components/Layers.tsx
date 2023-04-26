@@ -187,8 +187,6 @@ function LayerThumbnail({
 
   useEffect(() => {
     (async () => {
-      console.log(thumbnailHash);
-      console.log(getThumbnail);
       if (!thumbnailHash || !getThumbnail) {
         return;
       }
