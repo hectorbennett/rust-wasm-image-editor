@@ -125,11 +125,10 @@ impl Project {
 
     pub fn get_row_bytes(&self, y: u32) -> Vec<u8> {
         (0..self.width)
-            .map(|x| {
+            .flat_map(|x| {
                 self.calculate_pixel_with_checkerboard_background(x, y)
                     .unwrap()
             })
-            .flatten()
             .collect()
     }
 
@@ -137,8 +136,7 @@ impl Project {
     #[cfg(not(feature = "rayon"))]
     pub fn get_bytes(&self) -> Vec<u8> {
         (0..self.height)
-            .map(|y| self.get_row_bytes(y))
-            .flatten()
+            .flat_map(|y| self.get_row_bytes(y))
             .collect()
     }
 
@@ -147,8 +145,7 @@ impl Project {
     pub fn get_bytes(&self) -> Vec<u8> {
         (0..self.height)
             .into_par_iter()
-            .map(|y| self.get_row_bytes(y))
-            .flatten()
+            .flat_map(|y| self.get_row_bytes(y))
             .collect()
     }
 
