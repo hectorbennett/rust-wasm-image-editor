@@ -35,7 +35,7 @@ export function useRightClickMenu(menuContent: ReactNode) {
   return rightClickRef;
 }
 
-export default function useResizeObserver<T extends HTMLElement>(
+export function useResizeObserver<T extends HTMLElement>(
   ref: RefObject<T>,
   callback: (entry: ResizeObserverEntry) => void,
 ) {
@@ -59,4 +59,15 @@ export default function useResizeObserver<T extends HTMLElement>(
       }
     };
   }, [element, observer]);
+}
+
+export function useEffectOnce(callback: () => void) {
+  const hasRunOnce = useRef(false);
+  useEffect(() => {
+    if (!hasRunOnce.current) {
+      callback();
+      hasRunOnce.current = true;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 }

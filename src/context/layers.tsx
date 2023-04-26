@@ -4,11 +4,11 @@ import { WasmContext } from "./wasm";
 function useLayers() {
   const wasm = WasmContext.useContainer();
 
-  const layers = wasm.state?.projects.get(wasm.state?.active_project_uid || "")?.layers;
+  const layers = wasm.state?.projects?.get(wasm.state?.active_project_uid || "")?.layers;
 
   return {
     layers,
-    active_layer_uid: wasm.state?.projects.get(wasm.state?.active_project_uid || "")
+    active_layer_uid: wasm.state?.projects?.get(wasm.state?.active_project_uid || "")
       ?.active_layer_uid,
     createNewLayer: function createNewLayer() {
       wasm.api?.create_layer();
@@ -28,8 +28,8 @@ function useLayers() {
     deleteLayer: function (layer_uid: string) {
       wasm.api?.delete_layer(BigInt(layer_uid));
     },
-    getThumbnail: function (layer_uid: string) {
-      return wasm.api?.get_layer_thumbnail(BigInt(layer_uid));
+    getThumbnail: async function (layer_uid: string) {
+      return await wasm.api?.get_layer_thumbnail(BigInt(layer_uid));
     },
   };
 }
