@@ -4,6 +4,7 @@ import wrapApi from "./wrap-api";
 async function initApi() {
   const app = await import("../../../wasm/pkg/wasm.js");
   await app.default();
+  console.log(`Using single-threaded wasm`);
   return Comlink.proxy(wrapApi(new app.Api()));
 }
 
