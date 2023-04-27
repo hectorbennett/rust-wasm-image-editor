@@ -1,5 +1,4 @@
 use std::{
-    cmp,
     collections::hash_map::DefaultHasher,
     hash::{Hash, Hasher},
 };
