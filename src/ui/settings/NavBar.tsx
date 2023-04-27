@@ -1,5 +1,5 @@
 import { Box, NavLink } from "@mantine/core";
-import { SettingsContext } from "../context/settings";
+import { SettingsContext } from "src/context";
 
 export function NavBar() {
   const settings = SettingsContext.useContainer();

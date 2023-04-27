@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Box, Title } from "@mantine/core";
 import { NavBar } from "./NavBar";
 
-import { SettingsContext } from "../context/settings";
+import { SettingsContext } from "src/context";
 import { KeyboardShortcutsTab } from "./tabs/KeyboardShortcuts";
 import { UserInterfaceTab } from "./tabs/UserInterface";
 

@@ -3,21 +3,14 @@ import { ToolsContext, ActiveProjectContext } from "../context";
 import { ToolEventParams, ToolEvents } from "../context/tools";
 
 import { WasmContext } from "../context/wasm";
-import useResizeObserver from "../hooks";
+import { useEffectOnce, useResizeObserver } from "../hooks";
 import Stats from "stats.js";
 import { getWorkspaceMouseCoords } from "../utils";
-
-// todo: generate uid;
-const CANVAS_ID = "123456";
 
 interface CanvasProps {
   width: number;
   height: number;
 }
-
-const Canvas = forwardRef<HTMLCanvasElement, CanvasProps>(function Canvas({ width, height }, ref) {
-  return <canvas id={CANVAS_ID} ref={ref} width={width} height={height} />;
-});
 
 export default function Workspace() {
   const activeProject = ActiveProjectContext.useContainer();
@@ -33,38 +26,47 @@ export default function Workspace() {
 
   const wasm = WasmContext.useContainer();
 
-  useEffect(() => {
-    const canvas = canvasRef.current;
-    if (!canvas) {
-      return;
-    }
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      return;
-    }
-    if (!wasm.api) {
-      return;
-    }
-    if (inited.current === true) {
-      return;
-    }
-    inited.current = true;
-    console.log("INIT WORKSPACE");
-    wasm.api.init_canvas(CANVAS_ID);
+  useEffectOnce(() => {
+    (async () => {
+      const canvas = canvasRef.current;
+      if (!canvas) {
+        return;
+      }
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        return;
+      }
+      if (!wasm.api) {
+        return;
+      }
+      if (inited.current === true) {
+        return;
+      }
+      inited.current = true;
+      const stats = new Stats();
+      stats.dom.style.position = "static";
+      stats.dom.style.display = "flex";
+      stats.dom.style.gap = "10px";
+      // todo: move stats to its own component?
+      // (stats.dom.children[0] as HTMLDivElement).style.display = "block";
+      // (stats.dom.children[2] as HTMLDivElement).style.display = "block";
+      document.getElementById("fps-counter")?.appendChild(stats.dom);
 
-    const stats = new Stats();
-    stats.showPanel(0);
-    stats.dom.style.position = "static";
-    document.getElementById("fps-counter")?.appendChild(stats.dom);
-
-    const step = () => {
-      stats.begin();
-      wasm.render_to_canvas();
-      stats.end();
+      const step = async () => {
+        stats.begin();
+        const width = canvasRef.current.width;
+        const height = canvasRef.current.height;
+        if (width && height) {
+          const buffer = await wasm.api.get_raw_image_data();
+          var image = new ImageData(buffer, width, height);
+          ctx.putImageData(image, 0, 0);
+        }
+        stats.end();
+        requestAnimationFrame(step);
+      };
       requestAnimationFrame(step);
-    };
-    requestAnimationFrame(step);
-  }, [wasm]);
+    })();
+  });
 
   const default_events: ToolEvents = {
     onWheel: function ({ event }: ToolEventParams) {
@@ -94,7 +96,7 @@ export default function Workspace() {
         const func = combined_events[eventName as keyof ToolEvents] as (
           params: ToolEventParams,
         ) => void;
-        func({ ctx, event, api: wasm.api });
+        func({ ctx, event, api: wasm.api, state: wasm.state });
       },
     ]),
   );
@@ -104,6 +106,7 @@ export default function Workspace() {
     const h = entry.contentRect.height;
     if (w !== workspaceSize.width || h !== workspaceSize.height) {
       setWorkspaceSize({ width: w, height: h });
+      wasm.api.set_workspace_size(w, h);
     }
   });
 
@@ -121,7 +124,7 @@ export default function Workspace() {
       }}
       {...events}
     >
-      <Canvas ref={canvasRef} width={workspaceSize.width} height={workspaceSize.height} />
+      <canvas ref={canvasRef} width={workspaceSize.width} height={workspaceSize.height} />
       <Fps />
     </div>
   );

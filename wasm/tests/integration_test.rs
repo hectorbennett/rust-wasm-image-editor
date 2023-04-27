@@ -1,10 +1,6 @@
-use std::{cell::RefCell, rc::Rc};
 
-use wasm::app::{
-    commands::{resize_canvas::ResizeCanvas, set_name::SetName},
-    history::History,
-    project::Project,
-};
+
+
 use wasm_bindgen_test::*;
 
 #[test]
