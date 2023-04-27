@@ -57,7 +57,7 @@ export default function Workspace() {
         const width = canvasRef.current.width;
         const height = canvasRef.current.height;
         if (width && height) {
-          const buffer = await wasm.api.get_raw_image_data();
+          const buffer = await wasm.api.get_raw_image_data(width, height);
           var image = new ImageData(buffer, width, height);
           ctx.putImageData(image, 0, 0);
         }

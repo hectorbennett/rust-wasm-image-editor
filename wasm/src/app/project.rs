@@ -46,6 +46,7 @@ impl Project {
             buffer: PixelBuffer::new(width, height),
         };
         project.create_layer();
+        project.recalculate_buffer();
         project
     }
 

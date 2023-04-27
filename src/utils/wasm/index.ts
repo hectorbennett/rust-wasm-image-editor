@@ -2,6 +2,8 @@ import { threads as supportsThreads } from "wasm-feature-detect";
 import * as Comlink from "comlink";
 import type { WasmWorker } from "./wasm.worker.st";
 
+const FORCE_USE_SINGLE_THREADS = true;
+
 // these methods affect the ui (and maybe the canvas)
 const methods_with_callback = [
   "create_layer",
@@ -63,7 +65,6 @@ methods_without_callback.forEach((method) => {
 });
 
 export async function getMtApi(methodCallback) {
-  console.info("Using multi threaded wasm");
   const c = Comlink.wrap<WasmWorker>(
     new Worker(new URL("./wasm.worker.mt.ts", import.meta.url), {
       type: "module",
@@ -74,7 +75,6 @@ export async function getMtApi(methodCallback) {
 }
 
 export async function getStApi(methodCallback) {
-  console.info("Using single threaded wasm");
   const c = Comlink.wrap<WasmWorker>(
     new Worker(new URL("./wasm.worker.st.ts", import.meta.url), {
       type: "module",
@@ -85,9 +85,9 @@ export async function getStApi(methodCallback) {
 }
 
 export async function getApi(methodCallback) {
-  if (await supportsThreads()) {
-    return await getMtApi(methodCallback);
-  } else {
+  if (FORCE_USE_SINGLE_THREADS || !(await supportsThreads())) {
     return await getStApi(methodCallback);
+  } else {
+    return await getMtApi(methodCallback);
   }
 }

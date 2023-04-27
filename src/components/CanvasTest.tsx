@@ -33,7 +33,7 @@ export default function CanvasTest() {
 
     const ctx = canvasRef.current.getContext("2d");
 
-    const imageData = await api.get_raw_image_data();
+    const imageData = await api.get_raw_image_data(800, 800);
     const image = new ImageData(imageData, 800, 800);
     ctx.putImageData(image, 0, 0);
   };

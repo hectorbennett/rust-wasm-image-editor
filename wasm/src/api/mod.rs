@@ -361,8 +361,9 @@ impl Api {
         workspace.resize(width, height);
     }
 
-    pub fn get_workspace_buffer(&self) -> Clamped<Vec<u8>> {
+    pub fn get_workspace_buffer(&mut self, width: u32, height: u32) -> Clamped<Vec<u8>> {
         // let _timer = Timer::new("Api::get_workspace_buffer");
+        self.set_workspace_size(width, height);
         let workspace = &self.app.get_active_project_controller().unwrap().workspace;
         Clamped(workspace.to_vec())
     }
