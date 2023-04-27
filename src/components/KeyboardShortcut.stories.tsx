@@ -18,7 +18,7 @@ type Story = StoryObj<typeof meta>;
 
 export const Thing: Story = {
   args: {
-    keys: ["CTRL", "F"],
+    keys: "ctrl+F",
   },
 };
 
