@@ -47,8 +47,6 @@ pub fn coord_is_on_outline_of_rect(rect: [i32; 4], coord: [i32; 2]) -> bool {
     coord_is_on_border_of_rect(expanded_rect, coord)
 }
 
-
-
 #[cfg(test)]
 mod get_1d_index_from_2d_coord_tests {
     use super::*;
@@ -96,20 +94,6 @@ mod get_1d_index_from_2d_coord_tests {
     }
 }
 
-fn blend_alpha(alpha_fg: f32, alpha_bg: f32) -> f32 {
-    alpha_bg + alpha_fg - alpha_bg * alpha_fg
-}
-
-fn blend_colour_channel(
-    colour_fg: f32,
-    colour_bg: f32,
-    alpha_fg: f32,
-    alpha_bg: f32,
-    alpha_final: f32,
-) -> f32 {
-    (colour_fg * alpha_fg) + (colour_bg * alpha_bg) * (1.0 - alpha_fg) / alpha_final
-}
-
 pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
     /* rgba blend 2 pixels */
     if pixel_fg[3] == 255 || pixel_bg[3] == 0 {
@@ -144,5 +128,34 @@ pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
         (alpha_final * 255.0) as u8,
     ]
 }
+#[test]
+fn test_blend_pixels() {
+    assert_eq!(
+        blend_pixels([10, 20, 30, 40], [50, 60, 70, 80]),
+        [18, 23, 29, 107]
+    );
+}
 
-/* TODO: Alpha Blending with No Division Operations Jerry R. Van Aken */
+#[inline(always)]
+fn blend_alpha(alpha_fg: f32, alpha_bg: f32) -> f32 {
+    alpha_bg + alpha_fg - alpha_bg * alpha_fg
+}
+#[test]
+fn test_blend_alpha() {
+    assert_eq!(blend_alpha(0.2, 0.6), 0.68);
+}
+
+#[inline(always)]
+fn blend_colour_channel(
+    colour_fg: f32,
+    colour_bg: f32,
+    alpha_fg: f32,
+    alpha_bg: f32,
+    alpha_final: f32,
+) -> f32 {
+    (colour_fg * alpha_fg) + (colour_bg * alpha_bg) * (1.0 - alpha_fg) / alpha_final
+}
+#[test]
+fn test_blend_colour_channel() {
+    assert_eq!(blend_colour_channel(0.1, 0.2, 0.3, 0.4, 0.5), 0.142);
+}

@@ -16,7 +16,7 @@ SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
 
 # Install nightly toolchain
-RUN rustup toolchain install nightly-2022-12-12 && rustup component add rust-src --toolchain nightly-2022-12-12
+RUN rustup toolchain install nightly && rustup component add rust-src --toolchain nightly
 
 WORKDIR /app
 COPY package*.json ./
