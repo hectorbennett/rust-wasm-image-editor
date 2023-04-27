@@ -44,4 +44,5 @@ export const move_layer: Tool = {
   label: "Move layer",
   icon: ArrowsMove,
   events: events,
+  kbd_shortcut: "V",
 };

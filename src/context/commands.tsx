@@ -3,10 +3,15 @@ import { openContextModal } from "@mantine/modals";
 import {
   IconArrowBackUp,
   IconArrowForwardUp,
+  IconClipboardCopy,
   IconCopy,
   IconCut,
   IconDeviceFloppy,
   IconFile,
+  IconFileArrowRight,
+  IconFolders,
+  IconFoldersOff,
+  IconPhotoCog,
   // IconFileOff,
   // IconLogout,
   TablerIconsProps,
@@ -20,6 +25,8 @@ import { AppContext } from "./app";
 import { LayersContext } from "./layers";
 import { WasmContext } from "./wasm";
 import { ActiveProjectContext } from "./activeProject";
+import { useHotkeys } from "@mantine/hooks";
+import { ToolsContext } from "./tools";
 
 export type CommandCategory =
   | "app"
@@ -39,6 +46,7 @@ interface Command {
   action: () => void; // todo: make manditory
   icon?: FunctionComponent<TablerIconsProps>;
   disabled?: boolean;
+  kbd_shortcut?: string;
 }
 
 function useCommands() {
@@ -47,6 +55,7 @@ function useCommands() {
   const app = AppContext.useContainer();
   const layers = LayersContext.useContainer();
   const active_project = ActiveProjectContext.useContainer();
+  const tools = ToolsContext.useContainer();
   const spotlight = useSpotlight();
 
   const commands: Array<Command> = useMemo(
@@ -79,12 +88,15 @@ function useCommands() {
         label: "New",
         icon: IconFile,
         action: () => wasm.api?.create_project(),
+        kbd_shortcut: "ctrl+N",
       },
       {
         category: "file",
         id: "file.open",
         label: "Open",
         action: app.file.open,
+        kbd_shortcut: "ctrl+O",
+        icon: IconFolders,
       },
       {
         category: "file",
@@ -92,18 +104,21 @@ function useCommands() {
         label: "Save",
         icon: IconDeviceFloppy,
         action: app.file.save,
+        kbd_shortcut: "ctrl+S",
       },
       {
         category: "file",
         id: "file.export",
         label: "Export",
         action: app.file.export_png,
+        icon: IconFileArrowRight,
       },
       {
         category: "file",
         id: "file.import_image",
         label: "Import image",
         action: app.file.import_image_as_layer,
+        icon: IconPhotoCog,
       },
       // {
       //   category: "file",
@@ -118,6 +133,7 @@ function useCommands() {
         id: "edit.undo",
         icon: IconArrowBackUp,
         action: () => app.edit.undo(),
+        kbd_shortcut: "ctrl+Z",
         label: (() => {
           /* get undo label */
           if (!active_project.activeProject) {
@@ -147,6 +163,7 @@ function useCommands() {
         id: "edit.redo",
         icon: IconArrowForwardUp,
         action: () => app.edit.redo(),
+        kbd_shortcut: "ctrl+shift+Z",
         label: (() => {
           /* get redo label */
           if (!active_project.activeProject) {
@@ -176,6 +193,7 @@ function useCommands() {
         id: "edit.cut",
         label: "Cut",
         icon: IconCut,
+        kbd_shortcut: "ctrl+X",
         action: () => app.edit.cut(),
       },
       {
@@ -183,13 +201,15 @@ function useCommands() {
         id: "edit.copy",
         label: "Copy",
         icon: IconCopy,
+        kbd_shortcut: "ctrl+C",
         action: () => app.edit.copy(),
       },
       {
         category: "edit",
         id: "edit.paste",
         label: "Paste",
-        //   icon: IconP
+        icon: IconClipboardCopy,
+        kbd_shortcut: "ctrl+V",
         action: () => app.edit.paste(),
       },
       /* view */
@@ -199,56 +219,31 @@ function useCommands() {
         id: "select.all",
         label: "Select all",
         action: () => wasm.api?.select_all(),
+        kbd_shortcut: "cmd+A",
       },
       {
         category: "select",
         id: "select.none",
         label: "Select none",
         action: () => wasm.api?.select_none(),
+        kbd_shortcut: "cmd+D",
       },
       {
         category: "select",
         id: "select.inverse",
         label: "Select inverse",
         action: () => wasm.api?.select_inverse(),
+        kbd_shortcut: "shift+cmd+I",
       },
       /* tools */
-      {
+      ...tools.tools.map((tool) => ({
         category: "tools",
-        id: "tools.rectangular_marquee",
-        label: "Rectangular marquee",
-        action: () => console.warn("not implemented"),
-      },
-      {
-        category: "tools",
-        id: "tools.elliptical_marquee",
-        label: "Elliptical marquee",
-        action: () => console.warn("not implemented"),
-      },
-      {
-        category: "tools",
-        id: "tools.eyedrop",
-        label: "Eyedrop",
-        action: () => console.warn("not implemented"),
-      },
-      {
-        category: "tools",
-        id: "tools.paintbrush",
-        label: "Paintbrush",
-        action: () => console.warn("not implemented"),
-      },
-      {
-        category: "tools",
-        id: "tools.eraser",
-        label: "Eraser",
-        action: () => console.warn("not implemented"),
-      },
-      {
-        category: "tools",
-        id: "tools.paint_bucket",
-        label: "Paint Bucket",
-        action: () => console.warn("not implemented"),
-      },
+        id: `tools.${tool.name}`,
+        label: tool.label,
+        icon: tool.icon,
+        action: () => tools.setActiveTool(tool),
+        kbd_shortcut: tool.kbd_shortcut,
+      })),
       /* filters */
       // {
       //   category: "filters",
@@ -280,6 +275,7 @@ function useCommands() {
         id: "layer.new",
         label: "New layer",
         action: () => layers.createNewLayer(),
+        kbd_shortcut: "shift+cmd+N",
       },
     ],
     [
@@ -292,8 +288,15 @@ function useCommands() {
       layers,
       settings,
       spotlight.openSpotlight,
+      tools,
       wasm.api,
     ],
+  );
+
+  useHotkeys(
+    commands
+      .filter((command) => command.kbd_shortcut && command.action)
+      .map((command) => [command.kbd_shortcut, command.action]),
   );
 
   const executeCommand = useCallback(

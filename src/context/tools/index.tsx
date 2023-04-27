@@ -34,6 +34,7 @@ export interface Tool {
   icon: ReactBootstrapIcon | TablerIcon;
   events: ToolEvents;
   cursor?: ReactElement;
+  kbd_shortcut?: string;
 }
 
 function useTools() {

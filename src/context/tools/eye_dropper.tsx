@@ -12,4 +12,5 @@ export const eye_dropper: Tool = {
       api.eye_dropper(x, y);
     },
   },
+  kbd_shortcut: "J",
 };

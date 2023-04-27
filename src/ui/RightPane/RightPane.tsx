@@ -8,7 +8,6 @@ import PaneSection from "src/components/PaneSection";
 
 function RightPaneHistory() {
   const active_project = ActiveProjectContext.useContainer();
-  console.log(active_project.activeProject?.history.history);
 
   const history = active_project.activeProject?.history.history;
   if (!history) {
