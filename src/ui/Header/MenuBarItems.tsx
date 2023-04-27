@@ -59,6 +59,7 @@ export function MenuBarItems() {
             menuBarIsFocused={focused}
             opened={menuItem.label == openedMenu}
             onOpen={() => setOpenedMenu(menuItem.label)}
+            onClose={() => setOpenedMenu(null)}
           />
         );
       })}
