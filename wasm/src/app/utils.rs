@@ -94,7 +94,7 @@ mod get_1d_index_from_2d_coord_tests {
     }
 }
 
-pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
+pub fn blend_pixels_old(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
     /* rgba blend 2 pixels */
     if pixel_fg[3] == 255 || pixel_bg[3] == 0 {
         return pixel_fg;
@@ -129,9 +129,9 @@ pub fn blend_pixels(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
     ]
 }
 #[test]
-fn test_blend_pixels() {
+fn test_blend_pixels_old() {
     assert_eq!(
-        blend_pixels([10, 20, 30, 40], [50, 60, 70, 80]),
+        blend_pixels_old([10, 20, 30, 40], [50, 60, 70, 80]),
         [18, 23, 29, 107]
     );
 }
@@ -158,4 +158,50 @@ fn blend_colour_channel(
 #[test]
 fn test_blend_colour_channel() {
     assert_eq!(blend_colour_channel(0.1, 0.2, 0.3, 0.4, 0.5), 0.142);
+}
+
+fn alpha_blend_u32_pixels(p1: u32, p2: u32) -> u32 {
+    // each 32 bit is an ARGB
+    const AMASK: u32 = 0xFF000000;
+    const RBMASK: u32 = 0x00FF00FF;
+    const GMASK: u32 = 0x0000FF00;
+    const AGMASK: u32 = AMASK | GMASK;
+    const ONEALPHA: u32 = 0x01000000;
+    let a = (p2 & AMASK) >> 24;
+    let na = 255 - a;
+    let rb = ((na * (p1 & RBMASK)) + (a * (p2 & RBMASK))) >> 8;
+    let ag = (na * ((p1 & AGMASK) >> 8)) + (a * (ONEALPHA | ((p2 & GMASK) >> 8)));
+    return (rb & RBMASK) | (ag & AGMASK);
+}
+
+fn rgba_to_arbg_32(a: [u8; 4]) -> u32 {
+    u32::from_be_bytes([a[3], a[0], a[1], a[2]])
+}
+#[test]
+fn test_rgba_to_arbg_32() {
+    assert_eq!(rgba_to_arbg_32([1, 2, 3, 4]), 50462980);
+}
+
+fn arbg_32_to_rgba(arbg: u32) -> [u8; 4] {
+    let a = arbg.to_be_bytes();
+    [a[1], a[2], a[3], a[0]]
+}
+#[test]
+fn test_arbg_32_to_rgba() {
+    assert_eq!(arbg_32_to_rgba(50462980), [1, 2, 3, 4]);
+}
+
+pub fn blend_pixels(p1: [u8; 4], p2: [u8; 4]) -> [u8; 4] {
+    let pp1 = rgba_to_arbg_32(p1);
+    let pp2 = rgba_to_arbg_32(p2);
+    let pp3 = alpha_blend_u32_pixels(pp1, pp2);
+    arbg_32_to_rgba(pp3)
+}
+
+#[test]
+fn test_blend_pixels() {
+    assert_eq!(
+        blend_pixels([10, 20, 30, 40], [50, 60, 70, 80]),
+        [18, 23, 29, 107]
+    );
 }
