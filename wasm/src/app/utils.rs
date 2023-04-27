@@ -171,7 +171,7 @@ fn alpha_blend_u32_pixels(p1: u32, p2: u32) -> u32 {
     let na = 255 - a;
     let rb = ((na * (p1 & RBMASK)) + (a * (p2 & RBMASK))) >> 8;
     let ag = (na * ((p1 & AGMASK) >> 8)) + (a * (ONEALPHA | ((p2 & GMASK) >> 8)));
-    return (rb & RBMASK) | (ag & AGMASK);
+    (rb & RBMASK) | (ag & AGMASK)
 }
 
 fn rgba_to_arbg_32(a: [u8; 4]) -> u32 {
