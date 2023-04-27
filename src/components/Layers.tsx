@@ -1,5 +1,5 @@
 import { useState, MouseEventHandler, useRef, useEffect } from "react";
-import { Box, ActionIcon, TextInput, Menu, UnstyledButton, Divider } from "@mantine/core";
+import { Box, ActionIcon, TextInput, Menu, UnstyledButton, Divider, Button } from "@mantine/core";
 import { EyeFill, EyeSlash, LockFill, Lock, Trash } from "react-bootstrap-icons";
 import { useRightClick } from "../hooks";
 
@@ -52,16 +52,17 @@ export function Layer({
       }}
     >
       <Menu.Target>
-        <Box
+        <Button
           pl="xs"
+          component="div"
+          variant={active ? "light" : "subtle"}
+          radius={0}
+          styles={{ label: { fontWeight: "lighter" } }}
           sx={{
             display: "flex",
-            height: 50,
+            height: "3rem",
             alignItems: "center",
             width: "100%",
-            // todo: use mantine theme for background
-            background: active ? "rgba(255, 255, 255, 0.05)" : undefined,
-            cursor: "default",
           }}
           ref={rightClickRef}
           onMouseDown={() => {
@@ -96,7 +97,7 @@ export function Layer({
             />
             <LayerLabel name={name} onChangeName={onChangeName} />
           </Box>
-        </Box>
+        </Button>
       </Menu.Target>
 
       <Menu.Dropdown>
@@ -104,7 +105,6 @@ export function Layer({
           Delete layer
         </Menu.Item>
       </Menu.Dropdown>
-      <Divider />
     </Menu>
   );
 }
