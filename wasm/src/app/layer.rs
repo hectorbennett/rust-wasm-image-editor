@@ -144,18 +144,11 @@ impl Layer {
     }
 
     pub fn get_pixel_from_project_coordinates(&self, x: u32, y: u32) -> Pixel {
-        if x < cmp::max(self.left, 0).try_into().unwrap()
-            || y < cmp::max(self.top, 0).try_into().unwrap()
-            || x >= (self.left + self.width as i32).try_into().unwrap()
-            || y >= (self.top + self.height as i32).try_into().unwrap()
-        {
-            // out of bounds
-            return [0, 0, 0, 0];
-        }
-
-        let translated_x: u32 = (x as i32 - self.left).try_into().unwrap();
-        let translated_y: u32 = (y as i32 - self.top).try_into().unwrap();
-        self.buffer.get(translated_x, translated_y).unwrap()
+        let translated_x: u32 = (x as i32 - self.left) as u32;
+        let translated_y: u32 = (y as i32 - self.top) as u32;
+        self.buffer
+            .get(translated_x, translated_y)
+            .unwrap_or([0, 0, 0, 0])
     }
 
     pub fn layer_to_canvas_coords(&self, i: u32, j: u32) -> [i32; 2] {
