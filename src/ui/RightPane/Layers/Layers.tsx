@@ -1,21 +1,23 @@
-import { ActionIcon } from "@mantine/core";
+import { ActionIcon, Title, Box, Divider } from "@mantine/core";
 import { Plus } from "react-bootstrap-icons";
-import { LayersContext } from "../../../context/layers";
-import { WasmContext } from "../../../context/wasm";
+import { LayersContext } from "src/context/layers";
+import { WasmContext } from "src/context/wasm";
 
-import Sortable, { Item } from "../../../components/Sortable";
-import { Layer } from "../../../components/Layers";
+import Sortable, { Item } from "src/components/Sortable";
+import { Layer } from "src/components/Layers";
+import PaneTitle from "src/components/PaneTitle";
+import PaneSection from "src/components/PaneSection";
 
 function NewLayerButton() {
   const layers = LayersContext.useContainer();
   return (
     <ActionIcon
-      size="sm"
+      // size="sm"
       onClick={() => {
         layers.createNewLayer();
       }}
     >
-      <Plus size={12} />
+      <Plus size={16} />
     </ActionIcon>
   );
 }
@@ -37,8 +39,7 @@ export default function Layers() {
   };
 
   return (
-    <>
-      <NewLayerButton />
+    <PaneSection title="Layers" titleRightSection={<NewLayerButton />}>
       <Sortable
         onChange={onChange}
         items={l.map((layer) => ({
@@ -60,6 +61,6 @@ export default function Layers() {
           ),
         }))}
       />
-    </>
+    </PaneSection>
   );
 }

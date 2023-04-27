@@ -8,7 +8,7 @@ import { CustomSpotlightAction } from "src/components/CustomSpotlightAction";
 export default function App({ Component, pageProps }) {
   const toggleColorScheme = () => {};
 
-  const colorScheme = "dark";
+  const colorScheme = "light";
 
   return (
     <>

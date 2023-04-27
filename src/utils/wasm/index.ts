@@ -4,9 +4,6 @@ import type { WasmWorker } from "./wasm.worker.st";
 
 import { Api } from "wasm/pkg/wasm";
 
-console.log("api");
-console.log(Api);
-
 const FORCE_USE_SINGLE_THREADS = true;
 
 const methods_with_callback = [...Object.getOwnPropertyNames(Api.prototype)].filter(

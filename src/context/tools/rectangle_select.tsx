@@ -67,4 +67,5 @@ export const rectangle_select: Tool = {
   label: "Rectangle Select",
   icon: BoundingBox,
   events: events,
+  kbd_shortcut: "M",
 };
