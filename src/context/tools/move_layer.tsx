@@ -10,20 +10,20 @@ let currY = 0;
 let drawing = false;
 
 const events = {
-  onMouseDown: function ({ event, api }: ToolEventParams) {
-    const [x, y] = getProjectMouseCoords(event, api);
+  onMouseDown: async function ({ event, api }: ToolEventParams) {
+    const [x, y] = await getProjectMouseCoords(event, api);
     drawing = true;
     startX = x;
     startY = y;
     currX = x;
     currY = y;
   },
-  onMouseMove: function ({ event, api }: ToolEventParams) {
+  onMouseMove: async function ({ event, api }: ToolEventParams) {
     if (!drawing) {
       return;
     }
     [startX, startY] = [currX, currY];
-    [currX, currY] = getProjectMouseCoords(event, api);
+    [currX, currY] = await getProjectMouseCoords(event, api);
     move_active_layer(api);
   },
   onMouseUp: function ({ api }: ToolEventParams) {
@@ -36,7 +36,6 @@ const events = {
 };
 
 const move_active_layer = (api: Api) => {
-  console.log(currX - startX);
   api.move_active_layer(currX - startX, currY - startY);
 };
 

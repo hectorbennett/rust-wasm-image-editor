@@ -59,7 +59,7 @@ impl ProjectController {
             .append(Box::new(RenameLayer::new(self.project.clone(), uid, name)));
     }
 
-    pub fn set_layer_visibile(&mut self, uid: u64, visible: bool) {
+    pub fn set_layer_visible(&mut self, uid: u64, visible: bool) {
         self.history.append(Box::new(SetLayerVisible::new(
             self.project.clone(),
             uid,

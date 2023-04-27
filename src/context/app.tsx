@@ -1,5 +1,6 @@
 import { createContainer } from "unstated-next";
 import { WasmContext } from "./wasm";
+import { useState } from "react";
 
 function readFile(file: File): Promise<ArrayBuffer> {
   return new Promise((resolve) => {
@@ -139,8 +140,10 @@ function useApp() {
     edit: useEdit(),
     filters: useFilters(),
     image: useImage(),
-    zoom: wasm.state?.workspace.zoom || 100,
-    setZoom: (zoom: number) => wasm.api?.set_workspace_zoom(zoom),
+    zoom: wasm.state?.workspace.zoom,
+    setZoom: async (zoom: number) => {
+      wasm.api.set_workspace_zoom(zoom);
+    },
   };
 }
 

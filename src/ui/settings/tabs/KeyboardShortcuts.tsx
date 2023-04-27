@@ -1,9 +1,9 @@
 import { Box, Table, UnstyledButton } from "@mantine/core";
-import KeyboardShortcut from "../../components/KeyboardShortcut";
+import KeyboardShortcut from "src/components/KeyboardShortcut";
 
-import { CommandsContext } from "../../context";
-import { KeyboardShortcutName, SettingsContext } from "../../context/settings";
-import { CommandTypeBadge } from "../../components/CommandTypeBadge";
+import { CommandsContext, SettingsContext } from "src/context";
+import type { KeyboardShortcutName } from "src/context/settings";
+import { CommandTypeBadge } from "src/components/CommandTypeBadge";
 
 interface EditKeyboardShortcutProps {
   shortcutName: KeyboardShortcutName;

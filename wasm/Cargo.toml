@@ -42,7 +42,6 @@ default-features = false
 version = "1.3.0"
 features = ["v4", "js"]
 
-
 [dependencies.web-sys]
 version = "0.3.61"
 features = [
@@ -54,6 +53,15 @@ features = [
     'Window',
     'console',
 ]
+
+[dependencies.rayon]
+version = "1.5"
+optional = true
+
+[dependencies.wasm-bindgen-rayon]
+version = "1"
+optional = true
+
 
 ####################
 # Dev Dependencies #
@@ -70,8 +78,11 @@ opt-level = "s"
 
 [features]
 default = ["console_error_panic_hook"]
-
+parallel = ["rayon", "wasm-bindgen-rayon"]
 
 [[bench]]
 name = "benchmarks"
 harness = false
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false

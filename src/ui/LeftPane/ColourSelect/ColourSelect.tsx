@@ -30,7 +30,6 @@ function ColourPicker(props: ColourPickerProps) {
         value={valueString}
         onChange={(stringValue) => props.onChange(parse_rgba_string_to_array(stringValue))}
       />
-      <Text>{props.value}</Text>
     </Stack>
   );
 }
@@ -44,7 +43,7 @@ export default function ColourSelect() {
         onChange={(colour) => {
           wasm.api?.set_primary_colour(colour[0], colour[1], colour[2], colour[3]);
         }}
-        value={wasm.api?.state?.primary_colour || [0, 0, 0, 0]}
+        value={[0, 0, 0, 0]}
       />
     </div>
   );

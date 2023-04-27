@@ -2,9 +2,9 @@ import { ReactNode } from "react";
 import { HotkeyItem, useHotkeys } from "@mantine/hooks";
 import { AppContext, CommandsContext, SettingsContext, TabsContext } from "../context";
 import Ui from "../ui/Ui";
-import { Settings } from "../settings";
-import Workspace from "../workspace/Workspace";
-import Dropzone from "../components/Dropzone";
+import Workspace from "../ui/Workspace";
+import Dropzone from "./Dropzone";
+import { Settings } from "../ui/settings";
 
 function Tabs() {
   const tabs = TabsContext.useContainer();

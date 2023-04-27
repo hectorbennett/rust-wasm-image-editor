@@ -13,7 +13,7 @@ interface LayerProps {
   active?: boolean;
   onSetActive?: () => void;
   onDelete?: () => void;
-  getThumbnail?: () => Uint8ClampedArray | undefined;
+  getThumbnail?: () => Promise<Uint8ClampedArray | undefined>;
   thumbnailHash?: string;
 }
 
@@ -35,7 +35,7 @@ export function Layer({
   thumbnailHash,
 }: LayerProps) {
   const [menuIsOpen, setMenuIsOpen] = useState(false);
-  const rightClickRef = useRightClick<HTMLButtonElement>(function (_event: Event) {
+  const rightClickRef = useRightClick<HTMLDivElement>(function (_event: Event) {
     setMenuIsOpen(true);
   });
 
@@ -52,7 +52,7 @@ export function Layer({
       }}
     >
       <Menu.Target>
-        <UnstyledButton
+        <Box
           pl="xs"
           sx={{
             display: "flex",
@@ -61,6 +61,7 @@ export function Layer({
             width: "100%",
             // todo: use mantine theme for background
             background: active ? "rgba(255, 255, 255, 0.05)" : undefined,
+            cursor: "default",
           }}
           ref={rightClickRef}
           onMouseDown={() => {
@@ -95,7 +96,7 @@ export function Layer({
             />
             <LayerLabel name={name} onChangeName={onChangeName} />
           </Box>
-        </UnstyledButton>
+        </Box>
       </Menu.Target>
 
       <Menu.Dropdown>
@@ -176,7 +177,7 @@ function LayerThumbnail({
   active,
 }: {
   thumbnailHash?: string;
-  getThumbnail?: () => Uint8ClampedArray | undefined;
+  getThumbnail?: () => Promise<Uint8ClampedArray | undefined>;
   active: boolean;
 }) {
   const ref = useRef<HTMLCanvasElement>(null);
@@ -185,24 +186,26 @@ function LayerThumbnail({
   const height = 30;
 
   useEffect(() => {
-    if (!thumbnailHash || !getThumbnail) {
-      return;
-    }
-    const canvas = ref.current;
-    if (!canvas) {
-      return;
-    }
-    const ctx = canvas.getContext("2d");
-    if (!ctx) {
-      return;
-    }
-    const thumbnail = getThumbnail();
-    if (!thumbnail) {
-      return;
-    }
-    const image_data = ctx.createImageData(width, height);
-    image_data.data.set(thumbnail);
-    ctx.putImageData(image_data, 0, 0);
+    (async () => {
+      if (!thumbnailHash || !getThumbnail) {
+        return;
+      }
+      const canvas = ref.current;
+      if (!canvas) {
+        return;
+      }
+      const ctx = canvas.getContext("2d");
+      if (!ctx) {
+        return;
+      }
+      const thumbnail = await getThumbnail();
+      if (!thumbnail) {
+        return;
+      }
+      const image_data = ctx.createImageData(width, height);
+      image_data.data.set(thumbnail);
+      ctx.putImageData(image_data, 0, 0);
+    })();
   }, [thumbnailHash]);
 
   return (

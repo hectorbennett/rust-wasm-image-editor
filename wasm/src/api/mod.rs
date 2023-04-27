@@ -184,13 +184,13 @@ impl Api {
         web_sys::console::time_end_with_label("Api::rename_layer");
     }
 
-    pub fn set_layer_visibile(&mut self, layer_uid: u64, visible: bool) {
-        web_sys::console::time_with_label("Api::set_layer_visibile");
+    pub fn set_layer_visible(&mut self, layer_uid: u64, visible: bool) {
+        web_sys::console::time_with_label("Api::set_layer_visible");
         self.app
             .get_active_project_controller_mut()
             .unwrap()
-            .set_layer_visibile(layer_uid, visible);
-        web_sys::console::time_end_with_label("Api::set_layer_visibile");
+            .set_layer_visible(layer_uid, visible);
+        web_sys::console::time_end_with_label("Api::set_layer_visible");
     }
 
     pub fn set_layer_locked(&mut self, layer_uid: u64, locked: bool) {
@@ -344,6 +344,27 @@ impl Api {
                 }
             }
         }
+    }
+
+    // pub fn get_workspace_buffer(&mut self) {
+    //     workspace.resize(self.canvas.width(), self.canvas.height());
+    //     let v = workspace.to_vec();
+    // }
+
+    pub fn set_workspace_size(&mut self, width: u32, height: u32) {
+        let _timer = Timer::new("Api::set_workspace_size");
+        let workspace = &mut self
+            .app
+            .get_active_project_controller_mut()
+            .unwrap()
+            .workspace;
+        workspace.resize(width, height);
+    }
+
+    pub fn get_workspace_buffer(&self) -> Clamped<Vec<u8>> {
+        // let _timer = Timer::new("Api::get_workspace_buffer");
+        let workspace = &self.app.get_active_project_controller().unwrap().workspace;
+        Clamped(workspace.to_vec())
     }
 
     pub fn center_canvas(&mut self) {
