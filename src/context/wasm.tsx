@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { createContainer } from "unstated-next";
 import { useEffectOnce } from "../hooks";
 import { getApi } from "../utils/wasm";
+import api_demo from "../utils/api_demo";
 
 function useWasm() {
   const [appState, setAppState] = useState<any>(null);
@@ -22,10 +23,6 @@ function useWasm() {
       setIsLoaded(true);
     })();
   });
-
-  // useEffect(() => {
-  //   console.log(appState);
-  // }, [appState]);
 
   return {
     isLoading: !isLoaded || !appState,

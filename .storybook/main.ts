@@ -16,6 +16,7 @@ const config: StorybookConfig = {
   },
   async viteFinal(config) {
     return mergeConfig(config, {
+      // don't think these headers are working :(
       server: {
         headers: {
           "Cross-Origin-Embedder-Policy": "require-corp",
@@ -26,27 +27,3 @@ const config: StorybookConfig = {
   },
 };
 export default config;
-
-// import { defineConfig } from "vite";
-// import react from "@vitejs/plugin-react";
-// import fullReload from "vite-plugin-full-reload";
-// import OMT from "@surma/rollup-plugin-off-main-thread";
-
-// export default defineConfig({
-//   server: {
-//     host: "0.0.0.0",
-//     port: 3000,
-//     headers: {
-//       "Cross-Origin-Embedder-Policy": "require-corp",
-//       "Cross-Origin-Opener-Policy": "same-origin",
-//     },
-//   },
-//   plugins: [{ ...OMT() }, react(), fullReload(["wasm/pkg/**/*"])],
-//   esbuild: {
-//     target: "es2020",
-//   },
-//   build: { target: "es2020" },
-//   optimizeDeps: {
-//     esbuildOptions: { target: "es2020", supported: { bigint: true } },
-//   },
-// });

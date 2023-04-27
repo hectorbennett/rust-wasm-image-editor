@@ -55,7 +55,7 @@
   },
   "scripts": {
     "ci": "rm -rf node_modules && yarn install --frozen-lockfile",
-    "prepare": "rustup toolchain install nightly-2022-12-12 && rustup component add rust-src --toolchain nightly-2022-12-12",
+    "prepare": "yarn run install-wasm-pack && husky install && cargo install cargo-watch && rustup toolchain install nightly-2022-12-12 && rustup component add rust-src --toolchain nightly-2022-12-12",
     "install-wasm-pack": "curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh",
     "dev:js": "next",
     "dev:wasm-single-threaded": "cd wasm && cargo watch -s 'wasm-pack build . --target web'",
