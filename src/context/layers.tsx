@@ -17,7 +17,7 @@ function useLayers() {
       wasm.api?.set_layer_locked(BigInt(layer_uid), locked);
     },
     setLayerVisibility: function setLayerVisibility(layer_uid: string, visible: boolean) {
-      wasm.api?.set_layer_visibile(BigInt(layer_uid), visible);
+      wasm.api?.set_layer_visible(BigInt(layer_uid), visible);
     },
     renameLayer: function renameLayer(layer_uid: string, name: string) {
       wasm.api?.rename_layer(BigInt(layer_uid), name);

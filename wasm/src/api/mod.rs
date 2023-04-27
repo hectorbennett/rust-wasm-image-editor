@@ -184,13 +184,13 @@ impl Api {
         web_sys::console::time_end_with_label("Api::rename_layer");
     }
 
-    pub fn set_layer_visibile(&mut self, layer_uid: u64, visible: bool) {
-        web_sys::console::time_with_label("Api::set_layer_visibile");
+    pub fn set_layer_visible(&mut self, layer_uid: u64, visible: bool) {
+        web_sys::console::time_with_label("Api::set_layer_visible");
         self.app
             .get_active_project_controller_mut()
             .unwrap()
-            .set_layer_visibile(layer_uid, visible);
-        web_sys::console::time_end_with_label("Api::set_layer_visibile");
+            .set_layer_visible(layer_uid, visible);
+        web_sys::console::time_end_with_label("Api::set_layer_visible");
     }
 
     pub fn set_layer_locked(&mut self, layer_uid: u64, locked: bool) {
