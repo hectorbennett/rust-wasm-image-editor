@@ -18,7 +18,7 @@ function RightPaneHistory() {
 
   return (
     <PaneSection title="History">
-      <History history={history} revision={revision} />;
+      <History history={history} revision={revision} />
     </PaneSection>
   );
 }
