@@ -17,7 +17,7 @@ export function TabBar() {
         },
         tab: {
           "&[data-active]": {
-            backgroundColor: theme.colors.dark[5],
+            // backgroundColor: theme.colors.dark[5],
           },
         },
         tabLabel: {

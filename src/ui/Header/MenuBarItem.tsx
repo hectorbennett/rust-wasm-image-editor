@@ -18,7 +18,7 @@ export function MenuBarItem(props: MenuBarItemProps) {
   return (
     <Menu shadow="md" styles={{ dropdown: { minWidth: 150 } }} position="bottom-start">
       <Menu.Target>
-        <Button size="xs" variant="subtle" compact>
+        <Button size="sm" variant="subtle" compact styles={{ label: { fontWeight: "lighter" } }}>
           {capitalizeFirstLetter(props.label)}
         </Button>
       </Menu.Target>
