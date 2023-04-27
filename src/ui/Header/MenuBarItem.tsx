@@ -10,6 +10,7 @@ interface MenuBarItemProps {
   menuBarIsFocused: boolean;
   opened: boolean;
   onOpen: () => void;
+  onClose: () => void;
 }
 
 function capitalizeFirstLetter(string: string) {
@@ -46,13 +47,16 @@ export function MenuBarItem(props: MenuBarItemProps) {
       <Menu.Dropdown>
         {props.items.map((item) => (
           <Menu.Item
-            onClick={item.onClick}
-            key={item.label}
+            key={item.name}
+            onClick={(e) => {
+              props.onClose();
+              item.onClick(e);
+            }}
             icon={item.icon ? <item.icon size={14} stroke={1.25} /> : null}
             rightSection={
               item.kbd_shortcut ? (
                 <Box ml="2rem">
-                  <KeyboardShortcut keys={item.kbd_shortcut.split("+")} />
+                  <KeyboardShortcut keys={item.kbd_shortcut} />
                 </Box>
               ) : null
             }

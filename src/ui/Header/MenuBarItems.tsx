@@ -7,6 +7,7 @@ import { useFocusWithin } from "@mantine/hooks";
 
 export interface MenuItem {
   label: string;
+  name: string;
   kbd_shortcut?: string;
   onClick: MouseEventHandler;
   icon?: FunctionComponent<TablerIconsProps>;
@@ -33,6 +34,7 @@ export function MenuBarItems() {
       .map((c) => ({
         label: c.label,
         icon: c.icon,
+        name: c.id,
         kbd_shortcut: c.kbd_shortcut,
         onClick: () => c.action(),
         disabled: c.disabled,
@@ -47,7 +49,7 @@ export function MenuBarItems() {
 
   return (
     <Group ref={ref}>
-      {menu_items.map((menuItem) => {
+      {menu_items.map((menuItem, index) => {
         return (
           <MenuBarItem
             key={menuItem.label}
@@ -57,6 +59,7 @@ export function MenuBarItems() {
             menuBarIsFocused={focused}
             opened={menuItem.label == openedMenu}
             onOpen={() => setOpenedMenu(menuItem.label)}
+            onClose={() => setOpenedMenu(null)}
           />
         );
       })}
