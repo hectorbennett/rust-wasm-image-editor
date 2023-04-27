@@ -46,8 +46,8 @@ export function MenuBarItem(props: MenuBarItemProps) {
       <Menu.Dropdown>
         {props.items.map((item) => (
           <Menu.Item
+            key={item.name}
             onClick={item.onClick}
-            key={item.label}
             icon={item.icon ? <item.icon size={14} stroke={1.25} /> : null}
             rightSection={
               item.kbd_shortcut ? (
