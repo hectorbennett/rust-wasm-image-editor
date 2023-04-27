@@ -212,7 +212,6 @@ function useCommands() {
         kbd_shortcut: "ctrl+V",
         action: () => app.edit.paste(),
       },
-      /* view */
       /* select */
       {
         category: "select",
@@ -237,7 +236,7 @@ function useCommands() {
       },
       /* tools */
       ...tools.tools.map((tool) => ({
-        category: "tools",
+        category: "tools" as CommandCategory,
         id: `tools.${tool.name}`,
         label: tool.label,
         icon: tool.icon,
