@@ -47,8 +47,9 @@ export default function Workspace() {
       stats.dom.style.position = "static";
       stats.dom.style.display = "flex";
       stats.dom.style.gap = "10px";
-      (stats.dom.children[0] as HTMLDivElement).style.display = "block";
-      (stats.dom.children[2] as HTMLDivElement).style.display = "block";
+      // todo: move stats to its own component?
+      // (stats.dom.children[0] as HTMLDivElement).style.display = "block";
+      // (stats.dom.children[2] as HTMLDivElement).style.display = "block";
       document.getElementById("fps-counter")?.appendChild(stats.dom);
 
       const step = async () => {
