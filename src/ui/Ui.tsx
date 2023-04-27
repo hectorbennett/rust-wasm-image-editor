@@ -30,12 +30,12 @@ const useStyles = createStyles((theme, _params, _getRef) => ({
   header: {
     minHeight: HEADER_HEIGHT,
     display: "flex",
-    background: theme.colors.dark[6],
+    background: theme.colorScheme == "dark" ? theme.colors.dark[6] : theme.colors.gray[1],
   },
   leftPane: {
     height: `calc(100vh - ${HEADER_HEIGHT}px)`,
     display: "flex",
-    background: theme.colors.dark[7],
+    background: theme.colorScheme == "dark" ? theme.colors.dark[7] : theme.colors.gray[0],
   },
   canvasOuter: {
     flex: 1,
@@ -45,19 +45,19 @@ const useStyles = createStyles((theme, _params, _getRef) => ({
     height: TAB_BAR_HEIGHT,
     display: "flex",
     overflow: "auto",
-    background: theme.colors.dark[6],
+    background: theme.colorScheme == "dark" ? theme.colors.dark[6] : theme.colors.gray[1],
   },
   canvasInner: {
     height: `calc(100vh - ${HEADER_HEIGHT + TAB_BAR_HEIGHT + FOOTER_HEIGHT}px)`,
-    background: theme.colors.dark[5],
+    background: theme.colorScheme == "dark" ? theme.colors.dark[5] : theme.colors.gray[2],
   },
   rightPane: {
     height: `calc(100vh - ${HEADER_HEIGHT}px)`,
     display: "flex",
-    background: theme.colors.dark[7],
+    background: theme.colorScheme == "dark" ? theme.colors.dark[7] : theme.colors.gray[0],
   },
   footer: {
-    background: theme.colors.dark[6],
+    background: theme.colorScheme == "dark" ? theme.colors.dark[6] : theme.colors.gray[2],
     height: FOOTER_HEIGHT,
   },
 }));

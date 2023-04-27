@@ -21,6 +21,7 @@ function useWasm() {
       apiRef.current = api;
       refreshState();
       setIsLoaded(true);
+      api_demo(apiRef.current);
     })();
   });
 
