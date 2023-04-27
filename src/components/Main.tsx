@@ -1,10 +1,11 @@
 import { ReactNode } from "react";
 import { HotkeyItem, useHotkeys } from "@mantine/hooks";
-import { AppContext, CommandsContext, SettingsContext, TabsContext } from "../context";
+import { AppContext, CommandsContext, SettingsContext, TabsContext, WasmContext } from "../context";
 import Ui from "../ui/Ui";
 import Workspace from "../ui/Workspace";
 import Dropzone from "./Dropzone";
 import { Settings } from "../ui/settings";
+import { Loader } from "@mantine/core";
 
 function Tabs() {
   const tabs = TabsContext.useContainer();
@@ -31,8 +32,31 @@ function HotkeyProvider(props: { children: ReactNode }) {
   return <div>{props.children}</div>;
 }
 
+function LoadingPage() {
+  return (
+    <div
+      style={{
+        width: "100vw",
+        height: "100vh",
+        textAlign: "center",
+        minHeight: "100%",
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+      }}
+    >
+      <Loader />
+    </div>
+  );
+}
+
 export default function Main() {
   const app = AppContext.useContainer();
+  const wasm = WasmContext.useContainer();
+
+  if (wasm.isLoading) {
+    return <LoadingPage />;
+  }
   return (
     <>
       <HotkeyProvider>
