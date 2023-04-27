@@ -352,7 +352,7 @@ impl Api {
     // }
 
     pub fn set_workspace_size(&mut self, width: u32, height: u32) {
-        let _timer = Timer::new("Api::set_workspace_size");
+        // let _timer = Timer::new("Api::set_workspace_size");
         let workspace = &mut self
             .app
             .get_active_project_controller_mut()
