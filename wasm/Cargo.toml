@@ -80,7 +80,9 @@ opt-level = "s"
 default = ["console_error_panic_hook"]
 parallel = ["rayon", "wasm-bindgen-rayon"]
 
-
 [[bench]]
 name = "benchmarks"
 harness = false
+
+[package.metadata.wasm-pack.profile.release]
+wasm-opt = false
