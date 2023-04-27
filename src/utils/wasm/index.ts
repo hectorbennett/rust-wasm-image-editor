@@ -2,23 +2,16 @@ import { threads as supportsThreads } from "wasm-feature-detect";
 import * as Comlink from "comlink";
 import type { WasmWorker } from "./wasm.worker.st";
 
+import { Api } from "wasm/pkg/wasm";
+
+console.log("api");
+console.log(Api);
+
 const FORCE_USE_SINGLE_THREADS = true;
 
-// these methods affect the ui (and maybe the canvas)
-const methods_with_callback = [
-  "create_layer",
-  "create_project",
-  "redo",
-  "reeorder_layers",
-  "rename_layer",
-  "set_active_layer",
-  "set_active_project",
-  "set_layer_locked",
-  "set_layer_visible",
-  "set_primary_colour",
-  "set_workspace_size",
-  "undo",
-];
+const methods_with_callback = [...Object.getOwnPropertyNames(Api.prototype)].filter(
+  (i) => !["constructor", "__destroy_into_raw", "free", "state"].includes(i),
+);
 
 // these methods only affect the canvas
 const methods_without_callback = [

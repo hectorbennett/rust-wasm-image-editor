@@ -23,9 +23,6 @@ export default async function api_demo(api) {
   const state = await api.state;
   const layer_uids = get_layer_uids(state);
   await api.reeorder_layers(layer_uids.reverse());
-
-  await api.set_workspace_size(800, 800);
-  await api.center_canvas();
 }
 
 const get_layer_uids = (state) => {
