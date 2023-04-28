@@ -2,14 +2,15 @@ import { Fragment } from "react";
 import { Kbd, Text } from "@mantine/core";
 
 interface KeyboardShortcutProps {
-  keys: Array<string>;
+  keys: string;
 }
 
 export default function KeyboardShortcut(props: KeyboardShortcutProps) {
+  const keys = props.keys.split("+");
   return (
     <>
-      {props.keys.map((key, i) => {
-        if (i === props.keys.length - 1) {
+      {keys.map((key, i) => {
+        if (i === keys.length - 1) {
           return (
             <Kbd size="xs" key={key as string}>
               {key}

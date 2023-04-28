@@ -2,6 +2,7 @@ import { Box, Button, Menu } from "@mantine/core";
 
 import KeyboardShortcut from "../../components/KeyboardShortcut";
 import { MenuItem } from "./MenuBarItems";
+import { capitalizeFirstLetter } from "src/utils";
 
 interface MenuBarItemProps {
   label: string;
@@ -10,11 +11,7 @@ interface MenuBarItemProps {
   menuBarIsFocused: boolean;
   opened: boolean;
   onOpen: () => void;
-}
-
-function capitalizeFirstLetter(string: string) {
-  /* TODO: Move to some general utils folder */
-  return string.charAt(0).toUpperCase() + string.slice(1);
+  onClose: () => void;
 }
 
 export function MenuBarItem(props: MenuBarItemProps) {
@@ -46,13 +43,16 @@ export function MenuBarItem(props: MenuBarItemProps) {
       <Menu.Dropdown>
         {props.items.map((item) => (
           <Menu.Item
-            onClick={item.onClick}
-            key={item.label}
+            key={item.name}
+            onClick={(e) => {
+              props.onClose();
+              item.onClick(e);
+            }}
             icon={item.icon ? <item.icon size={14} stroke={1.25} /> : null}
             rightSection={
               item.kbd_shortcut ? (
                 <Box ml="2rem">
-                  <KeyboardShortcut keys={item.kbd_shortcut.split("+")} />
+                  <KeyboardShortcut keys={item.kbd_shortcut} />
                 </Box>
               ) : null
             }

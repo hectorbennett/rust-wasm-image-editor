@@ -1,27 +1,19 @@
 import ToolButton from "./ToolButton";
 
-import { ToolsContext } from "../../../context";
+import { ToolsContext } from "src/context";
 
-import { createStyles } from "@mantine/core";
-
-const useStyles = createStyles((_theme, _params, _getRef) => ({
-  tools: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 4,
-    // margin: 4,
-    justifyContent: "space-between",
-  },
-}));
+import { Flex } from "@mantine/core";
+import PaneSection from "src/components/PaneSection";
 
 export default function Tools() {
   const tools = ToolsContext.useContainer();
-  const { classes } = useStyles();
   return (
-    <div className={classes.tools}>
-      {tools.tools.map((tool, index) => (
-        <ToolButton tool={tool} key={index} />
-      ))}
-    </div>
+    <PaneSection title="Tools">
+      <Flex m="xs" gap="0.2rem" justify="flex-start" align="flex-start" direction="row" wrap="wrap">
+        {tools.tools.map((tool, index) => (
+          <ToolButton tool={tool} key={index} />
+        ))}
+      </Flex>
+    </PaneSection>
   );
 }

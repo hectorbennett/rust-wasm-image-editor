@@ -31,7 +31,7 @@ function EditKeyboardShortcut(props: EditKeyboardShortcutProps) {
       <UnstyledButton
       // onFocus={() => setInEditMode(true)}
       >
-        <KeyboardShortcut keys={settings.keyboardShortcuts[props.shortcutName]} />
+        {/* <KeyboardShortcut keys={settings.keyboardShortcuts[props.shortcutName]} /> */}
       </UnstyledButton>
     );
   }
