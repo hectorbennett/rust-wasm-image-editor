@@ -43,12 +43,7 @@ impl PixelBuffer {
             return None;
         }
         let i: usize = get_1d_index_from_2d_coord(self.width, x, y) * 4;
-        Some([
-            self.buffer[i],
-            self.buffer[i + 1],
-            self.buffer[i + 2],
-            self.buffer[i + 3],
-        ])
+        Some(self.buffer[i..=i + 3].try_into().unwrap())
     }
 
     pub fn set(&mut self, x: u32, y: u32, pixel: Pixel) {
