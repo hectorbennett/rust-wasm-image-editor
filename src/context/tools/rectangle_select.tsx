@@ -1,6 +1,6 @@
 import { BoundingBox } from "react-bootstrap-icons";
 import { Tool, ToolEventParams } from ".";
-import { getProjectMouseCoords } from "../../utils";
+import { getProjectMouseCoords } from "src/utils";
 import { Api } from "../../../wasm/pkg/wasm";
 
 let startX = 0;

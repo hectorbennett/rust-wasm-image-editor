@@ -1,6 +1,6 @@
 import { Magic } from "react-bootstrap-icons";
 import { Tool, ToolEventParams } from ".";
-import { getProjectMouseCoords } from "../../utils";
+import { getProjectMouseCoords } from "src/utils";
 
 const events = {
   onClick: async function ({ event, api }: ToolEventParams) {

@@ -1,11 +1,11 @@
-import React, { forwardRef, useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { ToolsContext, ActiveProjectContext } from "../context";
 import { ToolEventParams, ToolEvents } from "../context/tools";
 
 import { WasmContext } from "../context/wasm";
 import { useEffectOnce, useResizeObserver } from "../hooks";
 import Stats from "stats.js";
-import { getWorkspaceMouseCoords } from "../utils";
+import { getWorkspaceMouseCoords } from "src/utils";
 
 interface CanvasProps {
   width: number;
