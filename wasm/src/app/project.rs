@@ -1,3 +1,4 @@
+use crate::app::Colour;
 use image::{ImageBuffer, RgbaImage};
 use postcard;
 use serde::{Deserialize, Serialize};
@@ -212,5 +213,37 @@ fn get_checkerboard_pixel(x: u32, y: u32) -> Pixel {
         GREY_1
     } else {
         GREY_2
+    }
+}
+
+// demo project
+impl Project {
+    pub fn demo() -> Project {
+        // red square
+        let mut layer1 = Layer::new(1000, 1000);
+        let mut selection1 = Selection::new(1000, 1000);
+        let colour1 = Colour::from_rgba(255, 0, 0, 150);
+        selection1.select_rect(100, 150, 150, 150);
+        layer1.fill_selection(&selection1, &colour1);
+
+        // green square
+        let mut layer2 = Layer::new(1000, 1000);
+        let mut selection2 = Selection::new(1000, 1000);
+        let colour2 = Colour::from_rgba(0, 255, 0, 150);
+        selection2.select_rect(220, 100, 180, 150);
+        layer2.fill_selection(&selection2, &colour2);
+
+        // blue circle
+        let mut layer3 = Layer::new(1000, 1000);
+        let mut selection3 = Selection::new(1000, 1000);
+        let colour3 = Colour::from_rgba(0, 0, 255, 150);
+        selection3.select_ellipse(180, 200, 200, 200);
+        layer3.fill_selection(&selection3, &colour3);
+
+        let mut project = Project::new("Demo", 1000, 1000);
+        project.layers.push(layer1);
+        project.layers.push(layer2);
+        project.layers.push(layer3);
+        project
     }
 }
