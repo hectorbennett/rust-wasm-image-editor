@@ -1,11 +1,8 @@
-import { Box, Tabs, Title } from "@mantine/core";
-import Layers from "./Layers";
 import History from "src/components/History";
-import { ActiveProjectContext, WasmContext } from "src/context";
-import { IconMessageCircle, IconPhoto, IconSettings } from "@tabler/icons-react";
-import PaneTitle from "src/components/PaneTitle";
+import { ActiveProjectContext } from "src/context";
 import PaneSection from "src/components/PaneSection";
 import Pane from "src/components/Pane";
+import Layers from "./Layers";
 
 function RightPaneHistory() {
   const active_project = ActiveProjectContext.useContainer();

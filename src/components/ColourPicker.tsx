@@ -1,5 +1,5 @@
-import { ColorPicker as MantineColourPicker, Text, Stack } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { ColorPicker as MantineColourPicker } from "@mantine/core";
+import { useEffect, useMemo, useState } from "react";
 
 function parse_rgba_string_to_array(rgbaString: string) {
   const rgbaArray = rgbaString
@@ -11,27 +11,36 @@ function parse_rgba_string_to_array(rgbaString: string) {
   return rgbaArray;
 }
 
+const to_2_dp = (num: number) => Math.round(num * 100) / 100;
+
 function parse_rgba_array_to_string(array: Array<number>) {
-  return `rgba(${array[0]}, ${array[1]}, ${array[2]}, ${array[3] / 255})`;
+  return `rgba(${array[0]}, ${array[1]}, ${array[2]}, ${to_2_dp(array[3] / 255)})`;
 }
 
-// interface ColourPickerProps {
-//   value: Array<number>;
-//   onChange: (colour: Array<number>) => void;
-// }
+interface ColourPickerProps {
+  value: Array<number>;
+  onChange: (colour: Array<number>) => void;
+}
 
-export default function ColourPicker({}: {}) {
-  //   const valueString = parse_rgba_array_to_string(props.value);
+export default function ColourPicker({ value, onChange }: ColourPickerProps) {
   const [tempValue, setTempValue] = useState("rgba(0, 0, 0, 0)");
+
+  const permValue = useMemo(() => parse_rgba_array_to_string(value), [value]);
+
+  useEffect(() => {
+    setTempValue(permValue);
+  }, [permValue]);
 
   return (
     <MantineColourPicker
       sx={{ width: "100%" }}
       format="rgba"
-      // value={valueString}
-      // onChange={(stringValue) => props.onChange(parse_rgba_string_to_array(stringValue))}
       value={tempValue}
       onChange={setTempValue}
+      onChangeEnd={(value) => {
+        setTempValue(value);
+        onChange(parse_rgba_string_to_array(value));
+      }}
       swatches={[
         "#25262b",
         "#868e96",
@@ -48,9 +57,6 @@ export default function ColourPicker({}: {}) {
         "#fab005",
         "#fd7e14",
       ]}
-      onChangeEnd={() => {
-        console.log("mouseUp");
-      }}
     />
   );
 }
