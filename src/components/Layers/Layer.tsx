@@ -1,6 +1,6 @@
 import { useState, MouseEventHandler } from "react";
 import { Box, ActionIcon, Menu, Button } from "@mantine/core";
-import { EyeFill, EyeSlash, LockFill, Lock, Trash } from "react-bootstrap-icons";
+import { IconEye, IconEyeClosed, IconLock, IconLockOff, IconTrash } from "@tabler/icons-react";
 import { useRightClick } from "../../hooks";
 import LayerLabel from "./LayerLabel";
 import LayerThumbnail from "./LayerThumbnail";
@@ -97,7 +97,7 @@ export default function Layer({
       </Menu.Target>
 
       <Menu.Dropdown>
-        <Menu.Item icon={<Trash size={14} />} onClick={() => onDelete()}>
+        <Menu.Item icon={<IconTrash size={14} />} onClick={() => onDelete()}>
           Delete layer
         </Menu.Item>
       </Menu.Dropdown>
@@ -113,7 +113,7 @@ interface LayerCheckboxProps {
 function VisibleCheckbox(props: LayerCheckboxProps) {
   return (
     <ActionIcon size="sm" mx={2} onMouseDown={props.onClick}>
-      {props.checked ? <EyeFill size={12} /> : <EyeSlash size={12} />}
+      {props.checked ? <IconEye size={12} /> : <IconEyeClosed size={12} />}
     </ActionIcon>
   );
 }
@@ -121,7 +121,7 @@ function VisibleCheckbox(props: LayerCheckboxProps) {
 function LockedCheckbox(props: LayerCheckboxProps) {
   return (
     <ActionIcon size="sm" mx={2} onMouseDown={props.onClick}>
-      {props.checked ? <LockFill size={12} /> : <Lock size={12} />}
+      {props.checked ? <IconLockOff size={12} /> : <IconLock size={12} />}
     </ActionIcon>
   );
 }

@@ -1,7 +1,7 @@
-import { ArrowsMove } from "react-bootstrap-icons";
 import { Tool, ToolEventParams } from ".";
 import { getProjectMouseCoords } from "src/utils";
 import { Api } from "../../../wasm/pkg/wasm";
+import { IconArrowsMove } from "@tabler/icons-react";
 
 let startX = 0;
 let startY = 0;
@@ -42,7 +42,7 @@ const move_active_layer = (api: Api) => {
 export const move_layer: Tool = {
   name: "move_layer",
   label: "Move layer",
-  icon: ArrowsMove,
+  icon: IconArrowsMove,
   events: events,
   kbd_shortcut: "V",
 };
