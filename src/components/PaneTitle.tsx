@@ -9,7 +9,7 @@ interface PaneTitleProps {
 export default function PaneTitle({ label, rightSection }: PaneTitleProps) {
   return (
     <Box
-      mx="1rem"
+      mx="xs"
       sx={{
         display: "flex",
         justifyContent: "space-between",

@@ -1,7 +1,7 @@
 import { Api } from "../../../wasm/pkg/wasm";
 import { TbOvalVertical } from "react-icons/tb";
 import { Tool, ToolEventParams } from ".";
-import { getProjectMouseCoords } from "../../utils";
+import { getProjectMouseCoords } from "src/utils";
 
 let startX = 0;
 let startY = 0;

@@ -2,6 +2,7 @@ import { Box, Button, Menu } from "@mantine/core";
 
 import KeyboardShortcut from "../../components/KeyboardShortcut";
 import { MenuItem } from "./MenuBarItems";
+import { capitalizeFirstLetter } from "src/utils";
 
 interface MenuBarItemProps {
   label: string;
@@ -11,11 +12,6 @@ interface MenuBarItemProps {
   opened: boolean;
   onOpen: () => void;
   onClose: () => void;
-}
-
-function capitalizeFirstLetter(string: string) {
-  /* TODO: Move to some general utils folder */
-  return string.charAt(0).toUpperCase() + string.slice(1);
 }
 
 export function MenuBarItem(props: MenuBarItemProps) {

@@ -1,6 +1,6 @@
 import { IconColorPicker } from "@tabler/icons-react";
 import { Tool, ToolEventParams } from ".";
-import { getProjectMouseCoords } from "../../utils";
+import { getProjectMouseCoords } from "src/utils";
 
 export const eye_dropper: Tool = {
   name: "eye_dropper",

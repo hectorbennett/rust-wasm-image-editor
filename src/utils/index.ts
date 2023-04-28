@@ -1,4 +1,9 @@
-import { Api } from "../wasm/pkg/wasm";
+import { Api } from "../../wasm/pkg/wasm";
+
+export function capitalizeFirstLetter(string: string) {
+  /* TODO: Move to some general utils folder */
+  return string.charAt(0).toUpperCase() + string.slice(1);
+}
 
 export async function getProjectMouseCoords(
   event: React.MouseEvent<Element, MouseEvent>,
