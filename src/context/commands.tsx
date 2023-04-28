@@ -280,6 +280,13 @@ function useCommands() {
         action: () => layers.createNewLayer(),
         kbd_shortcut: "shift+cmd+N",
       },
+      {
+        category: "layer",
+        id: "layer.crop_layer_to_content",
+        label: "Crop layer to content",
+        action: () => wasm.api?.crop_layer_to_content(),
+        kbd_shortcut: "shift+cmd+N",
+      },
     ],
     [
       active_project.activeProject,

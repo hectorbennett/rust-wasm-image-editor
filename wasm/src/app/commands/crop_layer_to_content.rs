@@ -6,16 +6,25 @@ use super::command::Command;
 
 pub struct CropLayerToContent {
     project: Rc<RefCell<Project>>,
-    previous_active_layer_uid: Option<u64>,
+    previous_left: i32,
+    previous_top: i32,
+    previous_width: u32,
+    previous_height: u32,
 }
 
 impl CropLayerToContent {
     pub fn new(project: Rc<RefCell<Project>>) -> CropLayerToContent {
-        let previous_active_layer_uid = project.borrow_mut().active_layer_uid;
+        let previous_left = project.borrow().get_active_layer().unwrap().left;
+        let previous_top = project.borrow().get_active_layer().unwrap().top;
+        let previous_width = project.borrow().get_active_layer().unwrap().width;
+        let previous_height = project.borrow().get_active_layer().unwrap().height;
 
         CropLayerToContent {
             project,
-            previous_active_layer_uid,
+            previous_left,
+            previous_top: 0,
+            previous_width: 0,
+            previous_height: 0,
         }
     }
 }
@@ -26,29 +35,23 @@ impl Command for CropLayerToContent {
     }
 
     fn execute(&self) {
-        self.project.borrow_mut().create_layer();
+        self.project
+            .borrow_mut()
+            .get_active_layer()
+            .unwrap()
+            .crop_layer_to_content();
     }
 
     fn rollback(&self) {
-        // focus the previous active layer
-        self.project.borrow_mut().active_layer_uid = self.previous_active_layer_uid;
-
-        // delete the last added layer
-        let uid = self.project.borrow_mut().layers.last().unwrap().uid;
         self.project
             .borrow_mut()
-            .layers
-            .retain(|layer| layer.uid != uid);
+            .get_active_layer()
+            .unwrap()
+            .crop_layer(
+                self.previous_left,
+                self.previous_top,
+                self.previous_width,
+                self.previous_height,
+            );
     }
-}
-
-#[test]
-fn test_from_coords() {
-    // create a new project
-    let mut project = Rc::new(RefCell::new(Project::demo()));
-    CropLayerToContent::new(Rc::clone(&project));
-    s.select_rect(1, 1, 1, 1);
-
-    assert_eq!(s.from_coords(0, 0), 0);
-    assert_eq!(s.from_coords(1, 1), 255);
 }

@@ -153,6 +153,16 @@ impl Layer {
     pub fn layer_to_canvas_coords(&self, i: u32, j: u32) -> [i32; 2] {
         [i as i32 + self.left, j as i32 + self.top]
     }
+
+    pub fn crop(&mut self, left: i32, top: i32, width: u32, height: u32) {
+        // create a new buffer
+        let buffer = PixelBuffer::new(width, height);
+
+        // shift every pixel by the difference
+        let x_diff = 
+
+
+    }
 }
 
 #[cfg(test)]
