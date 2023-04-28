@@ -12,7 +12,7 @@ export default function PaneSection({ title, titleRightSection, children }: Pane
   return (
     <Box>
       <PaneTitle label={title} rightSection={titleRightSection} />
-      <Box sx={{ maxHeight: "12rem", overflow: "auto" }}>{children}</Box>
+      <Box>{children}</Box>
       <Divider />
     </Box>
   );
