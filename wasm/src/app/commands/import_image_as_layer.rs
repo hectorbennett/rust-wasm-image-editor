@@ -3,16 +3,16 @@ use std::io::Cursor;
 use std::{cell::RefCell, rc::Rc};
 
 use super::command::Command;
-use crate::app::pixel_buffer::PixelBuffer;
+use crate::app::buffer::rgba_buffer::RgbaBuffer;
 use crate::app::project::Project;
 
-fn image_bytes_to_pixel_buffer(bytes: &Vec<u8>) -> PixelBuffer {
+fn image_bytes_to_pixel_buffer(bytes: &Vec<u8>) -> RgbaBuffer {
     let img = ImageReader::new(Cursor::new(bytes))
         .with_guessed_format()
         .expect("Cannot guess format")
         .decode()
         .expect("Cannot decode");
-    PixelBuffer::from_image(img)
+    RgbaBuffer::from_image(img)
 }
 
 pub struct ImportImageAsLayer {
@@ -43,8 +43,9 @@ impl Command for ImportImageAsLayer {
 
         let mut project = self.project.borrow_mut();
         let layer = project.create_layer();
+        layer.width = buffer.width;
+        layer.height = buffer.height;
 
-        layer.resize(buffer.width, buffer.height);
         layer.set_buffer(buffer);
 
         project.recalculate_buffer();

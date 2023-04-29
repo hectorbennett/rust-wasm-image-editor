@@ -1,14 +1,11 @@
 use wasm_bindgen::{prelude::wasm_bindgen, Clamped, JsValue};
 extern crate console_error_panic_hook;
-use crate::api::canvas::Canvas;
 use crate::app::{colour::Colour, timer::Timer, App};
-pub mod canvas;
 pub mod serialize;
 
 #[wasm_bindgen]
 pub struct Api {
     app: App,
-    canvas: Option<Canvas>,
 }
 
 #[wasm_bindgen]
@@ -16,17 +13,7 @@ impl Api {
     #[wasm_bindgen(constructor)]
     pub fn init() -> Api {
         console_error_panic_hook::set_once();
-        Api {
-            app: App::new(),
-            canvas: None,
-        }
-    }
-
-    pub fn init_canvas(&mut self, canvas_id: &str) {
-        let _timer = Timer::new("Api::init_canvas");
-        let canvas = Canvas::new(canvas_id);
-        self.canvas = Some(canvas);
-        self.center_canvas();
+        Api { app: App::new() }
     }
 
     pub fn set_active_project(&mut self, project_uid: u64) {
@@ -41,7 +28,6 @@ impl Api {
 
     pub fn create_project(&mut self) {
         self.app.new_project();
-        self.center_canvas();
     }
 
     pub fn close_project(&mut self, project_uid: u64) {
@@ -222,7 +208,6 @@ impl Api {
             .project
             .borrow()
             .get_pixel(x, y)
-            .unwrap()
             .to_vec()
     }
 
@@ -234,8 +219,7 @@ impl Api {
             .unwrap()
             .project
             .borrow()
-            .get_pixel(x, y)
-            .unwrap();
+            .get_pixel(x, y);
 
         self.app.primary_colour = Colour::from_rgba_array(colour);
     }
@@ -333,24 +317,6 @@ impl Api {
             .set_zoom(zoom);
     }
 
-    pub fn render_to_canvas(&mut self) {
-        match &self.canvas {
-            None => (),
-            Some(canvas) => {
-                // let _timer = Timer::new("Api::render_to_canvas");
-                match self.app.get_active_project_controller_mut() {
-                    None => (),
-                    Some(project) => canvas.render_workspace(&mut project.workspace),
-                }
-            }
-        }
-    }
-
-    // pub fn get_workspace_buffer(&mut self) {
-    //     workspace.resize(self.canvas.width(), self.canvas.height());
-    //     let v = workspace.to_vec();
-    // }
-
     pub fn set_workspace_size(&mut self, width: u32, height: u32) {
         // let _timer = Timer::new("Api::set_workspace_size");
         let workspace = &mut self
@@ -367,13 +333,10 @@ impl Api {
         let workspace = &self.app.get_active_project_controller().unwrap().workspace;
         Clamped(workspace.to_vec())
     }
+}
 
-    pub fn center_canvas(&mut self) {
-        self.render_to_canvas();
-        self.app
-            .get_active_project_controller_mut()
-            .unwrap()
-            .workspace
-            .center_canvas();
-    }
+#[test]
+fn test_create_project() {
+    let mut api = Api::init();
+    api.create_project();
 }

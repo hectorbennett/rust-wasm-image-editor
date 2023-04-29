@@ -1,11 +1,9 @@
 use std::{cell::RefCell, cmp, rc::Rc};
 
-use super::pixel_buffer::Pixel;
-use super::pixel_buffer::PixelBuffer;
-use super::project::Project;
+use super::{buffer::rgba_buffer::RgbaBuffer, project::Project};
 
-const YELLOW: Pixel = [255, 255, 0, 255];
-const BLACK: Pixel = [0, 0, 0, 255];
+const YELLOW: [u8; 4] = [255, 255, 0, 255];
+const BLACK: [u8; 4] = [0, 0, 0, 255];
 
 pub struct Workspace {
     project: Rc<RefCell<Project>>,
@@ -79,7 +77,7 @@ impl Workspace {
     }
 
     pub fn to_vec(&self) -> Vec<u8> {
-        let mut pixel_buffer = PixelBuffer::new(self.width, self.height);
+        let mut pixel_buffer = RgbaBuffer::new(self.width, self.height);
 
         let project = self.project.borrow();
 
@@ -99,20 +97,19 @@ impl Workspace {
             (p_t..p_b).for_each(|j| {
                 let [p_x, p_y] = self.workspace_to_project_coords([i, j]);
 
-                if let Some(p) = project.get_pixel(p_x as u32, p_y as u32) {
-                    pixel_buffer.set(i as u32, j as u32, p);
-                }
+                let p = project.get_pixel(p_x as u32, p_y as u32);
+                pixel_buffer.set_pixel(i as u32, j as u32, p);
             });
         });
 
         // black project border
         (p_l..p_r).for_each(|i| {
-            pixel_buffer.set(i as u32, p_t as u32, BLACK);
-            pixel_buffer.set(i as u32, p_b as u32, BLACK);
+            pixel_buffer.set_pixel(i as u32, p_t as u32, BLACK);
+            pixel_buffer.set_pixel(i as u32, p_b as u32, BLACK);
         });
         (p_t..p_b).for_each(|j| {
-            pixel_buffer.set(p_l as u32, j as u32, BLACK);
-            pixel_buffer.set(p_r as u32, j as u32, BLACK);
+            pixel_buffer.set_pixel(p_l as u32, j as u32, BLACK);
+            pixel_buffer.set_pixel(p_r as u32, j as u32, BLACK);
         });
 
         // Render a yellow Active layer border
@@ -124,14 +121,14 @@ impl Workspace {
             ]);
             (l_l..l_r).for_each(|i| {
                 if i >= 0 {
-                    pixel_buffer.set(i as u32, l_t as u32, YELLOW);
-                    pixel_buffer.set(i as u32, l_b as u32, YELLOW);
+                    pixel_buffer.set_pixel(i as u32, l_t as u32, YELLOW);
+                    pixel_buffer.set_pixel(i as u32, l_b as u32, YELLOW);
                 }
             });
             (l_t..l_b).for_each(|j| {
                 if j >= 0 {
-                    pixel_buffer.set(l_l as u32, j as u32, YELLOW);
-                    pixel_buffer.set(l_r as u32, j as u32, YELLOW);
+                    pixel_buffer.set_pixel(l_l as u32, j as u32, YELLOW);
+                    pixel_buffer.set_pixel(l_r as u32, j as u32, YELLOW);
                 }
             });
         }
@@ -139,18 +136,18 @@ impl Workspace {
         // render selection
         for [i, j] in project.selection.border_coordinates() {
             let [s_x, s_y] = self.project_to_workspace_coords([*i, *j]);
-            pixel_buffer.set(
+            pixel_buffer.set_pixel(
                 s_x as u32,
                 s_y as u32,
                 get_selection_pixel(s_x as u32, s_y as u32),
             );
         }
 
-        pixel_buffer.as_vec()
+        pixel_buffer.as_vec().to_vec()
     }
 }
 
-fn get_selection_pixel(x: u32, y: u32) -> Pixel {
+fn get_selection_pixel(x: u32, y: u32) -> [u8; 4] {
     // todo: animate based on timestamp
     const SQUARE_SIZE: u32 = 5;
     if ((x / SQUARE_SIZE) + (y / SQUARE_SIZE)).rem_euclid(2) == 0 {

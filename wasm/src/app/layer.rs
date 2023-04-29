@@ -6,11 +6,8 @@ use std::{
 use serde::{Deserialize, Serialize};
 
 use super::{
-    colour::Colour,
-    pixel_buffer::{Pixel, PixelBuffer},
-    selection::Selection,
-    utils::coord_is_on_outline_of_rect,
-    utils::generate_uid,
+    buffer::rgba_buffer::RgbaBuffer, colour::Colour, selection::Selection,
+    utils::coord_is_on_outline_of_rect, utils::generate_uid,
 };
 
 #[derive(Serialize, Deserialize, Clone)]
@@ -25,7 +22,7 @@ pub struct Layer {
     pub locked: bool,
     // img: RgbaImage,
     #[serde(skip)]
-    buffer: PixelBuffer,
+    buffer: RgbaBuffer,
 }
 
 impl Default for Layer {
@@ -45,15 +42,15 @@ impl Layer {
             top: 0,
             visible: true,
             locked: false,
-            buffer: PixelBuffer::new(width, height),
+            buffer: RgbaBuffer::new(width, height),
         }
     }
 
-    pub fn get_buffer(&self) -> &PixelBuffer {
+    pub fn get_buffer(&self) -> &RgbaBuffer {
         &self.buffer
     }
 
-    pub fn set_buffer(&mut self, buffer: PixelBuffer) {
+    pub fn set_buffer(&mut self, buffer: RgbaBuffer) {
         self.buffer = buffer
     }
 
@@ -68,7 +65,7 @@ impl Layer {
             (0..30).for_each(|j| {
                 let i2 = self.width * i / 30;
                 let j2 = self.height * j / 30;
-                let pixel = self.buffer.get(i2, j2).unwrap();
+                let pixel = self.buffer.get_pixel(i2, j2);
                 v.extend_from_slice(&pixel);
             })
         });
@@ -81,11 +78,11 @@ impl Layer {
         s.finish()
     }
 
-    pub fn resize(&mut self, width: u32, height: u32) {
-        self.width = width;
-        self.height = height;
-        self.buffer = PixelBuffer::new(width, height);
-    }
+    // pub fn resize(&mut self, width: u32, height: u32) {
+    //     self.width = width;
+    //     self.height = height;
+    //     self.buffer = PixelBuffer::new(width, height);
+    // }
 
     pub fn set_position(&mut self, left: i32, top: i32) {
         self.left = left;
@@ -107,9 +104,9 @@ impl Layer {
                 if coords[0] >= 0 && coords[1] >= 0 {
                     let value = selection.from_coords(coords[0] as u32, coords[1] as u32);
                     if value != 0 {
-                        let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
+                        let alpha = ((colour.alpha as u32 * value as u32) / 255) as u8;
                         let pixel = [colour.red, colour.green, colour.blue, alpha];
-                        self.buffer.set(i, j, pixel);
+                        self.buffer.set_pixel(i, j, pixel);
                     }
                 }
             });
@@ -128,9 +125,9 @@ impl Layer {
                     let value = selection.from_coords(coords[0] as u32, coords[1] as u32);
                     if value != 0 {
                         let colour = f(i, j);
-                        let alpha = ((colour.alpha as u16 * value as u16) / 255) as u8;
+                        let alpha = ((colour.alpha as u32 * value as u32) / 255) as u8;
                         let pixel = [colour.red, colour.green, colour.blue, alpha];
-                        self.buffer.set(i, j, pixel);
+                        self.buffer.set_pixel(i, j, pixel);
                     }
                 }
             });
@@ -142,12 +139,10 @@ impl Layer {
         coord_is_on_outline_of_rect(rect, [x, y])
     }
 
-    pub fn get_pixel_from_project_coordinates(&self, x: u32, y: u32) -> Pixel {
+    pub fn get_pixel_from_project_coordinates(&self, x: u32, y: u32) -> [u8; 4] {
         let translated_x: u32 = (x as i32 - self.left) as u32;
         let translated_y: u32 = (y as i32 - self.top) as u32;
-        self.buffer
-            .get(translated_x, translated_y)
-            .unwrap_or([0, 0, 0, 0])
+        self.buffer.get_pixel(translated_x, translated_y)
     }
 
     pub fn layer_to_canvas_coords(&self, i: u32, j: u32) -> [i32; 2] {
@@ -172,7 +167,7 @@ mod tests {
 
         assert_eq!(
             layer.buffer.as_vec(),
-            vec![1, 2, 3, 4, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0]
+            &vec![1, 2, 3, 4, 1, 2, 3, 4, 0, 0, 0, 0, 0, 0, 0, 0]
         );
     }
 }
