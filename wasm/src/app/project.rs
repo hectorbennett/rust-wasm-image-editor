@@ -103,8 +103,8 @@ impl Project {
     }
 
     fn get_image(&self) -> RgbaImage {
-        ImageBuffer::from_fn(self.width as u32, self.height as u32, |x, y| {
-            image::Rgba(self.get_pixel(x as u32, y as u32))
+        ImageBuffer::from_fn(self.width, self.height, |x, y| {
+            image::Rgba(self.get_pixel(x, y))
         })
     }
 
