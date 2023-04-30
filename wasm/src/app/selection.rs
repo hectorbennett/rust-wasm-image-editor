@@ -1,6 +1,9 @@
-use super::utils;
+use std::cmp;
+
 use crate::app::layer::Layer;
 use serde::{Deserialize, Serialize};
+
+use super::buffer::Buffer;
 
 #[derive(Clone, Serialize, Deserialize)]
 
@@ -9,7 +12,7 @@ pub struct Selection {
     height: u32,
     left: i32,
     right: i32,
-    buffer: Vec<u8>,
+    buffer: Buffer<1>,
     border_coordinates: Vec<[i32; 2]>,
 }
 
@@ -33,50 +36,47 @@ impl Selection {
             height,
             left: 0,
             right: 0,
-            buffer: vec![0; (width * height) as usize],
+            buffer: Buffer::new(width, height),
             border_coordinates: vec![],
         }
     }
 
     pub fn put(&mut self, x: u32, y: u32, alpha: u8) {
-        if x >= self.width || y >= self.height {
-            return;
-        }
-        // put an alpha value into the buffer at pixel coordinate x, y
-        let i = utils::get_1d_index_from_2d_coord(self.width, x, y);
-        self.buffer[i] = alpha;
+        self.buffer.set_pixel(x, y, [alpha])
     }
 
     pub fn from_coords(&self, x: u32, y: u32) -> u8 {
         if x >= self.width || y >= self.height {
             return 0;
         }
-        let i = utils::get_1d_index_from_2d_coord(self.width, x, y);
-        self.buffer[i]
+        self.buffer.get_pixel(x, y)[0]
     }
 
     pub fn select_none(&mut self) {
         // reset the buffer
-        self.buffer = vec![0; (self.width * self.height) as usize];
+        self.buffer
+            .set_data(vec![0; (self.width * self.height) as usize]);
         self.recalculate_border_coordinates();
     }
 
     pub fn select_all(&mut self) {
-        self.buffer = vec![255; (self.width * self.height) as usize];
+        self.buffer
+            .set_data(vec![255; (self.width * self.height) as usize]);
         self.recalculate_border_coordinates();
     }
 
     pub fn select_inverse(&mut self) {
-        for i in 0..self.buffer.len() {
-            self.buffer[i] = 255 - self.buffer[i]
+        for (_i, _j, pixel) in self.buffer.pixels_mut() {
+            *pixel = [255 - pixel[0]];
         }
         self.recalculate_border_coordinates();
     }
 
     pub fn add_rect(&mut self, x: u32, y: u32, width: u32, height: u32) {
         // add a rectangle to the buffer
-        let right = x + width;
-        let bottom = y + height;
+
+        let right = cmp::min(x + width, self.width);
+        let bottom = cmp::min(y + height, self.height);
         (x..right).for_each(|i| {
             (y..bottom).for_each(|j| {
                 self.put(i, j, 255);
@@ -86,9 +86,10 @@ impl Selection {
     }
 
     pub fn add_ellipse(&mut self, x: u32, y: u32, width: u32, height: u32) {
-        // add a rectangle to the buffer
-        let right = x + width;
-        let bottom = y + height;
+        // add an ellipse to the buffer
+
+        let right = cmp::min(x + width, self.width);
+        let bottom = cmp::min(y + height, self.height);
         (x..right).for_each(|i| {
             (y..bottom).for_each(|j| {
                 if within_ellipse(i, j, x, y, width, height) {
@@ -157,9 +158,7 @@ impl Selection {
                 let neighbor_row = (row + delta_row) % self.height;
                 let neighbor_col = (column + delta_col) % self.width;
 
-                let idx = utils::get_1d_index_from_2d_coord(self.width, neighbor_row, neighbor_col);
-
-                if self.buffer[idx] == 0 {
+                if self.buffer.get_pixel(neighbor_row, neighbor_col)[0] == 0 {
                     return true;
                 }
             }
@@ -168,63 +167,66 @@ impl Selection {
     }
 }
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+#[test]
+fn test_empty_buffer() {
+    // check that creating a new 3x3 selection inits a vector of 9 zeroes
+    let s = Selection::new(3, 3);
+    assert_eq!(s.buffer.as_vec(), &vec![0; 9]);
+}
 
-    #[test]
-    fn test_empty_buffer() {
-        // check that creating a new 3x3 selection inits a vector of 9 zeroes
-        let s = Selection::new(3, 3);
-        assert_eq!(s.buffer, vec![0; 9]);
-    }
+#[test]
+fn test_add_rect() {
+    let mut s = Selection::new(3, 3);
 
-    #[test]
-    fn test_add_rect() {
-        let mut s = Selection::new(3, 3);
+    // select a 2x2 square to the selection positioned at the origin.
+    s.select_rect(0, 0, 2, 2);
+    assert_eq!(s.buffer.as_vec(), &vec![255, 255, 0, 255, 255, 0, 0, 0, 0]);
 
-        // select a 2x2 square to the selection positioned at the origin.
-        s.select_rect(0, 0, 2, 2);
-        assert_eq!(s.buffer, vec![255, 255, 0, 255, 255, 0, 0, 0, 0]);
+    // add 2 pixels in the bottom right corner
+    s.add_rect(1, 2, 2, 1);
+    assert_eq!(
+        s.buffer.as_vec(),
+        &vec![255, 255, 0, 255, 255, 0, 0, 255, 255]
+    );
+}
 
-        // add 2 pixels in the bottom right corner
-        s.add_rect(1, 2, 2, 1);
-        assert_eq!(s.buffer, vec![255, 255, 0, 255, 255, 0, 0, 255, 255]);
-    }
+#[test]
+fn test_select_all() {
+    let mut s = Selection::new(3, 3);
+    s.select_all();
+    assert_eq!(s.buffer.as_vec(), &vec![255; 9]);
+}
 
-    #[test]
-    fn test_select_all() {
-        let mut s = Selection::new(3, 3);
-        s.select_all();
-        assert_eq!(s.buffer, vec![255; 9]);
-    }
+#[test]
+fn test_select_inverse() {
+    let mut s = Selection::new(3, 3);
 
-    #[test]
-    fn test_select_inverse() {
-        let _s = Selection::new(4, 2);
+    s.select_rect(1, 1, 1, 1);
 
-        // select a square to the right
-        // s.select_rect(2, 0, 2, 2);
-        // s.select_inverse();
+    assert_eq!(s.buffer.as_vec(), &vec![0, 0, 0, 0, 255, 0, 0, 0, 0]);
 
-        // assert_eq!(s.buffer, [255, 255, 0, 0, 255, 255, 0, 0])
-    }
+    s.select_inverse();
 
-    #[test]
-    fn test_select_rect_out_of_bounds() {
-        // what happens if we select too wide
-        let mut s = Selection::new(2, 2);
-        s.select_rect(1, 0, 10, 5);
+    assert_eq!(
+        s.buffer.as_vec(),
+        &vec![255, 255, 255, 255, 0, 255, 255, 255, 255]
+    );
+}
 
-        assert_eq!(s.buffer, [0, 255, 0, 255]);
-    }
+#[test]
+fn test_select_rect_out_of_bounds() {
+    // what happens if we select too wide
+    let mut s = Selection::new(2, 2);
+    s.select_rect(1, 0, 10, 5);
 
-    #[test]
-    fn test_from_coords() {
-        let mut s = Selection::new(3, 3);
-        s.select_rect(1, 1, 1, 1);
+    assert_eq!(s.buffer.as_vec(), &vec![0, 255, 0, 255]);
+}
 
-        assert_eq!(s.from_coords(0, 0), 0);
-        assert_eq!(s.from_coords(1, 1), 255);
-    }
+#[test]
+fn test_from_coords() {
+    let mut s = Selection::new(3, 3);
+    s.select_rect(1, 1, 1, 1);
+
+    assert_eq!(s.from_coords(0, 0), 0);
+    assert_eq!(s.from_coords(1, 1), 255);
 }

@@ -1,13 +1,13 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::app::{colour::Colour, pixel_buffer::PixelBuffer, project::Project};
+use crate::app::{buffer::rgba_buffer::RgbaBuffer, colour::Colour, project::Project};
 
 use super::command::Command;
 
 pub struct FillSelection {
     project: Rc<RefCell<Project>>,
     colour: Colour,
-    old_layer_buffer: PixelBuffer,
+    old_layer_buffer: RgbaBuffer,
 }
 
 impl FillSelection {
