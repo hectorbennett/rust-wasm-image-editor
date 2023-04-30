@@ -1,8 +1,9 @@
 use std::cmp;
 
-use super::buffer::buffer::Buffer;
 use crate::app::layer::Layer;
 use serde::{Deserialize, Serialize};
+
+use super::buffer::Buffer;
 
 #[derive(Clone, Serialize, Deserialize)]
 
