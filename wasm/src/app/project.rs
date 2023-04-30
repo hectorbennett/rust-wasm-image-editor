@@ -9,8 +9,8 @@ use std::ops::Deref;
 use rayon::prelude::*;
 
 use super::{
+    buffer::rgba_buffer::RgbaBuffer,
     layer::Layer,
-    pixel_buffer::{Pixel, PixelBuffer},
     selection::Selection,
     utils::{blend_pixels, generate_uid},
 };
@@ -25,7 +25,7 @@ pub struct Project {
     pub active_layer_uid: Option<u64>,
     pub selection: Selection,
     #[serde(skip)]
-    buffer: PixelBuffer,
+    buffer: RgbaBuffer,
 }
 
 impl Default for Project {
@@ -44,7 +44,7 @@ impl Project {
             layers: vec![],
             active_layer_uid: None,
             selection: Selection::new(width, height),
-            buffer: PixelBuffer::new(width, height),
+            buffer: RgbaBuffer::new(width, height),
         };
         project.create_layer();
         project.recalculate_buffer();
@@ -104,7 +104,7 @@ impl Project {
 
     fn get_image(&self) -> RgbaImage {
         ImageBuffer::from_fn(self.width, self.height, |x, y| {
-            image::Rgba(self.get_pixel(x, y).unwrap())
+            image::Rgba(self.get_pixel(x, y))
         })
     }
 
@@ -118,11 +118,7 @@ impl Project {
     }
 
     pub fn recalculate_buffer(&mut self) {
-        self.buffer = PixelBuffer {
-            width: self.width,
-            height: self.height,
-            buffer: self.get_bytes(),
-        };
+        self.buffer = RgbaBuffer::new_with_data(self.width, self.height, self.get_bytes())
     }
 
     pub fn get_row_bytes(&self, y: u32) -> Vec<u8> {
@@ -151,27 +147,28 @@ impl Project {
             .collect()
     }
 
-    pub fn get_pixel(&self, x: u32, y: u32) -> Option<Pixel> {
-        self.buffer.get(x, y)
+    pub fn get_pixel(&self, x: u32, y: u32) -> [u8; 4] {
+        self.buffer.get_pixel(x, y)
     }
 
-    pub fn buffer(&self) -> &PixelBuffer {
+    pub fn buffer(&self) -> &RgbaBuffer {
         &self.buffer
     }
 
-    fn calculate_pixel(&self, x: u32, y: u32) -> Option<Pixel> {
+    fn calculate_pixel(&self, x: u32, y: u32) -> Option<[u8; 4]> {
         if x > self.width || y > self.height {
             return None;
         }
         let mut output: [u8; 4] = [0, 0, 0, 0];
         for layer in self.layers.iter().filter(|l| l.visible) {
-            let pixel = layer.get_pixel_from_project_coordinates(x, y);
-            output = blend_pixels(output, pixel);
+            if let Some(pixel) = layer.get_pixel_from_project_coordinates(x, y) {
+                output = blend_pixels(output, pixel);
+            }
         }
         Some(output)
     }
 
-    fn calculate_pixel_with_checkerboard_background(&self, x: u32, y: u32) -> Option<Pixel> {
+    fn calculate_pixel_with_checkerboard_background(&self, x: u32, y: u32) -> Option<[u8; 4]> {
         if let Some(pixel) = self.calculate_pixel(x, y) {
             if pixel[3] == 255 {
                 return Some(pixel);
@@ -205,9 +202,9 @@ impl Project {
     }
 }
 
-fn get_checkerboard_pixel(x: u32, y: u32) -> Pixel {
-    const GREY_1: Pixel = [135, 135, 135, 255];
-    const GREY_2: Pixel = [90, 90, 90, 255];
+fn get_checkerboard_pixel(x: u32, y: u32) -> [u8; 4] {
+    const GREY_1: [u8; 4] = [135, 135, 135, 255];
+    const GREY_2: [u8; 4] = [90, 90, 90, 255];
     const SQUARE_SIZE: u32 = 10;
     if ((x / SQUARE_SIZE) + (y / SQUARE_SIZE)).rem_euclid(2) == 0 {
         GREY_1

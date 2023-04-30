@@ -48,3 +48,11 @@ impl Command for SetLayerPosition {
         self.project.borrow_mut().recalculate_buffer();
     }
 }
+
+#[test]
+fn test_set_layer_position() {
+    let project = Rc::new(RefCell::new(Project::demo()));
+
+    let command = SetLayerPosition::new(Rc::clone(&project), -10, -10);
+    command.execute();
+}
