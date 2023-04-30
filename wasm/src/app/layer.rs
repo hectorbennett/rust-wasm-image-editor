@@ -161,9 +161,9 @@ impl Layer {
         [i as i32 + self.left, j as i32 + self.top]
     }
 
-    pub fn crop(&mut self, left: i32, top: i32, width: u32, height: u32) {
-        // self.buffer.crop(left, top, right, bottom);
-    }
+    // pub fn crop(&mut self, left: i32, top: i32, width: u32, height: u32) {
+    //     // self.buffer.crop(left, top, right, bottom);
+    // }
 }
 
 #[cfg(test)]
