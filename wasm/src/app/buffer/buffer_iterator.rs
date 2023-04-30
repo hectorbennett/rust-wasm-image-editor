@@ -1,6 +1,6 @@
 use std::mem;
 
-use super::buffer::Buffer;
+use super::Buffer;
 
 pub struct BufferIterator<'a, const N: usize> {
     buffer: &'a Buffer<N>,

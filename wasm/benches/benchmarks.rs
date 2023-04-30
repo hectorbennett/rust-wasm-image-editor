@@ -1,6 +1,6 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{criterion_group, criterion_main, Criterion};
 use wasm::app::project::Project;
-use wasm::app::utils::{blend_pixels, blend_pixels_old};
+
 
 fn criterion_benchmark(c: &mut Criterion) {
     // c.bench_function("blend_pixels_old", |b| {

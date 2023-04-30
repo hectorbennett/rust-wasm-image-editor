@@ -1,6 +1,6 @@
 use image::DynamicImage;
 
-use super::buffer::Buffer;
+use super::Buffer;
 
 pub type RgbaBuffer = Buffer<4>;
 
