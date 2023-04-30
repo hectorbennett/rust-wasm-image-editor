@@ -87,10 +87,14 @@ impl Workspace {
         let [mut p_l, mut p_t] = self.project_to_workspace_coords([0, 0]);
         let [mut p_r, mut p_b] = self.project_to_workspace_coords([project_width, project_height]);
 
+        if p_r < 0 || p_b < 0 || p_l >= self.width as i32 || p_t >= self.height as i32 {
+            return pixel_buffer.as_vec().to_vec();
+        }
+
         p_l = cmp::max(p_l, 0);
         p_t = cmp::max(p_t, 0);
-        p_r = cmp::min(p_r, self.width as i32);
-        p_b = cmp::min(p_b, self.height as i32);
+        p_r = cmp::min(p_r, (self.width - 1) as i32);
+        p_b = cmp::min(p_b, (self.height - 1) as i32);
 
         // render project pixels
         (p_l..p_r).for_each(|i| {
@@ -114,19 +118,23 @@ impl Workspace {
 
         // Render a yellow Active layer border
         if let Some(layer) = project.get_active_layer() {
-            let [l_l, l_t] = self.project_to_workspace_coords([layer.left, layer.top]);
-            let [l_r, l_b] = self.project_to_workspace_coords([
+            let [mut l_l, mut l_t] = self.project_to_workspace_coords([layer.left, layer.top]);
+            let [mut l_r, mut l_b] = self.project_to_workspace_coords([
                 layer.left + layer.width as i32,
                 layer.top + layer.height as i32,
             ]);
+            l_l = cmp::max(l_l, 0);
+            l_t = cmp::max(l_t, 0);
+            l_r = cmp::min(l_r, (self.width - 1) as i32);
+            l_b = cmp::min(l_b, (self.height - 1) as i32);
             (l_l..l_r).for_each(|i| {
-                if i >= 0 {
+                if i >= 0 && i < self.width as i32 {
                     pixel_buffer.set_pixel(i as u32, l_t as u32, YELLOW);
                     pixel_buffer.set_pixel(i as u32, l_b as u32, YELLOW);
                 }
             });
             (l_t..l_b).for_each(|j| {
-                if j >= 0 {
+                if j >= 0 && j < self.height as i32 {
                     pixel_buffer.set_pixel(l_l as u32, j as u32, YELLOW);
                     pixel_buffer.set_pixel(l_r as u32, j as u32, YELLOW);
                 }
@@ -136,11 +144,13 @@ impl Workspace {
         // render selection
         for [i, j] in project.selection.border_coordinates() {
             let [s_x, s_y] = self.project_to_workspace_coords([*i, *j]);
-            pixel_buffer.set_pixel(
-                s_x as u32,
-                s_y as u32,
-                get_selection_pixel(s_x as u32, s_y as u32),
-            );
+            if s_x >= 0 && s_y >= 0 && s_x < self.width as i32 && s_y < self.height as i32 {
+                pixel_buffer.set_pixel(
+                    s_x as u32,
+                    s_y as u32,
+                    get_selection_pixel(s_x as u32, s_y as u32),
+                );
+            }
         }
 
         pixel_buffer.as_vec().to_vec()
@@ -277,5 +287,16 @@ mod tests {
 
         // let flattened = v.into_iter().flatten().flatten().collect::<Vec<u8>>();
         // assert_eq!(workspace.to_vec(), flattened);
+    }
+
+    #[test]
+    fn test_scroll_too_far_left() {
+        let project = Rc::new(RefCell::new(Project::demo()));
+        let mut workspace = Workspace::new(Rc::clone(&project));
+        workspace.resize(2, 2);
+        workspace.set_position(-2, -2);
+        workspace.to_vec();
+        // assert_eq!()
+        // assert_eq!(workspace.to_vec(), vec![0]);
     }
 }

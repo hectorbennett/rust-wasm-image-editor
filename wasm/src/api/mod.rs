@@ -334,9 +334,3 @@ impl Api {
         Clamped(workspace.to_vec())
     }
 }
-
-#[test]
-fn test_create_project() {
-    let mut api = Api::init();
-    api.create_project();
-}

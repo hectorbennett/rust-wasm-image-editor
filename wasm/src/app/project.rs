@@ -161,8 +161,9 @@ impl Project {
         }
         let mut output: [u8; 4] = [0, 0, 0, 0];
         for layer in self.layers.iter().filter(|l| l.visible) {
-            let pixel = layer.get_pixel_from_project_coordinates(x, y);
-            output = blend_pixels(output, pixel);
+            if let Some(pixel) = layer.get_pixel_from_project_coordinates(x, y) {
+                output = blend_pixels(output, pixel);
+            }
         }
         Some(output)
     }

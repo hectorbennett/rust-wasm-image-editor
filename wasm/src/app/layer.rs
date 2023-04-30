@@ -139,10 +139,22 @@ impl Layer {
         coord_is_on_outline_of_rect(rect, [x, y])
     }
 
-    pub fn get_pixel_from_project_coordinates(&self, x: u32, y: u32) -> [u8; 4] {
-        let translated_x: u32 = (x as i32 - self.left) as u32;
-        let translated_y: u32 = (y as i32 - self.top) as u32;
-        self.buffer.get_pixel(translated_x, translated_y)
+    pub fn get_pixel_from_project_coordinates(&self, x: u32, y: u32) -> Option<[u8; 4]> {
+        let translated_x: i32 = x as i32 - self.left;
+        let translated_y: i32 = y as i32 - self.top;
+
+        if translated_x < 0 || translated_y < 0 {
+            return None;
+        }
+
+        if translated_x as u32 >= self.width - 1 || translated_y as u32 >= self.height - 1 {
+            return None;
+        }
+
+        Some(
+            self.buffer
+                .get_pixel(translated_x as u32, translated_y as u32),
+        )
     }
 
     pub fn layer_to_canvas_coords(&self, i: u32, j: u32) -> [i32; 2] {
