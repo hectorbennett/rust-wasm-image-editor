@@ -43,15 +43,15 @@ impl Command for CropLayerToContent {
     }
 
     fn rollback(&self) {
-        self.project
-            .borrow_mut()
-            .get_active_layer_mut()
-            .unwrap()
-            .crop(
-                self.previous_left,
-                self.previous_top,
-                self.previous_width,
-                self.previous_height,
-            );
+        // self.project
+        //     .borrow_mut()
+        //     .get_active_layer_mut()
+        //     .unwrap()
+        //     .crop(
+        //         self.previous_left,
+        //         self.previous_top,
+        //         self.previous_width,
+        //         self.previous_height,
+        //     );
     }
 }
