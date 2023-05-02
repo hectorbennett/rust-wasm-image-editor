@@ -1,6 +1,6 @@
 use std::{cell::RefCell, rc::Rc};
 
-use crate::app::{buffer::rgba_buffer::RgbaBuffer, colour::Colour, project::Project};
+use crate::app::{buffer::rgba_buffer::RgbaBuffer, project::Project};
 
 use super::command::Command;
 
@@ -44,7 +44,6 @@ impl Command for CropLayer {
     }
 
     fn execute(&self) {
-        let selection = self.project.borrow().selection.clone();
         self.project
             .borrow_mut()
             .get_active_layer_mut()
