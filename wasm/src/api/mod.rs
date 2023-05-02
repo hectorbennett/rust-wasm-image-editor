@@ -336,10 +336,10 @@ impl Api {
 
     pub fn crop_layer_to_content(&mut self) {
         web_sys::console::time_with_label("Api::crop_layer_to_content");
-        self.app
-            .get_active_project_controller_mut()
-            .unwrap()
-            .crop_layer_to_content();
+        // self.app
+        //     .get_active_project_controller_mut()
+        //     .unwrap()
+        //     .crop_layer_to_content();
         web_sys::console::time_end_with_label("Api::crop_layer_to_content");
     }
 }
