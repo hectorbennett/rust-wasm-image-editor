@@ -1,6 +1,6 @@
 pub mod command;
 pub mod create_layer;
-pub mod crop_layer_to_content;
+// pub mod crop_layer_to_content;
 pub mod delete_layer;
 pub mod fill_selection;
 pub mod generate_checkerboard;

@@ -35,23 +35,23 @@ impl Command for CropLayerToContent {
     }
 
     fn execute(&self) {
-        // self.project
-        //     .borrow_mut()
-        //     .get_active_layer()
-        //     .unwrap()
-        //     .crop_layer_to_content();
+        self.project
+            .borrow_mut()
+            .get_active_layer()
+            .unwrap()
+            .crop_layer_to_content();
     }
 
     fn rollback(&self) {
-        // self.project
-        //     .borrow_mut()
-        //     .get_active_layer_mut()
-        //     .unwrap()
-        //     .crop(
-        //         self.previous_left,
-        //         self.previous_top,
-        //         self.previous_width,
-        //         self.previous_height,
-        //     );
+        self.project
+            .borrow_mut()
+            .get_active_layer()
+            .unwrap()
+            .crop_layer(
+                self.previous_left,
+                self.previous_top,
+                self.previous_width,
+                self.previous_height,
+            );
     }
 }
