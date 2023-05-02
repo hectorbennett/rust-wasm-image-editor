@@ -100,9 +100,9 @@ impl Layer {
     pub fn fill_selection(&mut self, selection: &Selection, colour: &Colour) {
         (0..self.width).for_each(|i| {
             (0..=self.height).for_each(|j| {
-                let coords = self.layer_to_canvas_coords(i, j);
-                if coords[0] >= 0 && coords[1] >= 0 {
-                    let value = selection.from_coords(coords[0] as u32, coords[1] as u32);
+                let (x, y) = self.project_to_layer_coords(i, j);
+                if x >= 0 && y >= 0 {
+                    let value = selection.from_coords(x as u32, y as u32);
                     if value != 0 {
                         let alpha = ((colour.alpha as u32 * value as u32) / 255) as u8;
                         let pixel = [colour.red, colour.green, colour.blue, alpha];
@@ -120,9 +120,9 @@ impl Layer {
     ) {
         (0..self.width).for_each(|i| {
             (0..=self.height).for_each(|j| {
-                let coords = self.layer_to_canvas_coords(i, j);
-                if coords[0] >= 0 && coords[1] >= 0 {
-                    let value = selection.from_coords(coords[0] as u32, coords[1] as u32);
+                let (x, y) = self.project_to_layer_coords(i, j);
+                if x >= 0 && y >= 0 {
+                    let value = selection.from_coords(x as u32, y as u32);
                     if value != 0 {
                         let colour = f(i, j);
                         let alpha = ((colour.alpha as u32 * value as u32) / 255) as u8;
@@ -157,13 +157,19 @@ impl Layer {
         )
     }
 
-    pub fn layer_to_canvas_coords(&self, i: u32, j: u32) -> [i32; 2] {
-        [i as i32 + self.left, j as i32 + self.top]
+    pub fn project_to_layer_coords(&self, i: u32, j: u32) -> (i32, i32) {
+        (i as i32 + self.left, j as i32 + self.top)
     }
 
-    // pub fn crop(&mut self, left: i32, top: i32, width: u32, height: u32) {
-    //     // self.buffer.crop(left, top, right, bottom);
-    // }
+    pub fn crop(&mut self, left: u32, top: u32, width: u32, height: u32) {
+        // let (l, t) = self.project_to_layer_coords(left, top);
+        // let (l, t) = self.project_to_layer_coords(left, top);
+        self.buffer.crop(left, top, width, height);
+        self.left = left as i32;
+        self.top = top as i32;
+        self.width = width;
+        self.height = height;
+    }
 }
 
 #[cfg(test)]

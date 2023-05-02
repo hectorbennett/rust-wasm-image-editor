@@ -17,6 +17,9 @@ export default async function api_demo(api) {
   await api.select_ellipse(180, 200, 200, 200);
   await api.fill_selection();
 
+  // Crop the layer
+  await api.crop_layer(170, 190, 220, 220);
+
   // clear selection
   await api.select_none();
 

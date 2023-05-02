@@ -6,6 +6,7 @@ use super::{
         // command::Command,
         create_layer::CreateLayer,
         // crop_layer_to_content::CropLayerToContent,
+        crop_layer::CropLayer,
         delete_layer::DeleteLayer,
         fill_selection::FillSelection,
         generate_checkerboard::GenerateCheckerboard,
@@ -194,6 +195,16 @@ impl ProjectController {
         self.history.append(Box::new(ImportImageAsLayer::new(
             self.project.clone(),
             bytes,
+        )));
+    }
+
+    pub fn crop_layer(&mut self, left: u32, top: u32, width: u32, height: u32) {
+        self.history.append(Box::new(CropLayer::new(
+            Rc::clone(&self.project),
+            left,
+            top,
+            width,
+            height,
         )));
     }
 
