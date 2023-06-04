@@ -1,3 +1,4 @@
+use std::simd::u32x2;
 use uuid::Uuid;
 
 pub fn generate_uid() -> u64 {
@@ -94,114 +95,47 @@ mod get_1d_index_from_2d_coord_tests {
     }
 }
 
-pub fn blend_pixels_old(pixel_bg: [u8; 4], pixel_fg: [u8; 4]) -> [u8; 4] {
-    /* rgba blend 2 pixels */
-    if pixel_fg[3] == 255 || pixel_bg[3] == 0 {
-        return pixel_fg;
+#[inline]
+pub fn fast_divide_by_255(i: u32) -> u32 {
+    (i + 1 + (i >> 8)) >> 8
+}
+
+pub fn blend_pixels(bg: [u8; 4], fg: [u8; 4]) -> [u8; 4] {
+    let r_fg = fg[0] as u32;
+    let g_fg = fg[1] as u32;
+    let b_fg = fg[2] as u32;
+    let a_fg = fg[3] as u32;
+    let r_bg = bg[0] as u32;
+    let g_bg = bg[1] as u32;
+    let b_bg = bg[2] as u32;
+    let a_bg = bg[3] as u32;
+
+    if a_fg == 255 || a_bg == 0 {
+        return fg;
     }
-    let alpha_fg: f32 = pixel_fg[3] as f32 / 255.0;
 
-    let red_fg: f32 = pixel_fg[0] as f32 / 255.0;
-    let green_fg: f32 = pixel_fg[1] as f32 / 255.0;
-    let blue_fg: f32 = pixel_fg[2] as f32 / 255.0;
+    let thing_1 = 255 * a_fg;
+    let thing_2 = 255 * a_bg - a_fg * a_bg;
 
-    let red_bg: f32 = pixel_bg[0] as f32 / 255.0;
-    let green_bg: f32 = pixel_bg[1] as f32 / 255.0;
-    let blue_bg: f32 = pixel_bg[2] as f32 / 255.0;
-    let alpha_bg: f32 = pixel_bg[3] as f32 / 255.0;
+    // calculate final alpha * 255
+    let a_0 = thing_1 + thing_2;
 
-    let alpha_final = blend_alpha(alpha_fg, alpha_bg);
-
-    if alpha_final == 0.0 {
+    if a_0 == 0 {
         return [0, 0, 0, 0];
     }
 
-    let red_final: f32 = blend_colour_channel(red_fg, red_bg, alpha_fg, alpha_bg, alpha_final);
-    let green_final: f32 =
-        blend_colour_channel(green_fg, green_bg, alpha_fg, alpha_bg, alpha_final);
-    let blue_final: f32 = blend_colour_channel(blue_fg, blue_bg, alpha_fg, alpha_bg, alpha_final);
+    // calculate red and green together with simd
+    let rg = (u32x2::splat(thing_1) * u32x2::from([r_fg, g_fg])
+        + u32x2::splat(thing_2) * u32x2::from([r_bg, g_bg]))
+        / u32x2::splat(a_0);
+
+    // calculate blue on its own
+    let b = (thing_1 * b_fg + thing_2 * b_bg) / a_0;
 
     [
-        (red_final * 255.0) as u8,
-        (green_final * 255.0) as u8,
-        (blue_final * 255.0) as u8,
-        (alpha_final * 255.0) as u8,
+        rg[0] as u8,
+        rg[1] as u8,
+        b as u8,
+        fast_divide_by_255(a_0) as u8,
     ]
 }
-#[test]
-fn test_blend_pixels_old() {
-    assert_eq!(
-        blend_pixels_old([10, 20, 30, 40], [50, 60, 70, 80]),
-        [18, 23, 29, 107]
-    );
-}
-
-#[inline(always)]
-fn blend_alpha(alpha_fg: f32, alpha_bg: f32) -> f32 {
-    alpha_bg + alpha_fg - alpha_bg * alpha_fg
-}
-#[test]
-fn test_blend_alpha() {
-    assert_eq!(blend_alpha(0.2, 0.6), 0.68);
-}
-
-#[inline(always)]
-fn blend_colour_channel(
-    colour_fg: f32,
-    colour_bg: f32,
-    alpha_fg: f32,
-    alpha_bg: f32,
-    alpha_final: f32,
-) -> f32 {
-    (colour_fg * alpha_fg) + (colour_bg * alpha_bg) * (1.0 - alpha_fg) / alpha_final
-}
-#[test]
-fn test_blend_colour_channel() {
-    assert_eq!(blend_colour_channel(0.1, 0.2, 0.3, 0.4, 0.5), 0.142);
-}
-
-fn alpha_blend_u32_pixels(p1: u32, p2: u32) -> u32 {
-    // each 32 bit is an ARGB
-    const AMASK: u32 = 0xFF000000;
-    const RBMASK: u32 = 0x00FF00FF;
-    const GMASK: u32 = 0x0000FF00;
-    const AGMASK: u32 = AMASK | GMASK;
-    const ONEALPHA: u32 = 0x01000000;
-    let a = (p2 & AMASK) >> 24;
-    let na = 255 - a;
-    let rb = ((na * (p1 & RBMASK)) + (a * (p2 & RBMASK))) >> 8;
-    let ag = (na * ((p1 & AGMASK) >> 8)) + (a * (ONEALPHA | ((p2 & GMASK) >> 8)));
-    (rb & RBMASK) | (ag & AGMASK)
-}
-
-fn rgba_to_arbg_32(a: [u8; 4]) -> u32 {
-    u32::from_be_bytes([a[3], a[0], a[1], a[2]])
-}
-// #[test]
-// fn test_rgba_to_arbg_32() {
-//     assert_eq!(rgba_to_arbg_32([1, 2, 3, 4]), 50462980);
-// }
-
-fn arbg_32_to_rgba(arbg: u32) -> [u8; 4] {
-    let a = arbg.to_be_bytes();
-    [a[1], a[2], a[3], a[0]]
-}
-// #[test]
-// fn test_arbg_32_to_rgba() {
-//     assert_eq!(arbg_32_to_rgba(50462980), [1, 2, 3, 4]);
-// }
-
-pub fn blend_pixels(p1: [u8; 4], p2: [u8; 4]) -> [u8; 4] {
-    let pp1 = rgba_to_arbg_32(p1);
-    let pp2 = rgba_to_arbg_32(p2);
-    let pp3 = alpha_blend_u32_pixels(pp1, pp2);
-    arbg_32_to_rgba(pp3)
-}
-
-// #[test]
-// fn test_blend_pixels() {
-//     assert_eq!(
-//         blend_pixels([10, 20, 30, 40], [50, 60, 70, 80]),
-//         [18, 23, 29, 107]
-//     );
-// }

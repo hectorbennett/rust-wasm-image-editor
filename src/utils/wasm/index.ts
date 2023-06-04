@@ -4,7 +4,7 @@ import type { WasmWorker } from "./wasm.worker.st";
 
 import { Api } from "wasm/pkg/wasm";
 
-const FORCE_USE_SINGLE_THREADS = true;
+const FORCE_USE_SINGLE_THREADS = false;
 
 const methods_with_callback = [...Object.getOwnPropertyNames(Api.prototype)].filter(
   (i) => !["constructor", "__destroy_into_raw", "free", "state"].includes(i),
