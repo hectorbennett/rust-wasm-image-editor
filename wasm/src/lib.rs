@@ -1,3 +1,5 @@
+#![feature(portable_simd)]
+
 use api::Api;
 use wasm_bindgen::prelude::*;
 
