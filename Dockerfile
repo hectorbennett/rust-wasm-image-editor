@@ -1,39 +1,49 @@
-FROM node:19.7.0
-
-# Install rust
-# Get Rust; NOTE: using sh for better compatibility with other base images
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN curl https://sh.rustup.rs -sSf | sh -s -- -y
-
-# Add .cargo/bin to PATH
-ENV PATH="/root/.cargo/bin:${PATH}"
-
-# Check cargo is visible
-RUN cargo --help
-
-# Install wasm-pack
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
-
-# Install nightly toolchain
-RUN rustup toolchain install nightly && rustup component add rust-src --toolchain nightly
+################
+##### rust
+FROM rust:1.66 as wasm_build
 
 WORKDIR /app
-COPY package*.json ./
 
-# Install yarn packages
-RUN yarn run ci --ignore-scripts
+# use nightly rust
+# RUN rustup override set nightly-2022-12-12
+RUN rustup toolchain install nightly-2022-12-12
+RUN rustup component add rust-src --toolchain nightly-2022-12-12
+
+# Install wasm pack and wasm-bindgen-cli
+RUN cargo +nightly-2022-12-12 install wasm-pack
+RUN cargo +nightly-2022-12-12 install wasm-bindgen-cli
+# RUN cargo +nightly-2022-12-12 wasm-bindgen-cli
+
+# Cache dependencies by building a dummy project
+COPY wasm/Cargo.toml .
+RUN mkdir src && touch src/lib.rs && mkdir benches && touch benches/benchmarks.rs
+RUN cargo +nightly-2022-12-12 build
+
+# Now copy all the files from wasm
+COPY wasm/ .
+
+# compile multi-threaded
+RUN rustup override set nightly-2022-12-12 && RUSTFLAGS='-C target-feature=+atomics,+bulk-memory,+mutable-globals' rustup run nightly-2022-12-12 wasm-pack build --target web --release --out-dir pkg-parallel -- --features parallel -Z build-std=panic_abort,std
+
+# compile single-threaded
+RUN rustup run nightly-2022-12-12 wasm-pack build --target web --release
+
+
+################
+##### node
+FROM node:19.7.0 as ts_build
+
+WORKDIR /app
+COPY package.json yarn.lock ./
+
+RUN yarn install --frozen-lockfile --ignore-scripts && yarn cache clean
 
 COPY . .
 
+COPY --from=wasm_build /app wasm
+
 ENV NODE_ENV=production
 EXPOSE 3000
-
-# Build wasm single-threaded
-RUN yarn run build:wasm-single-threaded
-
-# Build wasm multi-threaded
-RUN yarn run build:wasm-multi-threaded
 
 # Build js
 RUN yarn run build:js
