@@ -1,0 +1,40 @@
+FROM node:19.7.0
+
+# Install rust nightly
+# Get Rust; NOTE: using sh for better compatibility with other base images
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+
+RUN curl https://sh.rustup.rs -sSf | sh -s -- --default-toolchain nightly-aarch64-unknown-linux-gnu -y
+
+# Add .cargo/bin to PATH
+ENV PATH="/root/.cargo/bin:${PATH}"
+
+# Check cargo is visible
+RUN cargo --help
+
+# Install wasm-pack
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+RUN curl https://rustwasm.github.io/wasm-pack/installer/init.sh -sSf | sh
+
+WORKDIR /app
+COPY package.json yarn.lock ./
+
+# Install yarn packages
+RUN yarn install --frozen-lockfile --ignore-scripts && yarn cache clean
+
+COPY . .
+
+ENV NODE_ENV=production
+EXPOSE 3000
+
+# Build wasm multi-threaded
+RUN yarn run build:wasm-multi-threaded
+
+# Build wasm single-threaded
+RUN yarn run build:wasm-single-threaded
+
+# Build js
+RUN yarn run build:js
+
+# Serve
+CMD ["yarn", "run", "serve"]
