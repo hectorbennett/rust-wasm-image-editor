@@ -73,20 +73,20 @@ impl<const N: usize> Buffer<N> {
         self.data = data;
     }
 
-    pub fn crop(&mut self, left: u32, top: u32, right: u32, bottom: u32) {
-        // create a new buffer
-        let new_width: u32 = right - left;
-        let new_height: u32 = bottom - top;
-        let mut new_buffer = Self::new(new_width, new_height);
+    pub fn crop(&mut self, left: u32, top: u32, width: u32, height: u32) {
+        let right = left + width;
+        let bottom = top + height;
+        let mut new_buffer = Self::new(width, height);
 
         (left..right).for_each(|x| {
             (top..bottom).for_each(|y| {
                 let pixel = self.get_pixel_mut(x, y);
-                new_buffer.set_pixel(x, y, *pixel)
+                // let pixel: [u8] = [0, 0, 0, 0];
+                new_buffer.set_pixel(x - left, y - height, *pixel);
             })
         });
-        self.width = new_width;
-        self.height = new_height;
+        self.width = width;
+        self.height = height;
         self.data = new_buffer.data;
     }
 }
@@ -164,4 +164,16 @@ fn test_set_data() {
     let mut buffer: Buffer<2> = Buffer::new(2, 2);
     buffer.set_data(vec![3; 2 * 2 * 2]);
     assert_eq!(buffer.as_vec(), &vec![3; 2 * 2 * 2])
+}
+
+#[test]
+fn test_crop() {
+    let mut buffer: Buffer<1> = Buffer::new(3, 3);
+    buffer.set_pixel(1, 1, [1]);
+    assert_eq!(buffer.as_vec(), &vec![0, 0, 0, 0, 1, 0, 0, 0, 0]);
+
+    buffer.crop(1, 1, 1, 1);
+    assert_eq!(buffer.as_vec(), &vec![1]);
+    assert_eq!(buffer.width, 1);
+    assert_eq!(buffer.height, 1);
 }

@@ -1,5 +1,5 @@
 import { ActionIcon } from "@mantine/core";
-import { Plus } from "react-bootstrap-icons";
+// import { Plus } from "react-bootstrap-icons";
 import { LayersContext } from "src/context/layers";
 import { WasmContext } from "src/context/wasm";
 
@@ -7,6 +7,7 @@ import Sortable, { Item } from "src/components/Sortable";
 import { Layer, LayerSettings } from "src/components/Layers";
 
 import PaneSection from "src/components/PaneSection";
+import { IconPlus } from "@tabler/icons-react";
 
 function NewLayerButton() {
   const layers = LayersContext.useContainer();
@@ -17,7 +18,7 @@ function NewLayerButton() {
         layers.createNewLayer();
       }}
     >
-      <Plus size={16} />
+      <IconPlus size={16} />
     </ActionIcon>
   );
 }

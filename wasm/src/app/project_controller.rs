@@ -5,6 +5,8 @@ use super::{
     commands::{
         // command::Command,
         create_layer::CreateLayer,
+        // crop_layer_to_content::CropLayerToContent,
+        crop_layer::CropLayer,
         delete_layer::DeleteLayer,
         fill_selection::FillSelection,
         generate_checkerboard::GenerateCheckerboard,
@@ -195,4 +197,19 @@ impl ProjectController {
             bytes,
         )));
     }
+
+    pub fn crop_layer(&mut self, left: u32, top: u32, width: u32, height: u32) {
+        self.history.append(Box::new(CropLayer::new(
+            Rc::clone(&self.project),
+            left,
+            top,
+            width,
+            height,
+        )));
+    }
+
+    // pub fn crop_layer_to_content(&mut self) {
+    //     self.history
+    //         .append(Box::new(CropLayerToContent::new(self.project.clone())));
+    // }
 }

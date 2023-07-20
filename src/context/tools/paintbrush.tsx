@@ -1,5 +1,4 @@
 import { Box } from "@mantine/core";
-import { Brush } from "react-bootstrap-icons";
 import { Tool } from ".";
 
 // let prevX = 0;
@@ -57,10 +56,10 @@ function Cursor() {
   );
 }
 
-export const paintbrush: Tool = {
+export const paintbrush = {
   name: "paintbrush",
   label: "Paintbrush",
-  icon: Brush,
+  // icon: Brush,
   events: {},
   // events: {
   //   onMouseMove: function (params: ToolEventParams) {
